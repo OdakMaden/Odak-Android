@@ -2,7 +2,10 @@ package com.techzilla.odak.main.viewcontrollers
 
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
@@ -37,10 +40,22 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
 
+        binding.defaultClickContainer.setOnClickListener {
+            isEnableChange()
+            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1500
+            binding.container.animate()
+                .translationX(0.0f)
+                .translationY(0.0f)
+                .setInterpolator(AccelerateInterpolator()).duration = 1500
+            binding.defaultClickContainer.visibility = GONE
+        }
+
 
         binding.menuButton.setOnClickListener {
             isOpenMenu = !isOpenMenu
             if (isOpenMenu){
+                binding.defaultClickContainer.visibility = VISIBLE
+                isEnableChange()
                 binding.menuButton.animate().rotation(90.0f).setInterpolator(AccelerateInterpolator()).duration=1500
                 binding.container.animate()
                     .translationX((binding.root.width * 0.6).toFloat())
@@ -48,13 +63,16 @@ class MainActivity : AppCompatActivity() {
                     .setInterpolator(AccelerateInterpolator()).duration = 1500
             }
             else{
+                isEnableChange()
                 binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1500
                 binding.container.animate()
                     .translationX(0.0f)
                     .translationY(0.0f)
                     .setInterpolator(AccelerateInterpolator()).duration = 1500
+                binding.defaultClickContainer.visibility = GONE
             }
             binding.container.isSelected = isOpenMenu
+
             backgroundMenu(isOpenMenu)
         }
 
@@ -75,6 +93,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun isEnableChange(){
+        binding.defaultClickContainer.isEnabled = false
+        binding.menuButton.isEnabled = false
+
+        object : CountDownTimer(1500, 500){
+            override fun onTick(p0: Long) {
+            }
+            override fun onFinish() {
+                binding.defaultClickContainer.isEnabled = true
+                binding.menuButton.isEnabled = true
+            }
+        }.start()
+    }
 
 
     private fun backgroundMenu(isEnable:Boolean){

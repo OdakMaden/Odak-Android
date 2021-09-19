@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/default_background_shape.xml" value="0.125" />
         <entry key="app/src/main/res/drawable/fade_red.xml" value="0.17109375" />
         <entry key="app/src/main/res/drawable/icon_close.xml" value="0.17109375" />
         <entry key="app/src/main/res/drawable/main_background.xml" value="0.17109375" />
@@ -10,7 +11,7 @@
         <entry key="app/src/main/res/drawable/search_view_background.xml" value="0.17109375" />
         <entry key="app/src/main/res/layout/activity_currency_detail.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.21197916666666666" />
         <entry key="app/src/main/res/layout/custom_marker_view.xml" value="0.158984375" />
         <entry key="app/src/main/res/layout/fragment_market.xml" value="0.165" />

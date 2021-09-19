@@ -51,19 +51,6 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <!--Bura bakılacak-->
-    <style name="odak.fragment.cardView" parent="@style/Widget.MaterialComponents.CardView">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MaterialCardView.Cut</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.MaterialCardView.Cut" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">32dp</item>
-        <item name="cornerSizeTopLeft">32dp</item>
-        <item name="cornerSizeBottomRight">32dp</item>
-        <item name="cornerSizeBottomLeft">32dp</item>
-    </style>
-    
     <style name="odak.textview.item_inner_view.mid_text" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">12sp</item>
