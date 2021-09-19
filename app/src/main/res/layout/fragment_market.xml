@@ -22,7 +22,7 @@
             android:closeIcon="@drawable/icon_close"
             android:searchHintIcon="@drawable/icon_search_hint"
             android:iconifiedByDefault="true"
-            android:theme="@style/odak.searchview"
+            android:theme="@style/odak.search_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/guideline_menu_horizontal"

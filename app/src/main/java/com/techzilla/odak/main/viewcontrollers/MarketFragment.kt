@@ -1,13 +1,16 @@
 package com.techzilla.odak.main.viewcontrollers
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.techzilla.odak.R
+import com.techzilla.odak.currencydetail.viewcontroller.CurrencyDetailActivity
 import com.techzilla.odak.databinding.FragmentMarketBinding
 import com.techzilla.odak.main.adapters.InnerViewRecyclerViewAdapter
 import com.techzilla.odak.shared.model.CurrencyModel
@@ -39,6 +42,13 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
         selectBottomItem(binding.favoriteContainer)
         binding.defaultRecyclerview.adapter = adapter
 
+        binding.searchView.setOnSearchClickListener {
+            it.startAnimation(AnimationUtils.makeInAnimation(requireActivity(), false))
+        }
+        binding.searchView.setOnCloseListener {
+            binding.searchView.startAnimation(AnimationUtils.makeInAnimation(requireActivity(), true))
+            false
+        }
 
         binding.favoriteContainer.setOnClickListener {
             selectBottomItem(binding.favoriteContainer)
@@ -102,6 +112,8 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
                 binding.goldBarText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
                 binding.bitcoinIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_bitcoin, resources.newTheme()))
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
+
+                adapter.changeType(4)
             }
             binding.dollarContainer->{
                 binding.favoriteIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_favori, resources.newTheme()))
@@ -153,6 +165,12 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
 
     override fun innerViewOnClickListener(position: Int) {
         adapter.selectItem(position)
+    }
+
+    override fun innerViewForDetailOnClickListener(innerViewCurrencyModel: InnerViewCurrencyModel) {
+        Intent(requireActivity(), CurrencyDetailActivity::class.java).apply {
+            startActivity(this)
+        }
     }
 
 

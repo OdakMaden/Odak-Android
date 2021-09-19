@@ -71,7 +71,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         holder.bind(arrayList[position])
         holder.itemView.setOnClickListener {
             if (arrayList[position].isSelected){
-                println(true)
+                listener.innerViewForDetailOnClickListener(arrayList[position])
             }
             else{
                 listener.innerViewOnClickListener(position)
@@ -163,5 +163,6 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
     interface InnerViewListener{
         fun innerViewOnClickListener(position: Int)
+        fun innerViewForDetailOnClickListener(innerViewCurrencyModel:InnerViewCurrencyModel)
     }
 }
