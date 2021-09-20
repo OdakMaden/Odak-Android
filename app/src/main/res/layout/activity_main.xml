@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.35"
         app:layout_constraintHorizontal_bias="0.07">
         <LinearLayout
-            android:id="@+id/piyasa"
+            android:id="@+id/market"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">
@@ -35,7 +35,7 @@
                 style="@style/odak.textview.menu_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Piyasa"/>
+                android:text="@string/menu.market.label"/>
         </LinearLayout>
 
         <LinearLayout
@@ -54,7 +54,7 @@
                 style="@style/odak.textview.menu_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Çevirici"
+                android:text="@string/menu.converter.label"
                 />
         </LinearLayout>
         <LinearLayout
@@ -73,7 +73,7 @@
                 style="@style/odak.textview.menu_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Bildirim"/>
+                android:text="@string/menu.notification.label"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/call"
@@ -91,7 +91,7 @@
                 style="@style/odak.textview.menu_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Ara"/>
+                android:text="@string/menu.call.label"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/logout"
@@ -109,7 +109,7 @@
                 style="@style/odak.textview.menu_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Çıkış"/>
+                android:text="@string/menu.logout.label"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -37,7 +37,7 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Şifre"
+        android:hint="@string/auth.password.label"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
         android:maxLength="6"
@@ -64,7 +64,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="giriş"
+            android:text="@string/auth.login.button"
             android:textColor="@color/white"
             android:paddingHorizontal="15dp"
             android:paddingVertical="3dp"

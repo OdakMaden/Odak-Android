@@ -13,8 +13,10 @@ import com.techzilla.odak.R
 import com.techzilla.odak.currencydetail.viewcontroller.CurrencyDetailActivity
 import com.techzilla.odak.databinding.FragmentMarketBinding
 import com.techzilla.odak.main.adapters.InnerViewRecyclerViewAdapter
+import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
+import com.techzilla.odak.shared.constants.USER
+import com.techzilla.odak.shared.constants.list
 import com.techzilla.odak.shared.model.CurrencyModel
-import com.techzilla.odak.shared.model.InnerViewCurrencyModel
 
 
 class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListener {
@@ -25,7 +27,6 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
     private val adapter by lazy { InnerViewRecyclerViewAdapter(this,
         binding.defaultRecyclerview.layoutManager!!
     ) }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,42 +63,15 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
         binding.cryptoContainer.setOnClickListener {
             selectBottomItem(binding.cryptoContainer)
         }
+        adapter.insertNewParam(list, USER.favoriteCodeList)
+    }
 
-        val list : MutableList<InnerViewCurrencyModel> = mutableListOf(InnerViewCurrencyModel(
-            CurrencyModel("AMERİKAN DOLARI", "USD", "8,4436", "8,4431", "% -0,08", 0),
-            false),
-            InnerViewCurrencyModel(
-                CurrencyModel("EURO", "EUR/TRY", "8,4436", "8,4431", "% 0,08", 0),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("İNGİLİZ STERLİNİ", "GBP/TRY", "8,4436", "8,4431", "% -0,08", 0),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("İSVEÇ FRANKI", "CHF/TRY", "8,4436", "8,4431", "% 0,08", 0),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("", "GR ALTIN", "8,4436", "8,4431", "% -0,08", 1),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("", "HAS ALTIN", "8,4436", "8,4431", "% 0,08", 1),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("", "22 AYAR", "8,4436", "8,4431", "% -0,08", 1),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("BITCOIN", "BTC/TRY", "8,4436", "8,4431", "% -0,08", 2),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("CARDANO", "ADA/TRY", "8,4436", "8,4431", "% 0,08", 2),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("COSMOS", "ATOM/TRY", "8,4436", "8,4431", "% -0,08", 2),
-                false),
-            InnerViewCurrencyModel(
-                CurrencyModel("ETHEREUM", "ETH/TRY", "8,4436", "8,4431", "% 0,08", 2),
-                false))
-
-        adapter.insertNewParam(list)
+    override fun onResume() {
+        super.onResume()
+        isChangeInnerViewCurrencyModel?.let {
+            adapter.changeItems(USER.favoriteCodeList, it)
+            isChangeInnerViewCurrencyModel = null
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -167,9 +141,21 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
         adapter.selectItem(position)
     }
 
-    override fun innerViewForDetailOnClickListener(innerViewCurrencyModel: InnerViewCurrencyModel) {
+    override fun innerViewForDetailOnClickListener(currencyModel: CurrencyModel) {
         Intent(requireActivity(), CurrencyDetailActivity::class.java).apply {
+            putExtra("currencyCode", currencyModel.currencyCode)
             startActivity(this)
+        }
+    }
+
+    override fun innerViewAddFavoriteOnClickListener(currencyModel: CurrencyModel, isFavorite:Boolean) {
+        if (isFavorite){
+            USER.favoriteCodeList.remove(currencyModel.currencyCode)
+            adapter.deleteFavorite(currencyModel)
+        }
+        else{
+            USER.favoriteCodeList.add(currencyModel.currencyCode)
+            adapter.addFavorite(currencyModel)
         }
     }
 

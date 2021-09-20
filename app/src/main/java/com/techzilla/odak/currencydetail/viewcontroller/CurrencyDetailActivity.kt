@@ -3,12 +3,12 @@ package com.techzilla.odak.currencydetail.viewcontroller
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.DashPathEffect
-import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.components.Legend
@@ -17,19 +17,25 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.techzilla.odak.R
 import com.techzilla.odak.databinding.ActivityCurrencyDetailBinding
+import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
+import com.techzilla.odak.shared.constants.USER
+import com.techzilla.odak.shared.constants.list
+import com.techzilla.odak.shared.model.CurrencyModel
+import java.text.DecimalFormat
 
 
 class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
     private var _binding : ActivityCurrencyDetailBinding? = null
     private val binding get() = _binding!!
+    private lateinit var currencyModel: CurrencyModel
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCurrencyDetailBinding.inflate(layoutInflater)
@@ -43,6 +49,56 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
+
+        val currencyCode = intent.getStringExtra("currencyCode")
+        list.forEach {
+            if (it.currencyCode == currencyCode){
+                currencyModel = it
+            }
+        }
+
+        binding.clockText.isSelected = true
+        binding.title.text = currencyModel.currencyCode
+        binding.subTitle.text = currencyModel.currencyName
+        binding.buyText.text = currencyModel.buyPrice.toString()
+        binding.sellText.text = currencyModel.salePrice.toString()
+        if (USER.favoriteCodeList.contains(currencyModel.currencyCode)){
+            binding.favorite.setImageDrawable(resources.getDrawable(R.drawable.icon_selected_favorite, resources.newTheme()))
+        }
+        else{
+            binding.favorite.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite, resources.newTheme()))
+        }
+
+        if (currencyModel.percentage.contains("-")) {
+            binding.increase.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.icon_increase_down,
+                    resources.newTheme()
+                )
+            )
+            binding.increaseText.setTextColor(resources.getColor(R.color.odak_red, resources.newTheme()))
+        }
+        else{
+            binding.increase.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.icon_increase_up,
+                    resources.newTheme()
+                )
+            )
+            binding.increaseText.setTextColor(resources.getColor(R.color.odak_green, resources.newTheme()))
+        }
+        binding.increaseText.text = currencyModel.percentage
+
+        val decimalFormat = DecimalFormat("#.#####")
+        binding.fluidSlider.apply {
+            endText = decimalFormat.format(currencyModel.buyPrice * 1.01)
+            startText = decimalFormat.format(currencyModel.buyPrice / 1.01)
+            bubbleText = decimalFormat.format(currencyModel.buyPrice)
+            isPressed = false
+        }
+        binding.highestText.text = decimalFormat.format(currencyModel.buyPrice * 1.01)
+        binding.lowestText.text = decimalFormat.format(currencyModel.buyPrice / 1.01)
+
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -81,6 +137,61 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         setData(10, 90f)
         binding.lineChart.animateX(1500)
         binding.lineChart.legend.form = Legend.LegendForm.NONE
+
+        binding.clockText.setOnClickListener {
+            selectedDateButton(it as TextView)
+        }
+        binding.dayText.setOnClickListener {
+            selectedDateButton(it as TextView)
+        }
+        binding.weekText.setOnClickListener {
+            selectedDateButton(it as TextView)
+        }
+        binding.monthText.setOnClickListener {
+            selectedDateButton(it as TextView)
+        }
+
+        binding.favorite.setOnClickListener {
+            if (USER.favoriteCodeList.contains(currencyModel.currencyCode)) {
+                USER.favoriteCodeList.remove(currencyModel.currencyCode)
+                binding.favorite.setImageDrawable(
+                    resources.getDrawable(
+                        R.drawable.icon_favorite,
+                        resources.newTheme()
+                    )
+                )
+            } else {
+                USER.favoriteCodeList.add(currencyModel.currencyCode)
+                binding.favorite.setImageDrawable(
+                    resources.getDrawable(
+                        R.drawable.icon_selected_favorite,
+                        resources.newTheme()
+                    )
+                )
+            }
+            isChangeInnerViewCurrencyModel = currencyModel
+        }
+    }
+
+    private fun selectedDateButton(textView: TextView){
+        binding.clockText.isSelected = false
+        binding.dayText.isSelected = false
+        binding.weekText.isSelected = false
+        binding.monthText.isSelected = false
+        when(textView){
+            binding.clockText ->{
+                binding.clockText.isSelected = true
+            }
+            binding.dayText ->{
+                binding.dayText.isSelected = true
+            }
+            binding.weekText ->{
+                binding.weekText.isSelected = true
+            }
+            binding.monthText->{
+                binding.monthText.isSelected = true
+            }
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

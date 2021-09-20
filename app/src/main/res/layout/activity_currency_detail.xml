@@ -25,7 +25,6 @@
         style="@style/odak.textview.currency_detail.title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BTC/TRY"
         app:layout_constraintTop_toBottomOf="@id/guideline_menu_horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +34,6 @@
         style="@style/odak.textview.currency_detail.sub_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BITCOIN"
         app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +63,7 @@
                     android:id="@+id/buy_default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ALIŞ"
+                    android:text="@string/detail.buy.label"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/buy_text" />
                 <TextView
@@ -73,7 +71,6 @@
                     android:id="@+id/buy_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="8,4431"
                     app:layout_constraintTop_toBottomOf="@id/buy_default"
                     app:layout_constraintBottom_toBottomOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -88,7 +85,7 @@
                     android:id="@+id/sell_default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="SATIŞ"
+                    android:text="@string/detail.sell.label"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/sell_text" />
                 <TextView
@@ -96,7 +93,6 @@
                     android:id="@+id/sell_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="8,4431"
                     app:layout_constraintTop_toBottomOf="@id/sell_default"
                     app:layout_constraintBottom_toBottomOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -122,7 +118,6 @@
                     android:id="@+id/increase_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="8,4431"
                     android:textColor="@color/odak_green"
                     app:layout_constraintTop_toBottomOf="@id/increase"
                     app:layout_constraintBottom_toBottomOf="parent" />
@@ -161,11 +156,12 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/clock_text"
                 style="@style/odak.textview.currency_detail.time_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:text="1 SAAT"
+                android:text="@string/detail.clock.button"
                 />
             <androidx.cardview.widget.CardView
                 android:layout_width="1dp"
@@ -174,11 +170,12 @@
                 android:paddingVertical="10dp"
                 />
             <TextView
+                android:id="@+id/day_text"
                 style="@style/odak.textview.currency_detail.time_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:text="1 GÜN"
+                android:text="@string/detail.day.button"
                 />
             <androidx.cardview.widget.CardView
                 android:layout_width="1dp"
@@ -187,11 +184,12 @@
                 android:paddingVertical="10dp"
                 />
             <TextView
+                android:id="@+id/week_text"
                 style="@style/odak.textview.currency_detail.time_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:text="1 HAFTA"/>
+                android:text="@string/detail.week.button"/>
             <androidx.cardview.widget.CardView
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
@@ -199,11 +197,12 @@
                 android:paddingVertical="10dp"
                 />
             <TextView
+                android:id="@+id/month_text"
                 style="@style/odak.textview.currency_detail.time_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:text="1 AY"/>
+                android:text="@string/detail.month.button"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -247,13 +246,12 @@
                     android:id="@+id/lowest_default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="En Düşük" />
+                    android:text="@string/detail.lowest.label" />
                 <TextView
                     style="@style/odak.textview.currency_detail.lowest_highest.price"
                     android:id="@+id/lowest_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="8,4431" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -276,13 +274,12 @@
                     android:id="@+id/highest_default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="En Yüksek" />
+                    android:text="@string/detail.highest.label" />
                 <TextView
                     style="@style/odak.textview.currency_detail.lowest_highest.price"
                     android:id="@+id/highest_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="8,4431" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
@@ -301,7 +298,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <ImageView
-                android:id="@+id/detail"
+                android:id="@+id/call"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.24"

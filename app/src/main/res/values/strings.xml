@@ -1,5 +1,38 @@
 <resources>
     <string name="app_name">Odak</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Odak_shared_pref">odakSharedPref</string>
+
+    <!--auth-->
+    <string name="auth.password.label">Şifre</string>
+    <string name="auth.login.button">giriş</string>
+
+    <!--Menu-->
+    <string name="menu.market.label">Piyasa</string>
+    <string name="menu.converter.label">Çevirici</string>
+    <string name="menu.notification.label">Bildirim</string>
+    <string name="menu.call.label">Ara</string>
+    <string name="menu.logout.label">Çıkış</string>
+    
+    <!--Bottom Menu-->
+    <string name="menu.favorite.button">Favori</string>
+    <string name="menu.currency.button">Döviz</string>
+    <string name="menu.goldBar.button">Altın</string>
+    <string name="menu.crypto.button">Kripto</string>
+
+    <!--Currency item-->
+    <string name="item.buy.label">Aliş</string>
+    <string name="item.sell.label">Satış</string>
+
+    <!--Detail-->
+    <string name="detail.buy.label">ALIŞ</string>
+    <string name="detail.sell.label">SATIŞ</string>
+    <string name="detail.clock.button">1 SAAT</string>
+    <string name="detail.day.button">1 GÜN</string>
+    <string name="detail.week.button">1 HAFTA</string>
+    <string name="detail.month.button">1 AY</string>
+    <string name="detail.lowest.label">En Düşük</string>
+    <string name="detail.highest.label">En Yüksek</string>
+    
+    
+    
 </resources>

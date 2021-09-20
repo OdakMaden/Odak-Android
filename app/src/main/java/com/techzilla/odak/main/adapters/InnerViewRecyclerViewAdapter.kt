@@ -9,21 +9,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.R
 import com.techzilla.odak.databinding.ItemInnerViewBinding
-import com.techzilla.odak.shared.model.InnerViewCurrencyModel
+import com.techzilla.odak.shared.model.CurrencyModel
 
 class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, private val layoutManager: RecyclerView.LayoutManager) : RecyclerView.Adapter<InnerViewRecyclerViewAdapter.ViewHolder>() {
 
-    private val favoriteArrayList = ArrayList<InnerViewCurrencyModel>()
-    private val dollarArrayList = ArrayList<InnerViewCurrencyModel>()
-    private val goldBarArrayList = ArrayList<InnerViewCurrencyModel>()
-    private val cryptoArrayList = ArrayList<InnerViewCurrencyModel>()
-    private val arrayList = ArrayList<InnerViewCurrencyModel>()
+    private val favoriteArrayList = ArrayList<CurrencyModel>()
+    private val dollarArrayList = ArrayList<CurrencyModel>()
+    private val goldBarArrayList = ArrayList<CurrencyModel>()
+    private val cryptoArrayList = ArrayList<CurrencyModel>()
+    private val arrayList = ArrayList<CurrencyModel>()
+    private var selectedModel: CurrencyModel? = null
+    private var _type = 4
 
-    class ViewHolder(private val binding: ItemInnerViewBinding) : RecyclerView.ViewHolder(binding.root){
+    class ViewHolder(private val binding: ItemInnerViewBinding, private val listener: InnerViewListener) : RecyclerView.ViewHolder(binding.root){
 
         @SuppressLint("UseCompatLoadingForDrawables")
-        fun bind(innerViewCurrencyModel: InnerViewCurrencyModel){
-            if (innerViewCurrencyModel.isSelected){
+        fun bind(currencyModel: CurrencyModel, isSelected:Boolean, isFavorite:Boolean){
+            if (isSelected){
                 binding.container.setContentPadding(0,15,0,15)
                 binding.menuContainer.visibility = VISIBLE
             }
@@ -32,11 +34,18 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 binding.menuContainer.visibility = GONE
             }
 
-            binding.title.text = innerViewCurrencyModel.currencyModel.currencyCode
-            binding.subTitle.text = innerViewCurrencyModel.currencyModel.currencyName
-            binding.buyText.text = innerViewCurrencyModel.currencyModel.buyPrice
-            binding.sellText.text = innerViewCurrencyModel.currencyModel.salePrice
-            if (innerViewCurrencyModel.currencyModel.percentage.contains("-")){
+            binding.title.text = currencyModel.currencyCode
+            binding.subTitle.text = currencyModel.currencyName
+            binding.buyText.text = currencyModel.buyPrice.toString()
+            binding.sellText.text = currencyModel.salePrice.toString()
+            if (isFavorite){
+                binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_selected_favorite, binding.root.resources.newTheme()))
+            }
+            else{
+                binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_favorite, binding.root.resources.newTheme()))
+            }
+
+            if (currencyModel.percentage.contains("-")){
                 binding.increaseImage.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_increase_down, binding.root.resources.newTheme()))
                 binding.increaseText.setTextColor(binding.root.resources.getColor(R.color.odak_red, binding.root.resources.newTheme()))
             }
@@ -44,13 +53,13 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 binding.increaseImage.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_increase_up, binding.root.resources.newTheme()))
                 binding.increaseText.setTextColor(binding.root.resources.getColor(R.color.odak_green, binding.root.resources.newTheme()))
             }
-            binding.increaseText.text = innerViewCurrencyModel.currencyModel.percentage
+            binding.increaseText.text = currencyModel.percentage
 
             binding.detail.setOnClickListener {
-                println("detail")
+                listener.innerViewForDetailOnClickListener(currencyModel)
             }
             binding.favorite.setOnClickListener {
-                println("favorite")
+                listener.innerViewAddFavoriteOnClickListener(currencyModel, isFavorite)
             }
             binding.converter.setOnClickListener {
                 println("converter")
@@ -64,17 +73,24 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ItemInnerViewBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(ItemInnerViewBinding.inflate(LayoutInflater.from(parent.context), parent, false), listener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(arrayList[position])
+        var isFavorite = false
+        favoriteArrayList.forEach {
+           if (it.currencyCode == arrayList[position].currencyCode){
+               isFavorite = true
+           }
+        }
+        holder.bind(arrayList[position], arrayList[position] == selectedModel, isFavorite)
         holder.itemView.setOnClickListener {
-            if (arrayList[position].isSelected){
+            if (arrayList[position] == selectedModel){
                 listener.innerViewForDetailOnClickListener(arrayList[position])
             }
             else{
                 listener.innerViewOnClickListener(position)
+                selectedModel = arrayList[0]
             }
         }
     }
@@ -83,9 +99,9 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         return arrayList.size
     }
 
-    fun insertNewParam(currencyModelList: List<InnerViewCurrencyModel>){
+    fun insertNewParam(currencyModelList: List<CurrencyModel>, favoriteArray: ArrayList<String>){
         currencyModelList.forEach {
-            when (it.currencyModel.currencyType){
+            when (it.currencyType){
                 0 ->{
                     dollarArrayList.add(it)
                 }
@@ -95,7 +111,9 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 2 ->{
                     cryptoArrayList.add(it)
                 }
-                else ->{
+            }
+            favoriteArray.let { favoriteArray->
+                if (favoriteArray.contains(it.currencyCode) && !favoriteArrayList.contains(it)){
                     favoriteArrayList.add(it)
                 }
             }
@@ -104,44 +122,72 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         notifyItemInserted(arrayList.size)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun addFavorite(currencyModel: CurrencyModel){
+        favoriteArrayList.add(currencyModel)
+        notifyItemChanged(arrayList.indexOf(currencyModel))
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun deleteFavorite(currencyModel: CurrencyModel){
+        if (_type>2){
+            favoriteArrayList.remove(currencyModel)
+            arrayList.remove(currencyModel)
+            notifyDataSetChanged()
+        }
+        else{
+            favoriteArrayList.remove(currencyModel)
+            notifyItemChanged(arrayList.indexOf(currencyModel))
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     fun changeType(type : Int){
         when(type){
             0 ->{
                 notifyItemRangeRemoved(0, arrayList.size)
                 arrayList.clear()
-                dataSetChange(dollarArrayList)
                 arrayList.addAll(dollarArrayList)
                 notifyItemInserted(arrayList.size)
             }
             1 ->{
                 notifyItemRangeRemoved(0, arrayList.size)
                 arrayList.clear()
-                dataSetChange(goldBarArrayList)
                 arrayList.addAll(goldBarArrayList)
                 notifyItemInserted(arrayList.size)
             }
             2 ->{
                 notifyItemRangeRemoved(0, arrayList.size)
                 arrayList.clear()
-                dataSetChange(cryptoArrayList)
                 arrayList.addAll(cryptoArrayList)
                 notifyItemInserted(arrayList.size)
             }
             else ->{
                 notifyItemRangeRemoved(0, arrayList.size)
                 arrayList.clear()
-                dataSetChange(favoriteArrayList)
                 arrayList.addAll(favoriteArrayList)
                 notifyItemInserted(arrayList.size)
             }
         }
+        selectedModel = null
+        _type = type
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun changeItems(currencyCode:List<String>, currencyModel: CurrencyModel){
+        val isFavorite = currencyCode.contains(currencyModel.currencyCode)
+        if (isFavorite){
+            addFavorite(currencyModel)
+        }
+        else{
+            deleteFavorite(currencyModel)
+        }
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun selectItem(position: Int){
         val selected = arrayList.removeAt(position)
-        arrayList[0].isSelected = false
-        selected.isSelected = true
         arrayList.add(0, selected)
         notifyItemMoved(position, 0)
         layoutManager.scrollToPosition(0)
@@ -155,14 +201,9 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         }.start()
     }
 
-    private fun dataSetChange(list:List<InnerViewCurrencyModel>){
-        list.forEach {
-            it.isSelected = false
-        }
-    }
-
     interface InnerViewListener{
         fun innerViewOnClickListener(position: Int)
-        fun innerViewForDetailOnClickListener(innerViewCurrencyModel:InnerViewCurrencyModel)
+        fun innerViewForDetailOnClickListener(currencyModel:CurrencyModel)
+        fun innerViewAddFavoriteOnClickListener(currencyModel:CurrencyModel, isFavorite: Boolean)
     }
 }

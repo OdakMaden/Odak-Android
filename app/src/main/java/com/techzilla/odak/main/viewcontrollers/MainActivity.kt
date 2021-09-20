@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             backgroundMenu(isOpenMenu)
         }
 
-        binding.piyasa.setOnClickListener {
+        binding.market.setOnClickListener {
             println("piyasa")
         }
         binding.converter.setOnClickListener {
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun backgroundMenu(isEnable:Boolean){
-        binding.piyasa.isEnabled = isEnable
+        binding.market.isEnabled = isEnable
         binding.converter.isEnabled = isEnable
         binding.call.isEnabled = isEnable
         binding.notification.isEnabled = isEnable

@@ -2,11 +2,10 @@ package com.techzilla.odak.auth.viewcontroller
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 import android.view.WindowInsets
+import androidx.appcompat.app.AppCompatActivity
 import com.techzilla.odak.databinding.ActivityLoginBinding
 import com.techzilla.odak.main.viewcontrollers.MainActivity
 
