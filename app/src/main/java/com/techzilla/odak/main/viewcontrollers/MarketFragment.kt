@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.techzilla.odak.R
@@ -63,6 +64,19 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
         binding.cryptoContainer.setOnClickListener {
             selectBottomItem(binding.cryptoContainer)
         }
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener, androidx.appcompat.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                p0?.let {
+                    adapter.searchItems(p0.lowercase())
+                }
+                return true
+            }
+        })
         adapter.insertNewParam(list, USER.favoriteCodeList)
     }
 

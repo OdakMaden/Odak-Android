@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.R
 import com.techzilla.odak.databinding.ItemInnerViewBinding
@@ -185,6 +186,25 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
     }
 
+    fun searchItems(text: String){
+        notifyItemRangeRemoved(0, arrayList.size)
+        arrayList.clear()
+        when (_type){
+            0 ->{
+                arrayList.addAll(searchFunction(dollarArrayList, text))
+            }
+            1 ->{
+                arrayList.addAll(searchFunction(goldBarArrayList, text))
+            }
+            2 ->{
+                arrayList.addAll(searchFunction(cryptoArrayList, text))
+            }
+            else ->{
+                arrayList.addAll(searchFunction(favoriteArrayList, text))
+            }
+        }
+        notifyItemInserted(0)
+    }
     @SuppressLint("NotifyDataSetChanged")
     fun selectItem(position: Int){
         val selected = arrayList.removeAt(position)
@@ -199,6 +219,16 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 notifyDataSetChanged()
             }
         }.start()
+    }
+
+    private fun searchFunction(searchList: ArrayList<CurrencyModel>, text: String):ArrayList<CurrencyModel>{
+        val result = ArrayList<CurrencyModel>()
+        searchList.forEach {
+            if (it.currencyCode.lowercase().contains(text) || it.currencyName.lowercase().contains(text)){
+                result.add(it)
+            }
+        }
+        return result
     }
 
     interface InnerViewListener{

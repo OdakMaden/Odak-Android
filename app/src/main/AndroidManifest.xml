@@ -4,10 +4,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:logo="@mipmap/logo_foreground"
-        android:roundIcon="@mipmap/logo_foreground"
+        android:logo="@mipmap/logo"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Odak">
         <activity
