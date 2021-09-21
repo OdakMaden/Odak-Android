@@ -144,11 +144,12 @@
         android:id="@+id/date_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginVertical="20dp"
+        android:layout_marginHorizontal="30dp"
         app:cardCornerRadius="5dp"
         app:cardBackgroundColor="@color/odak_blue"
         app:layout_constraintTop_toBottomOf="@id/lineChart"
-        app:layout_constraintBottom_toTopOf="@id/fluidSlider"
+        app:layout_constraintBottom_toTopOf="@id/fluidSlider_container"
         app:layout_constraintVertical_bias="1">
         <LinearLayout
             android:layout_width="match_parent"
@@ -206,17 +207,75 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <com.ramotion.fluidslider.FluidSlider
-        android:id="@+id/fluidSlider"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fluidSlider_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:text_size="10sp"
-        app:size="small"
-        app:bar_color="@color/odak_blue"
-        app:bubble_text_color="@color/odak_blue"
-        app:layout_constraintBottom_toTopOf="@id/lowest_highest_container"
+        app:cardBackgroundColor="@color/odak_blue"
         android:layout_marginHorizontal="30dp"
-        />
+        app:cardCornerRadius="8dp"
+        app:layout_constraintBottom_toTopOf="@id/lowest_highest_container">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/selected_date"
+                style="@style/odak.textview.currency_detail.selected_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail.clock.button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+            <TextView
+                android:id="@+id/lowest_slider_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/selected_date"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <TextView
+                android:id="@+id/highest_slider_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/selected_date"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/slider_way"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                app:cardBackgroundColor="@color/odak_light_blue"
+                app:cardCornerRadius="2dp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="6dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/slider_circle"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:cardCornerRadius="10dp"
+                android:layout_marginHorizontal="5dp"
+                app:layout_constraintVertical_bias="0.75"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:id="@+id/lowest_highest_container"

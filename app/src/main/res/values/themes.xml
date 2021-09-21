@@ -120,6 +120,13 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <style name="odak.textview.currency_detail.selected_date" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="fontFamily">@font/metropolis_semi_bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
     <style name="odak.textview.currency_detail.increase" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">11sp</item>

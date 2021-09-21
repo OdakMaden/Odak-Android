@@ -9,7 +9,7 @@
         <entry key="app/src/main/res/drawable/main_background.xml" value="0.17109375" />
         <entry key="app/src/main/res/drawable/search_query_background.xml" value="0.17109375" />
         <entry key="app/src/main/res/drawable/search_view_background.xml" value="0.17109375" />
-        <entry key="app/src/main/res/layout/activity_currency_detail.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/activity_currency_detail.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.21197916666666666" />

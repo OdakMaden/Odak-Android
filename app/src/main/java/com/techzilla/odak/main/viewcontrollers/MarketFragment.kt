@@ -140,6 +140,8 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
                 adapter.changeType(2)
             }
         }
+
+        binding.searchView.setQuery("", true)
     }
 
     private fun getStatusBarHeight(): Int{

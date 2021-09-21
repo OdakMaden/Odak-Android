@@ -5,9 +5,11 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
+import android.view.animation.AccelerateInterpolator
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -90,15 +92,65 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         binding.increaseText.text = currencyModel.percentage
 
         val decimalFormat = DecimalFormat("#.#####")
-        binding.fluidSlider.apply {
-            endText = decimalFormat.format(currencyModel.buyPrice * 1.01)
-            startText = decimalFormat.format(currencyModel.buyPrice / 1.01)
-            bubbleText = decimalFormat.format(currencyModel.buyPrice)
-            isPressed = false
-        }
-        binding.highestText.text = decimalFormat.format(currencyModel.buyPrice * 1.01)
-        binding.lowestText.text = decimalFormat.format(currencyModel.buyPrice / 1.01)
 
+        binding.lowestSliderText.text = decimalFormat.format(currencyModel.salePrice / 1.01)
+        binding.highestSliderText.text = decimalFormat.format(currencyModel.salePrice * 1.01)
+        binding.highestText.text = decimalFormat.format(currencyModel.salePrice * 1.01)
+        binding.lowestText.text = decimalFormat.format(currencyModel.salePrice / 1.01)
+
+        object : CountDownTimer(100,100){
+            override fun onTick(p0: Long) {
+            }
+
+            override fun onFinish() {
+                changeSliderCirclePosition(currencyModel.salePrice, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+            }
+        }.start()
+
+        object : CountDownTimer(2000,100){
+            override fun onTick(p0: Long) {
+            }
+
+            override fun onFinish() {
+                changeSliderCirclePosition(currencyModel.salePrice * 1.005, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+            }
+        }.start()
+
+        object : CountDownTimer(5000,100){
+            override fun onTick(p0: Long) {
+            }
+
+            override fun onFinish() {
+                changeSliderCirclePosition(currencyModel.salePrice / 1.005, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+            }
+        }.start()
+
+        object : CountDownTimer(8000,100){
+            override fun onTick(p0: Long) {
+            }
+
+            override fun onFinish() {
+                changeSliderCirclePosition(8.36, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+            }
+        }.start()
+
+        object : CountDownTimer(11000,100){
+            override fun onTick(p0: Long) {
+            }
+
+            override fun onFinish() {
+                changeSliderCirclePosition(8.52804, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+            }
+        }.start()
+
+        object : CountDownTimer(14000,100){
+            override fun onTick(p0: Long) {
+            }
+
+            override fun onFinish() {
+                changeSliderCirclePosition(currencyModel.salePrice, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+            }
+        }.start()
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -192,6 +244,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 binding.monthText.isSelected = true
             }
         }
+        binding.selectedDate.text = textView.text
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -258,6 +311,11 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             // set data
             binding.lineChart.data = data
         }
+    }
+
+    private fun changeSliderCirclePosition(salePrice: Double, minSalePrice: Double, maxSalePrice:Double){
+        binding.sliderCircle.animate().translationX((binding.sliderWay.width * ((salePrice - minSalePrice) / (maxSalePrice - minSalePrice))).toFloat())
+            .setInterpolator(AccelerateInterpolator()).setDuration(500).start()
     }
 
     override fun onValueSelected(e: Entry?, h: Highlight?) {
