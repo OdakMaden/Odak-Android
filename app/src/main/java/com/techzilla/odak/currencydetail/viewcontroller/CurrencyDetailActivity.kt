@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
@@ -166,41 +167,87 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         binding.lineChart.setScaleEnabled(true)
         binding.lineChart.setPinchZoom(true)
 
+
+
+        val values = ArrayList<String>()
+        for (i in 0..7){
+            values.add(i, "$i.gün")
+        }
+        binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
+        setData(values.size, 100f)
+
         binding.lineChart.xAxis.apply {
+            setDrawGridLines(false)
+            textColor = Color.WHITE
+            labelRotationAngle = -90f
+            setLabelCount(4, false)
             position = XAxis.XAxisPosition.BOTTOM
-            enableGridDashedLine(10f, 0f, 0f)
-            axisMaximum = 9f
-            axisMinimum = 1f
-            gridColor = resources.getColor(R.color.odak_chart_bakground_line_blue, resources.newTheme())
-            textColor = Color.WHITE
         }
+
+
         binding.lineChart.axisRight.isEnabled = false
+
         binding.lineChart.axisLeft.apply {
-            enableGridDashedLine(10f,0f, 0f)
-            gridColor = resources.getColor(R.color.odak_chart_bakground_line_blue, resources.newTheme())
-            axisMaximum = 100f
-            axisMinimum = 0f
+            setDrawGridLines(false)
+            setLabelCount(10, false)
             textColor = Color.WHITE
         }
+
 
         binding.lineChart.axisLeft.setDrawLimitLinesBehindData(true)
         binding.lineChart.xAxis.setDrawLimitLinesBehindData(true)
 
-        setData(10, 90f)
+       // setData(30, 90f)
         binding.lineChart.animateX(1500)
         binding.lineChart.legend.form = Legend.LegendForm.NONE
 
         binding.clockText.setOnClickListener {
             selectedDateButton(it as TextView)
+
+            val values = ArrayList<String>()
+            for (i in 0..60){
+                values.add(i, "$i.dakika")
+            }
+            binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
+            setData(values.size, 100f)
+
+            binding.lineChart.invalidate()
         }
         binding.dayText.setOnClickListener {
             selectedDateButton(it as TextView)
+
+            val values = ArrayList<String>()
+            for (i in 0..24){
+                values.add(i, "$i.saat")
+            }
+            binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
+            setData(values.size, 100f)
+
+            binding.lineChart.invalidate()
         }
         binding.weekText.setOnClickListener {
             selectedDateButton(it as TextView)
+
+            val values = ArrayList<String>()
+            for (i in 0..7){
+                values.add(i, "$i.gün")
+            }
+            binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
+            setData(values.size, 100f)
+
+            binding.lineChart.invalidate()
         }
         binding.monthText.setOnClickListener {
             selectedDateButton(it as TextView)
+
+            val values = ArrayList<String>()
+            for (i in 0..30){
+                values.add(i, "$i.GÜN")
+            }
+            binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
+            setData(values.size, 100f)
+
+            binding.lineChart.invalidate()
         }
 
         binding.favorite.setOnClickListener {
@@ -251,7 +298,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
     private fun setData(count: Int, range: Float) {
         val values: ArrayList<Entry> = ArrayList()
         for (i in 0 until count) {
-            val `val` = (Math.random() * range).toFloat() - 10
+            val `val` = (Math.random() * range).toFloat()
             values.add(Entry(i.toFloat(), `val`, resources.getDrawable(R.drawable.star, resources.newTheme())))
         }
         val set1: LineDataSet
@@ -259,7 +306,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             binding.lineChart.data.dataSetCount > 0
         ) {
             set1 =
-                binding.lineChart.data.getDataSetByIndex(0) as LineDataSet //.getDataSetByIndex(0)
+                binding.lineChart.data.getDataSetByIndex(0) as LineDataSet
             set1.values = values
             set1.notifyDataSetChanged()
             binding.lineChart.data.notifyDataChanged()

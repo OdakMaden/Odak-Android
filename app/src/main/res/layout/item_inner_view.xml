@@ -72,7 +72,7 @@
 
             <TextView
                 android:id="@+id/buy_text"
-                style="@style/odak.textview.item_inner_view.mid_text"
+                style="@style/odak.textview.item_inner_view.mid_text.price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/buy_default_text"
@@ -82,7 +82,7 @@
 
             <TextView
                 android:id="@+id/sell_text"
-                style="@style/odak.textview.item_inner_view.mid_text"
+                style="@style/odak.textview.item_inner_view.mid_text.price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/buy_default_text"
@@ -92,8 +92,8 @@
 
             <ImageView
                 android:id="@+id/increase_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:src="@drawable/icon_increase_up"
                 app:layout_constraintTop_toBottomOf="@id/buy_default_text"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -154,8 +154,9 @@
             <ImageView
                 android:id="@+id/detail"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="23dp"
                 android:layout_weight="0.24"
+                android:layout_marginVertical="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_graph"
                 />
@@ -167,8 +168,9 @@
             <ImageView
                 android:id="@+id/favorite"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="23dp"
                 android:layout_weight="0.24"
+                android:layout_marginVertical="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_favorite"
                 />
@@ -180,24 +182,26 @@
             <ImageView
                 android:id="@+id/converter"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="23dp"
                 android:layout_weight="0.24"
+                android:layout_marginVertical="4dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_dollar"
+                android:src="@drawable/icon_converter"
                 />
             <androidx.cardview.widget.CardView
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="4dp"
                 />
+
             <ImageView
                 android:id="@+id/alarm"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="23dp"
                 android:layout_weight="0.24"
+                android:layout_marginVertical="4dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_notification"
-                />
+                android:src="@drawable/icon_notification" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

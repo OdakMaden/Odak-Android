@@ -10,6 +10,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
+import com.techzilla.odak.converter.viewcontrollers.ConverterFragment
 import com.techzilla.odak.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -36,9 +37,11 @@ class MainActivity : AppCompatActivity() {
         binding.container.isSelected = isOpenMenu
 
         supportFragmentManager.beginTransaction().apply {
-            this.add(binding.fragmentContainer.id, MarketFragment())
+            add(binding.fragmentContainer.id, MarketFragment())
             commit()
         }
+
+
 
         binding.defaultClickContainer.setOnClickListener {
             isEnableChange()
@@ -77,10 +80,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.market.setOnClickListener {
-            println("piyasa")
+            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, MarketFragment()).commit()
         }
         binding.converter.setOnClickListener {
-            println("converter")
+           // supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, ConverterFragment()).commit()
         }
         binding.call.setOnClickListener {
             println("call")

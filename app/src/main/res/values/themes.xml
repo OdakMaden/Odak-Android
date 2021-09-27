@@ -24,7 +24,7 @@
     <style name="odak.textview.menu_title" parent="Widget.AppCompat.TextView">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/white</item>
-        <item name="fontFamily">@font/metropolis_medium</item>
+        <item name="fontFamily">@font/metropolis_black</item>
         <item name="android:maxLines">1</item>
         <item name="android:gravity">center_vertical</item>
     </style>
@@ -53,7 +53,15 @@
 
     <style name="odak.textview.item_inner_view.mid_text" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="fontFamily">@font/metropolis_black</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="odak.textview.item_inner_view.mid_text.price" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="fontFamily">@font/metropolis_black</item>
         <item name="android:gravity">center_horizontal</item>
@@ -61,7 +69,7 @@
 
     <style name="odak.textview.item_inner_view.sub_title" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">7sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="fontFamily">@font/metropolis_medium</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_marginTop">2dp</item>
@@ -70,7 +78,7 @@
 
     <style name="odak.textview.currency_detail.title" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:layout_marginTop">15dp</item>
         <item name="fontFamily">@font/metropolis_black</item>
         <item name="android:gravity">center_horizontal</item>
@@ -98,8 +106,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:gravity">center</item>
         <item name="fontFamily">@font/metropolis_black</item>
-        <item name="android:textSize">17sp</item>
-        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:layout_marginBottom">5dp</item>
     </style>
 
@@ -121,7 +128,7 @@
     </style>
 
     <style name="odak.textview.currency_detail.selected_date" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/odak_light_blue</item>
         <item name="fontFamily">@font/metropolis_semi_bold</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_margin">10dp</item>
