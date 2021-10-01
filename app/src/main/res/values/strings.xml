@@ -14,10 +14,10 @@
     <string name="menu.logout.label">ÇIKIŞ</string>
 
     <!--Bottom Menu-->
-    <string name="menu.favorite.button">Favori</string>
-    <string name="menu.currency.button">Döviz</string>
-    <string name="menu.goldBar.button">Altın</string>
-    <string name="menu.crypto.button">Kripto</string>
+    <string name="menu.favorite.button">FAVORİ</string>
+    <string name="menu.currency.button">DÖVİZ</string>
+    <string name="menu.goldBar.button">ALTIN</string>
+    <string name="menu.crypto.button">KRİPTO</string>
 
     <!--Currency item-->
     <string name="item.buy.label">ALİŞ</string>
@@ -32,8 +32,18 @@
     <string name="detail.month.button">1 AY</string>
     <string name="detail.lowest.label">EN DÜŞÜK</string>
     <string name="detail.highest.label">EN YÜKSEK</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- Alarm -->
+    <string name="alarm.title.label">ALARM</string>
+    <string name="alarm.newAlarm.label">YENİ BİR ALARM OLUŞTURMAK İÇİN \n + SİMGESİNE TIKLAYIN.</string>
+    <string name="alarm.createAlarm.button">ALARM OLUŞTUR</string>
+    <string name="alarm.lastPrice.label">SON FİYAT: </string>
+    <string name="alarm.price.label">FİYAT</string>
+    <string name="alarm.distance.labal">FARK</string>
+    <string name="alarm.if_up.button">ÜZERİNE ÇIKARSA</string>
+    <string name="alarm.if_down.button">ALTINA İNERSE</string>
+    <string name="alarm.aim_title.label">HEDEF %@</string>
+    <string name="alarm.minimum.label">MİNİMUM</string>
+    <string name="alarm.maximum.label">MAKSİMUM</string>
 
 </resources>

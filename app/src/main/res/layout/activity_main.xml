@@ -137,7 +137,7 @@
             android:src="@drawable/icon_menu"
             android:translationZ="0dp"
             android:layout_marginStart="20dp"
-            android:backgroundTint="@android:color/transparent"
+            android:background="@android:color/transparent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/guideline_menu_horizontal"
             app:layout_constraintBottom_toBottomOf="@id/guideline_menu_horizontal"

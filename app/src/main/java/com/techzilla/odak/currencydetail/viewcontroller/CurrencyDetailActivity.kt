@@ -1,6 +1,9 @@
 package com.techzilla.odak.currencydetail.viewcontroller
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.os.Build
@@ -11,6 +14,8 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.animation.AccelerateInterpolator
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.components.Legend
@@ -24,6 +29,8 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.techzilla.odak.R
+import com.techzilla.odak.alarm.constant.currencyModelForDetail
+import com.techzilla.odak.alarm.viewcontroller.AlarmDetailActivity
 import com.techzilla.odak.databinding.ActivityCurrencyDetailBinding
 import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
 import com.techzilla.odak.shared.constants.USER
@@ -37,6 +44,13 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
     private var _binding : ActivityCurrencyDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var currencyModel: CurrencyModel
+
+    private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
+        if (result.resultCode == RESULT_OK){
+            AlertDialog.Builder(this).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"
+            ) { dialog, p1 ->  dialog.dismiss()}.show()
+        }
+    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -270,6 +284,13 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             }
             isChangeInnerViewCurrencyModel = currencyModel
         }
+
+        binding.alarm.setOnClickListener {
+            startResult.launch(Intent(this, AlarmDetailActivity::class.java).also {
+                currencyModelForDetail = currencyModel
+            })
+        }
+
     }
 
     private fun selectedDateButton(textView: TextView){

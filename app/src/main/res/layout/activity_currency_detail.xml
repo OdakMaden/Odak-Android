@@ -11,8 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-
         <ImageButton
             android:id="@+id/back_btn"
             android:src="@drawable/icon_back"
@@ -269,11 +267,11 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/slider_circle"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_marginHorizontal="5dp"
                     app:cardBackgroundColor="@color/odak_light_blue"
-                    app:cardCornerRadius="10dp"
+                    app:cardCornerRadius="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0"

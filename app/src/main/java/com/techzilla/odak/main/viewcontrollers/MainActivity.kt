@@ -12,6 +12,7 @@ import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import com.techzilla.odak.converter.viewcontrollers.ConverterFragment
 import com.techzilla.odak.databinding.ActivityMainBinding
+import com.techzilla.odak.alarm.viewcontroller.AlarmFragment
 
 class MainActivity : AppCompatActivity() {
     private var _binding : ActivityMainBinding? = null
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         binding.container.isSelected = isOpenMenu
 
         supportFragmentManager.beginTransaction().apply {
+            //add(binding.fragmentContainer.id, MarketFragment())
+
             add(binding.fragmentContainer.id, MarketFragment())
             commit()
         }
@@ -45,11 +48,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.defaultClickContainer.setOnClickListener {
             isEnableChange()
-            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1500
+            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1000
             binding.container.animate()
                 .translationX(0.0f)
-                .translationY(0.0f)
-                .setInterpolator(AccelerateInterpolator()).duration = 1500
+               // .translationY(0.0f)
+                .setInterpolator(AccelerateInterpolator()).duration = 1000
             binding.defaultClickContainer.visibility = GONE
         }
 
@@ -59,19 +62,20 @@ class MainActivity : AppCompatActivity() {
             if (isOpenMenu){
                 binding.defaultClickContainer.visibility = VISIBLE
                 isEnableChange()
-                binding.menuButton.animate().rotation(90.0f).setInterpolator(AccelerateInterpolator()).duration=1500
+                binding.menuButton.animate().rotation(90.0f).setInterpolator(AccelerateInterpolator()).duration=1000
                 binding.container.animate()
                     .translationX((binding.root.width * 0.6).toFloat())
-                    .translationY((binding.root.height * 0.25).toFloat())
-                    .setInterpolator(AccelerateInterpolator()).duration = 1500
+                    //.translationY((binding.root.height * 0.25).toFloat())
+                    .translationY(0.0f)
+                    .setInterpolator(AccelerateInterpolator()).duration = 1000
             }
             else{
                 isEnableChange()
-                binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1500
+                binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1000
                 binding.container.animate()
                     .translationX(0.0f)
-                    .translationY(0.0f)
-                    .setInterpolator(AccelerateInterpolator()).duration = 1500
+                    //.translationY(0.0f)
+                    .setInterpolator(AccelerateInterpolator()).duration = 1000
                 binding.defaultClickContainer.visibility = GONE
             }
             binding.container.isSelected = isOpenMenu
@@ -83,13 +87,13 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, MarketFragment()).commit()
         }
         binding.converter.setOnClickListener {
-           // supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, ConverterFragment()).commit()
+            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, ConverterFragment()).commit()
         }
         binding.call.setOnClickListener {
             println("call")
         }
         binding.notification.setOnClickListener {
-            println("notification")
+            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, AlarmFragment()).commit()
         }
         binding.logout.setOnClickListener {
             println("logout")
@@ -100,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         binding.defaultClickContainer.isEnabled = false
         binding.menuButton.isEnabled = false
 
-        object : CountDownTimer(1500, 500){
+        object : CountDownTimer(1000, 500){
             override fun onTick(p0: Long) {
             }
             override fun onFinish() {

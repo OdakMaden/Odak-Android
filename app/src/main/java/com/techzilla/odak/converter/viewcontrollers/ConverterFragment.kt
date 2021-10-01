@@ -1,26 +1,28 @@
 package com.techzilla.odak.converter.viewcontrollers
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.R
 import com.techzilla.odak.converter.adapter.ItemPickerAdapter
-import com.techzilla.odak.converter.model.ConverterCurrency
 import com.techzilla.odak.databinding.FragmentConverterBinding
+import com.techzilla.odak.shared.constants.converterList
 import java.text.DecimalFormat
 
 
 class ConverterFragment : Fragment() {
 
     private val binding by lazy { FragmentConverterBinding.inflate(layoutInflater) }
-    private val fromAdapter by lazy { ItemPickerAdapter(0) }
-    private val toAdapter by lazy { ItemPickerAdapter(1) }
+    private val fromAdapter by lazy { ItemPickerAdapter() }
+    private val toAdapter by lazy { ItemPickerAdapter() }
     private val decimalFormat = DecimalFormat("#.#####")
 
     override fun onCreateView(
@@ -34,43 +36,24 @@ class ConverterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.currencyButtonText.isSelected = true
-        binding.currencyBottomLine.isSelected = true
+        binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
+        selectBottomItem(binding.dollarContainer, true)
 
-        binding.currencyButton.setOnClickListener {
-            binding.currencyButtonText.isSelected = true
-            binding.currencyBottomLine.isSelected = true
-            binding.goldBarButtonText.isSelected = false
-            binding.goldBarBottomLine.isSelected = false
+        binding.dollarContainer.setOnClickListener {
+            selectBottomItem(binding.dollarContainer, false)
         }
-
-        binding.goldBarButton.setOnClickListener {
-            binding.currencyButtonText.isSelected = false
-            binding.currencyBottomLine.isSelected = false
-            binding.goldBarButtonText.isSelected = true
-            binding.goldBarBottomLine.isSelected = true
+        binding.goldBarsContainer.setOnClickListener {
+            selectBottomItem(binding.goldBarsContainer, false)
+        }
+        binding.cryptoContainer.setOnClickListener {
+            selectBottomItem(binding.cryptoContainer, false)
         }
 
         binding.fromRecyclerview.adapter = fromAdapter
         binding.toRecyclerview.adapter = toAdapter
 
-        val arrayList = ArrayList<ConverterCurrency>()
-        arrayList.add(ConverterCurrency(" ", " ", 0.0))
-        arrayList.add(ConverterCurrency("TRY", "Lira", 1.0))
-        arrayList.add(ConverterCurrency("USD", "Dolar", 8.8))
-        arrayList.add(ConverterCurrency("EURO", "Euro", 10.34))
-        arrayList.add(ConverterCurrency("SE", "Seeeas", 3.4))
-        arrayList.add(ConverterCurrency("ADA", "Cardana", 24.3))
-        arrayList.add(ConverterCurrency("AS", "asda", 344.333))
-        arrayList.add(ConverterCurrency("TRY", "Lira",1.0))
-        arrayList.add(ConverterCurrency("USD", "Dolar", 8.8))
-        arrayList.add(ConverterCurrency("EURO", "Euro", 10.34))
-        arrayList.add(ConverterCurrency("SE", "Seeeas", 3.4))
-        arrayList.add(ConverterCurrency("ADA", "Cardana", 24.3))
-        arrayList.add(ConverterCurrency("AS1", "asdsdaa", 3432.2))
-        arrayList.add(ConverterCurrency(" ", " ", 0.0))
-        fromAdapter.addNewItem(arrayList )
-        toAdapter.addNewItem(arrayList)
+        fromAdapter.addNewItem(converterList)
+        toAdapter.addNewItem(converterList)
 
         binding.fromRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -81,16 +64,17 @@ class ConverterFragment : Fragment() {
                         val offset = (binding.fromRecyclerview.height / itemHeight - 1) / 2
                         layoutManager?.let {
                             var position = it.findFirstCompletelyVisibleItemPosition()
+                            val lastPosition = it.findLastCompletelyVisibleItemPosition()
                             if (position+1 != fromAdapter.getSelectedPosition()){
                                 position += offset
-                                if (position in 0 until arrayList.size) {
+                                if (position in 0 until fromAdapter.getShowListSize()) {
                                     fromAdapter.setPositionToItem(position)
                                     scrollToItem(itemHeight, it, position, recyclerView)
                                     updateChangeText()
                                 }
                             }
-                            else{
-                                if (position in 0 until arrayList.size) {
+                            else if (lastPosition == fromAdapter.getSelectedPosition()){
+                                if (position in 0 until fromAdapter.getShowListSize()) {
                                     fromAdapter.setPositionToItem(position)
                                     scrollToItem(itemHeight, it, position, recyclerView)
                                     updateChangeText()
@@ -130,14 +114,14 @@ class ConverterFragment : Fragment() {
                             val lastPosition = it.findLastCompletelyVisibleItemPosition()
                             if (position+1 != toAdapter.getSelectedPosition()){
                                 position += offset
-                                if (position in 0 until arrayList.size) {
+                                if (position in 0 until toAdapter.getShowListSize()) {
                                     toAdapter.setPositionToItem(position)
                                     scrollToItem(itemHeight, it, position, recyclerView)
                                     updateChangeText()
                                 }
                             }
                             else if (lastPosition == toAdapter.getSelectedPosition()){
-                                if (position in 0 until arrayList.size) {
+                                if (position in 0 until toAdapter.getShowListSize()) {
                                     toAdapter.setPositionToItem(position)
                                     scrollToItem(itemHeight, it, position, recyclerView)
                                     updateChangeText()
@@ -150,7 +134,7 @@ class ConverterFragment : Fragment() {
         })
 
       //  binding.fromCode.text = fromAdapter.getSelectedItem().currencyCode
-      //  binding.toPieceCode.text = toAdapter.getSelectedItem().currencyCode
+        //binding.toPieceCode.text = toAdapter.getSelectedItem().currencyCode
         binding.fromPiece.addTextChangedListener { _it ->
             if (_it.toString() != ""){
                 binding.resultPrice.text = decimalFormat.format(_it.toString().toDouble() * binding.toPiecePrice.text.toString().toDouble())
@@ -159,15 +143,17 @@ class ConverterFragment : Fragment() {
                 binding.resultPrice.text = decimalFormat.format(0 * binding.toPiecePrice.text.toString().toDouble())
             }
         }
+
+
         updateChangeText()
-     //   binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().currencyPrice / fromAdapter.getSelectedItem().currencyPrice)
-     //   binding.resultPrice.text = decimalFormat.format(binding.fromPiece.text.toString().toDouble() / binding.toPiecePrice.text.toString().toDouble())
+        binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().salePrice / fromAdapter.getSelectedItem().salePrice)
+        binding.resultPrice.text = decimalFormat.format(binding.fromPiece.text.toString().toDouble() / binding.toPiecePrice.text.toString().toDouble())
     }
 
     private fun updateChangeText(){
-        binding.fromCode.text = fromAdapter.getSelectedItem().currencyCode
-        binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().currencyPrice / fromAdapter.getSelectedItem().currencyPrice)
-        binding.toPieceCode.text = toAdapter.getSelectedItem().currencyCode
+       // binding.fromCode.text = fromAdapter.getSelectedItem().currencyCode
+        binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().salePrice / fromAdapter.getSelectedItem().salePrice)
+        //binding.toPieceCode.text = toAdapter.getSelectedItem().currencyCode
         binding.fromPiece.text.toString().let { fromPiece->
             if (fromPiece == ""){
                 binding.resultPrice.text = decimalFormat.format(0 * binding.toPiecePrice.text.toString().toDouble())
@@ -194,4 +180,62 @@ class ConverterFragment : Fragment() {
             })
         }
     }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun selectBottomItem(constraintLayout: ConstraintLayout, isFirst:Boolean){
+        when(constraintLayout){
+            binding.dollarContainer->{
+                binding.dollarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_dollar_selected, resources.newTheme()))
+                binding.dollarText.setTextColor(resources.getColor(R.color.odak_light_blue, resources.newTheme()))
+                binding.goldBarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_gold_bars, resources.newTheme()))
+                binding.goldBarText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
+                binding.bitcoinIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_bitcoin, resources.newTheme()))
+                binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
+
+                fromAdapter.changeType(0)
+                toAdapter.changeType(0)
+                if (!isFirst){
+                    updateChangeText()
+                }
+            }
+            binding.goldBarsContainer->{
+                binding.dollarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_dollar, resources.newTheme()))
+                binding.dollarText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
+                binding.goldBarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_gold_bars_selected, resources.newTheme()))
+                binding.goldBarText.setTextColor(resources.getColor(R.color.odak_light_blue, resources.newTheme()))
+                binding.bitcoinIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_bitcoin, resources.newTheme()))
+                binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
+
+                fromAdapter.changeType(1)
+                toAdapter.changeType(1)
+                if (!isFirst){
+                    updateChangeText()
+                }
+            }
+            binding.cryptoContainer->{
+                binding.dollarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_dollar, resources.newTheme()))
+                binding.dollarText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
+                binding.goldBarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_gold_bars, resources.newTheme()))
+                binding.goldBarText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
+                binding.bitcoinIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_bitcoin_selected, resources.newTheme()))
+                binding.bitcoinText.setTextColor(resources.getColor(R.color.odak_light_blue, resources.newTheme()))
+
+                fromAdapter.changeType(2)
+                toAdapter.changeType(2)
+                if (!isFirst){
+                    updateChangeText()
+                }
+            }
+        }
+    }
+
+    private fun getStatusBarHeight(): Int{
+        var result = 0
+        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        if (resourceId>0){
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
+    }
+
 }

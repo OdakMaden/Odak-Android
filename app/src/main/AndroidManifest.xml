@@ -11,6 +11,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Odak">
         <activity
+            android:name=".alarm.viewcontroller.AlarmDetailActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true" />
+        <activity
+            android:name=".alarm.viewcontroller.AddAlarmActivity"
+            android:exported="true" />
+        <activity
             android:name=".currencydetail.viewcontroller.CurrencyDetailActivity"
             android:exported="true" />
         <activity
@@ -19,7 +26,6 @@
         <activity
             android:name=".auth.viewcontroller.LoginActivity"
             android:exported="true" />
-
         <activity
             android:name=".splash.viewcontroller.SplashActivity"
             android:exported="true">

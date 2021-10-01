@@ -10,12 +10,14 @@
 
 
     <color name="soft_white">#42FFFFFF</color>
+    <color name="half_white">#F2FFFFFF</color>
+    <color name="half_transparent_white">#80FFFFFF</color>
     <color name="odak_red">#F50808</color>
     <color name="odak_green">#04FE42</color>
     <color name="odak_dark_blue">#05256A</color>
     <color name="odak_blue">#1A3C84</color>
     <color name="odak_light_blue">#00A7FF</color>
     <color name="odak_line_blue">#00FFFF</color>
-    <color name="odak_line_blue_transparent">#3300FFFF</color>
     <color name="odak_chart_bakground_line_blue">#00B9FF</color>
+    <color name="odak_blue_gray">#858FA7</color>
 </resources>
