@@ -2,33 +2,29 @@ package com.techzilla.odak.converter.viewcontrollers
 
 import android.annotation.SuppressLint
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowInsets
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.R
+import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.converter.adapter.ItemPickerAdapter
 import com.techzilla.odak.databinding.ActivityConverterBinding
-import com.techzilla.odak.shared.constants.converterList
 import com.techzilla.odak.shared.constants.exchangeRateList
-import com.techzilla.odak.shared.model.CurrencyModel
 import com.techzilla.odak.shared.model.CurrencyTypeEnum
-import com.techzilla.odak.shared.service.repository.MainRepository
 import java.text.DecimalFormat
 
 class ConverterActivity : AppCompatActivity() {
     private val binding : ActivityConverterBinding by lazy { ActivityConverterBinding.inflate(layoutInflater) }
 
-    private val fromAdapter by lazy { ItemPickerAdapter() }
-    private val toAdapter by lazy { ItemPickerAdapter() }
+    private val fromAdapter by lazy { ItemPickerAdapter(0) }
+    private val toAdapter by lazy { ItemPickerAdapter(1) }
     private val decimalFormat = DecimalFormat("#.#####")
-
-    private lateinit var mainRepository: MainRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,27 +38,18 @@ class ConverterActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
-/*
-        mainRepository = MainRepository()
-        //selectBottomItem(binding.dollarContainer, true)
 
-        mainRepository.getExchangeRateList()
-        mainRepository.exchangeRateListLiveData.observe(this, { list->
-
-            selectBottomItem(binding.dollarContainer, true)
-
-
-        })
-
- */
+        selectBottomItem(binding.dollarContainer, true)
         binding.fromRecyclerview.adapter = fromAdapter
         binding.toRecyclerview.adapter = toAdapter
 
         fromAdapter.addNewItem(exchangeRateList)
         toAdapter.addNewItem(exchangeRateList)
+
+        exchangeRateDTOForDetail?.let {
+            fromAdapter.setFocusItemWithCode(it, binding.fromRecyclerview.layoutManager as LinearLayoutManager)
+        }
         updateChangeText()
-        binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().sellingRate / fromAdapter.getSelectedItem().sellingRate)
-        binding.resultPrice.text = decimalFormat.format(binding.fromPiece.text.toString().toDouble() * binding.toPiecePrice.text.toString().toDouble())
 
         binding.dollarContainer.setOnClickListener {
             selectBottomItem(binding.dollarContainer, false)
@@ -78,20 +65,6 @@ class ConverterActivity : AppCompatActivity() {
             setResult(RESULT_CANCELED)
             finish()
         }
-        //fromAdapter.addNewItem(converterList)
-        //toAdapter.addNewItem(converterList)
-
-        /*
-        currencyModelForDetail?.let {
-            fromAdapter.setFocusItemWithCode(CurrencyModel("TÜRK LİRASI", "TRY", 1.0, 1.0, "0", it.currencyType),
-                binding.fromRecyclerview.layoutManager as LinearLayoutManager
-            )
-            toAdapter.setFocusItemWithCode(it,
-                binding.toRecyclerview.layoutManager as LinearLayoutManager
-            )
-        }
-
-         */
 
         binding.fromRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -183,7 +156,7 @@ class ConverterActivity : AppCompatActivity() {
 
 
     private fun updateChangeText(){
-        binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().sellingRate / fromAdapter.getSelectedItem().sellingRate)
+        binding.toPiecePrice.text = decimalFormat.format(fromAdapter.getSelectedItem().sellingRate / toAdapter.getSelectedItem().sellingRate)
         binding.fromPiece.text.toString().let { fromPiece->
             if (fromPiece == ""){
                 binding.resultPrice.text = decimalFormat.format(0 * binding.toPiecePrice.text.toString().toDouble())

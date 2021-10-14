@@ -8,9 +8,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.techzilla.odak.R
+import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.databinding.ActivityAlarmDetailBinding
 import java.text.DecimalFormat
 
@@ -37,19 +39,19 @@ class AlarmDetailActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         }
 
-       /* if (currencyModelForDetail == null){
+        if (exchangeRateDTOForDetail == null){
             Toast.makeText(this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_SHORT).show()
             finish()
         }
 
-        */
 
-        /*
-        currencyModelForDetail?.let {
-            binding.currencyCode.text = it.currencyCode
-            binding.currencyName.text = it.currencyName
-            binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${decimalFormat.format(it.salePrice)}"
-            binding.aimPrice.setText(decimalFormat.format(it.salePrice))
+
+
+        exchangeRateDTOForDetail?.let {
+            binding.currencyCode.text = it.code
+            binding.currencyName.text = it.name
+            binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${decimalFormat.format(it.sellingRate)}"
+            binding.aimPrice.setText(decimalFormat.format(it.sellingRate))
             binding.priceButton.isSelected = true
             binding.aimLabelTitle.text =
                 resources.getString(R.string.alarm_aim_title_label).replace("%@", binding.priceButton.text.toString())
@@ -58,7 +60,6 @@ class AlarmDetailActivity : AppCompatActivity() {
             binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
         }
 
-         */
 
         binding.ifDownButton.setOnClickListener {
             if (!binding.ifDownButtonText.isSelected){
@@ -125,24 +126,60 @@ class AlarmDetailActivity : AppCompatActivity() {
 
 
         binding.aimPrice.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            if (!hasFocus){
+                if (isPrice && !isDistance){
+                    when {
+                        binding.aimPrice.text.toString().replace("% ", "").toDouble() < (exchangeRateDTOForDetail!!.sellingRate * 0.8) -> {
+                            binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 0.8).toString())
+                            binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
+                            getResultSlider(binding.sliderCircle.x)
+                        }
+                        binding.aimPrice.text.toString().replace("% ", "").toDouble() > (exchangeRateDTOForDetail!!.sellingRate * 1.2) -> {
+                            binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 1.2).toString())
+                            binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
+                            getResultSlider(binding.sliderCircle.x)
+                        }
+                        else -> {
+                            changeSliderTitleWithEditText(binding.aimPrice.text.toString().replace("% ", ""))
+                        }
+                    }
+                }
+                else if(!isPrice && isDistance){
+                    when {
+                        binding.aimPrice.text.toString().replace("% ", "").toDouble() < (exchangeRateDTOForDetail!!.sellingRate * 0.8) -> {
+                            binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 0.8).toString())
+                            binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
+                            getResultSlider(binding.sliderCircle.x)
+                        }
+                        binding.aimPrice.text.toString().replace("% ", "").toDouble() > (exchangeRateDTOForDetail!!.sellingRate * 1.2) -> {
+                            binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 1.2).toString())
+                            binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
+                            getResultSlider(binding.sliderCircle.x)
+                        }
+                        else -> {
+                            changeSliderTitleWithEditText(binding.aimPrice.text.toString().replace("% ", ""))
+                        }
+                    }
+                }
+                /*when {
+                    binding.aimPrice.text.toString().replace("% ", "").toDouble() < (exchangeRateDTOForDetail!!.sellingRate * 0.8) -> {
+                        binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 0.8).toString())
+                        binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
+                        getResultSlider(binding.sliderCircle.x)
+                    }
+                    binding.aimPrice.text.toString().replace("% ", "").toDouble() > (exchangeRateDTOForDetail!!.sellingRate * 1.2) -> {
+                        binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 1.2).toString())
+                        binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
+                        getResultSlider(binding.sliderCircle.x)
+                    }
+                    else -> {
+                        changeSliderTitleWithEditText(binding.aimPrice.text.toString().replace("% ", ""))
+                    }
+                }
 
-            /*if (!hasFocus){
-                if (binding.aimPrice.text.toString().toDouble() < (currencyModelForDetail!!.salePrice * 0.8)) {
-                    binding.aimPrice.setText((currencyModelForDetail!!.salePrice * 0.8).toString())
-                    binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
-                    getResultSlider(binding.sliderCircle.x)
-                }
-                else if (binding.aimPrice.text.toString().toDouble() > (currencyModelForDetail!!.salePrice * 1.2)){
-                    binding.aimPrice.setText((currencyModelForDetail!!.salePrice * 1.2).toString())
-                    binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
-                    getResultSlider(binding.sliderCircle.x)
-                }
-                else{
-                    changeSliderTitleWithEditText(binding.aimPrice.text.toString())
-                }
+                 */
             }
 
-             */
         }
 
         binding.sliderCircleWay.setOnTouchListener { view, motionEvent ->
@@ -169,13 +206,13 @@ class AlarmDetailActivity : AppCompatActivity() {
                 (binding.sliderWay.width)
 
         val decimalFactor = DecimalFormat("#.#").format(result * 20).toDouble()
-        /*currencyModelForDetail?.let {
+        exchangeRateDTOForDetail?.let {
             if (isPrice && !isDistance){
                 if (isIfUp && !isIfDown){
-                    binding.aimPrice.setText(decimalFormat.format(it.salePrice * (decimalFactor / 100 + 1)))
+                    binding.aimPrice.setText(decimalFormat.format(it.sellingRate * (decimalFactor / 100 + 1)))
                 }
                 else if (!isIfUp && isIfDown){
-                    binding.aimPrice.setText(decimalFormat.format((it.salePrice ) * (0.8 + decimalFactor / 100)))
+                    binding.aimPrice.setText(decimalFormat.format((it.sellingRate ) * (0.8 + decimalFactor / 100)))
                 }
             }
             else if(!isPrice && isDistance){
@@ -187,20 +224,18 @@ class AlarmDetailActivity : AppCompatActivity() {
                 }
             }
         }
-
-         */
     }
 
     private fun changeSliderTitleWithEditText(text : String){
-        /*currencyModelForDetail?.let {
+        exchangeRateDTOForDetail?.let {
             if (isPrice && !isDistance){
                 val textFloat = text.toFloat()
                 val sliderValue = (binding.sliderCircleWay.width - (binding.sliderCircleWay.width - binding.sliderWay.width) / 2  )
                 if (isIfUp && !isIfDown){
-                    binding.sliderCircle.x = (sliderValue * (((textFloat - (it.salePrice)) / ((it.salePrice*1.2) - (it.salePrice)))).toFloat()) - binding.sliderCircle.width / 2
+                    binding.sliderCircle.x = (sliderValue * (((textFloat - (it.sellingRate)) / ((it.sellingRate*1.2) - (it.sellingRate)))).toFloat()) - binding.sliderCircle.width / 2
                 }
                 else if (!isIfUp && isIfDown){
-                    binding.sliderCircle.x = (sliderValue * (((textFloat - (it.salePrice * 0.8)) / ((it.salePrice) - (it.salePrice * 0.8)))).toFloat()) - binding.sliderCircle.width / 2
+                    binding.sliderCircle.x = (sliderValue * (((textFloat - (it.sellingRate * 0.8)) / ((it.sellingRate) - (it.sellingRate * 0.8)))).toFloat()) - binding.sliderCircle.width / 2
                 }
             }
             else if(!isPrice && isDistance){
@@ -212,8 +247,6 @@ class AlarmDetailActivity : AppCompatActivity() {
                 }
             }
         }
-
-         */
     }
 
 }

@@ -14,9 +14,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.techzilla.odak.R
 import com.techzilla.odak.alarm.adapter.AddAlarmRecyclerviewAdapter
+import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.databinding.ActivityAddAlarmBinding
-import com.techzilla.odak.shared.constants.list
-import com.techzilla.odak.shared.model.CurrencyModel
+import com.techzilla.odak.shared.constants.exchangeRateList
+import com.techzilla.odak.shared.model.ExchangeRateDTO
 
 class AddAlarmActivity : AppCompatActivity(), AddAlarmRecyclerviewAdapter.AddAlarmListener {
 
@@ -48,7 +49,7 @@ class AddAlarmActivity : AppCompatActivity(), AddAlarmRecyclerviewAdapter.AddAla
         binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
         binding.alarmRecyclerview.adapter = adapter
         selectBottomItem(binding.dollarContainer)
-        adapter.insertParseList(list)
+        adapter.insertParseList(exchangeRateList)
 
         binding.dollarContainer.setOnClickListener {
             selectBottomItem(binding.dollarContainer)
@@ -86,11 +87,11 @@ class AddAlarmActivity : AppCompatActivity(), AddAlarmRecyclerviewAdapter.AddAla
         return result
     }
 
-    override fun addAlarmForDetail(currencyModel: CurrencyModel) {
-        adapter.selectItem(currencyModel)
+    override fun addAlarmForDetail(exchangeRateDTO: ExchangeRateDTO) {
+        adapter.selectItem(exchangeRateDTO)
         startForResult.launch(
             Intent(this, AlarmDetailActivity::class.java).also {
-                //currencyModelForDetail = currencyModel
+                exchangeRateDTOForDetail = exchangeRateDTO
             }
         )
     }

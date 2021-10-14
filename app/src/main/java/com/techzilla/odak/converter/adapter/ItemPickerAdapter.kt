@@ -9,7 +9,7 @@ import com.techzilla.odak.databinding.ItemPickerElementBinding
 import com.techzilla.odak.shared.model.CurrencyTypeEnum
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 
-class ItemPickerAdapter : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
+class ItemPickerAdapter (private val adapterType:Int) : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
 
     private val dollarArrayList = ArrayList<ExchangeRateDTO>()
     private val goldBarArrayList = ArrayList<ExchangeRateDTO>()
@@ -17,7 +17,7 @@ class ItemPickerAdapter : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
     private val arrayList = ArrayList<ExchangeRateDTO>()
     private var _type : CurrencyTypeEnum = CurrencyTypeEnum.Money
     private var selectedPosition = 1
-    private var _layoutManager:RecyclerView.LayoutManager? = null
+   // private var _layoutManager:RecyclerView.LayoutManager? = null
 
     class ViewHolder(private val binding: ItemPickerElementBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -71,7 +71,16 @@ class ItemPickerAdapter : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
         goldBarArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Metal, "", 0.0f,0.0f))
         cryptoArrayList.add(0,ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Crypto, "", 0.0f,0.0f))
         cryptoArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Crypto, "", 0.0f,0.0f))
-
+        if (adapterType == 0){
+            dollarArrayList.add(dollarArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Money, "", 1.0f, 1.0f))
+            goldBarArrayList.add(goldBarArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Metal, "", 1.0f, 1.0f))
+            cryptoArrayList.add(cryptoArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Crypto, "", 1.0f, 1.0f))
+        }
+        else{
+            dollarArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Money, "", 1.0f, 1.0f))
+            goldBarArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Metal, "", 1.0f, 1.0f))
+            cryptoArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Crypto, "", 1.0f, 1.0f))
+        }
         arrayList.addAll(dollarArrayList)
         notifyItemInserted(dollarArrayList.size)
     }
@@ -99,14 +108,11 @@ class ItemPickerAdapter : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun setFocusItemWithCode(forItem:ExchangeRateDTO, layoutManager: LinearLayoutManager){
-        _layoutManager = layoutManager
         changeType(forItem.currencyType)
-        arrayList.forEach {
-            if (forItem.code.contains(it.code)){
-                selectedPosition = arrayList.indexOf(it)
-                layoutManager.scrollToPosition(arrayList.indexOf(it) - 1)
-            }
-        }
+
+        selectedPosition = arrayList.indexOf(forItem)
+        layoutManager.scrollToPosition(arrayList.indexOf(forItem) - 1)
+
         notifyDataSetChanged()
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/default_background"
+    android:background="#162658"
     tools:context=".splash.viewcontroller.SplashActivity">
 
     <LinearLayout
@@ -17,15 +17,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.3">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/odak_logo_1"
+        <VideoView
+            android:id="@+id/video_view"
+            android:backgroundTint="@android:color/transparent"
+            android:background="@android:color/transparent"
+            android:layout_width="179dp"
+            android:layout_height="204dp"
             />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:src="@drawable/odak_logo_2"
             />
 

@@ -16,18 +16,16 @@ import com.techzilla.odak.converter.adapter.ItemPickerAdapter
 import com.techzilla.odak.databinding.FragmentConverterBinding
 import com.techzilla.odak.shared.constants.exchangeRateList
 import com.techzilla.odak.shared.model.CurrencyTypeEnum
-import com.techzilla.odak.shared.service.repository.MainRepository
 import java.text.DecimalFormat
 
 
 class ConverterFragment : Fragment() {
 
     private val binding by lazy { FragmentConverterBinding.inflate(layoutInflater) }
-    private val fromAdapter by lazy { ItemPickerAdapter() }
-    private val toAdapter by lazy { ItemPickerAdapter() }
+    private val fromAdapter by lazy { ItemPickerAdapter(0) }
+    private val toAdapter by lazy { ItemPickerAdapter(1) }
     private val decimalFormat = DecimalFormat("#.#####")
 
-    private lateinit var mainRepository : MainRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,36 +38,19 @@ class ConverterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
-        //selectBottomItem(binding.dollarContainer, true)
-
-        mainRepository = MainRepository()
-        //selectBottomItem(binding.dollarContainer, true)
 
         binding.fromRecyclerview.adapter = fromAdapter
         binding.toRecyclerview.adapter = toAdapter
 
-/*
-        mainRepository = MainRepository()
-        //selectBottomItem(binding.dollarContainer, true)
 
-        mainRepository.getExchangeRateList()
-        mainRepository.exchangeRateListLiveData.observe(requireActivity(), { list->
-
-            selectBottomItem(binding.dollarContainer, true)
-
-
-        })
-
- */
         binding.fromRecyclerview.adapter = fromAdapter
         binding.toRecyclerview.adapter = toAdapter
 
         fromAdapter.addNewItem(exchangeRateList)
         toAdapter.addNewItem(exchangeRateList)
         updateChangeText()
-        binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().sellingRate / fromAdapter.getSelectedItem().sellingRate)
-        binding.resultPrice.text = decimalFormat.format(binding.fromPiece.text.toString().toDouble() * binding.toPiecePrice.text.toString().toDouble())
 
+        selectBottomItem(binding.dollarContainer, true)
 
         binding.dollarContainer.setOnClickListener {
             selectBottomItem(binding.dollarContainer, false)
@@ -80,9 +61,6 @@ class ConverterFragment : Fragment() {
         binding.cryptoContainer.setOnClickListener {
             selectBottomItem(binding.cryptoContainer, false)
         }
-
-        //fromAdapter.addNewItem(converterList)
-        //toAdapter.addNewItem(converterList)
 
         binding.fromRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -173,7 +151,7 @@ class ConverterFragment : Fragment() {
     }
 
     private fun updateChangeText(){
-        binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().sellingRate / fromAdapter.getSelectedItem().sellingRate)
+        binding.toPiecePrice.text = decimalFormat.format(fromAdapter.getSelectedItem().sellingRate / toAdapter.getSelectedItem().sellingRate)
         binding.fromPiece.text.toString().let { fromPiece->
             if (fromPiece == ""){
                 binding.resultPrice.text = decimalFormat.format(0 * binding.toPiecePrice.text.toString().toDouble())

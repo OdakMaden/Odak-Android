@@ -5,22 +5,23 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.databinding.ItemAlarmBinding
-import com.techzilla.odak.shared.model.CurrencyModel
+import com.techzilla.odak.shared.model.CurrencyTypeEnum
+import com.techzilla.odak.shared.model.ExchangeRateDTO
 
 class AddAlarmRecyclerviewAdapter(private val listener:AddAlarmListener) : RecyclerView.Adapter<AddAlarmRecyclerviewAdapter.ViewHolder>(){
 
-    private val dollarArrayList = ArrayList<CurrencyModel>()
-    private val goldBarArrayList = ArrayList<CurrencyModel>()
-    private val cryptoArrayList = ArrayList<CurrencyModel>()
-    private val arrayList = ArrayList<CurrencyModel>()
-    private var selectedModel: CurrencyModel? = null
+    private val dollarArrayList = ArrayList<ExchangeRateDTO>()
+    private val goldBarArrayList = ArrayList<ExchangeRateDTO>()
+    private val cryptoArrayList = ArrayList<ExchangeRateDTO>()
+    private val arrayList = ArrayList<ExchangeRateDTO>()
+    private var selectedModel: ExchangeRateDTO? = null
     private var _type = 0
 
 
     inner class ViewHolder(private val binding: ItemAlarmBinding): RecyclerView.ViewHolder(binding.root){
-        fun bindHolder(currencyModel:CurrencyModel, isSelected:Boolean){
-            binding.currencyCode.text = currencyModel.currencyCode
-            binding.currencyName.text = currencyModel.currencyName
+        fun bindHolder(exchangeRateDTO:ExchangeRateDTO, isSelected:Boolean){
+            binding.currencyCode.text = exchangeRateDTO.code
+            binding.currencyName.text = exchangeRateDTO.name
 
             if (isSelected){
                 binding.currencyCode.isSelected = true
@@ -55,17 +56,20 @@ class AddAlarmRecyclerviewAdapter(private val listener:AddAlarmListener) : Recyc
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun insertParseList(fullData : List<CurrencyModel>){
+    fun insertParseList(fullData : List<ExchangeRateDTO>){
         fullData.forEach {
             when(it.currencyType){
-                0 ->{
+                CurrencyTypeEnum.Money ->{
                     dollarArrayList.add(it)
                 }
-                1 ->{
+                CurrencyTypeEnum.Metal ->{
                     goldBarArrayList.add(it)
                 }
-                2 ->{
+                CurrencyTypeEnum.Crypto ->{
                     cryptoArrayList.add(it)
+                }
+                CurrencyTypeEnum.Parity ->{
+                    dollarArrayList.add(it)
                 }
             }
         }
@@ -117,15 +121,15 @@ class AddAlarmRecyclerviewAdapter(private val listener:AddAlarmListener) : Recyc
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun selectItem(currencyModel: CurrencyModel){
-        selectedModel = currencyModel
+    fun selectItem(exchangeRateDTO: ExchangeRateDTO){
+        selectedModel = exchangeRateDTO
         notifyDataSetChanged()
     }
 
-    private fun searchFunction(searchList: ArrayList<CurrencyModel>, text: String):ArrayList<CurrencyModel>{
-        val result = ArrayList<CurrencyModel>()
+    private fun searchFunction(searchList: ArrayList<ExchangeRateDTO>, text: String):ArrayList<ExchangeRateDTO>{
+        val result = ArrayList<ExchangeRateDTO>()
         searchList.forEach {
-            if (it.currencyCode.lowercase().contains(text) || it.currencyName.lowercase().contains(text)){
+            if (it.code.lowercase().contains(text) || it.name.lowercase().contains(text)){
                 result.add(it)
             }
         }
@@ -133,6 +137,6 @@ class AddAlarmRecyclerviewAdapter(private val listener:AddAlarmListener) : Recyc
     }
 
     interface AddAlarmListener{
-        fun addAlarmForDetail(currencyModel: CurrencyModel)
+        fun addAlarmForDetail(exchangeRateDTO: ExchangeRateDTO)
     }
 }

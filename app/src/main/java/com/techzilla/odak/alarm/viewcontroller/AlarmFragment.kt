@@ -28,6 +28,7 @@ class AlarmFragment : Fragment() {
                 startActivity(this)
             }
         }
+
         binding.createAlarmButton.setOnClickListener {
             Intent(requireActivity(), AddAlarmActivity::class.java).apply {
                 startActivity(this)
