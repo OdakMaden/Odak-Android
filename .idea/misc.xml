@@ -12,7 +12,8 @@
         <entry key="app/src/main/res/drawable/search_view_background.xml" value="0.17109375" />
         <entry key="app/src/main/res/layout/activity_add_alarm.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_alarm.xml" value="0.158984375" />
-        <entry key="app/src/main/res/layout/activity_alarm_detail.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_alarm_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_converter.xml" value="0.158984375" />
         <entry key="app/src/main/res/layout/activity_currency_detail.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
@@ -26,6 +27,7 @@
         <entry key="app/src/main/res/layout/item_alarm.xml" value="0.45" />
         <entry key="app/src/main/res/layout/item_inner_view.xml" value="0.375" />
         <entry key="app/src/main/res/layout/item_picker_element.xml" value="0.158984375" />
+        <entry key="app/src/main/res/layout/item_user_alarm.xml" value="0.335" />
         <entry key="app/src/main/res/menu/main_background_menu.xml" value="0.158984375" />
       </map>
     </option>

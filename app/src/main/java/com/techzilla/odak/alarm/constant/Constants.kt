@@ -1,5 +1,5 @@
 package com.techzilla.odak.alarm.constant
 
-import com.techzilla.odak.shared.model.CurrencyModel
+import com.techzilla.odak.shared.model.ExchangeRateDTO
 
-var currencyModelForDetail : CurrencyModel? = null
+var exchangeRateDTOForDetail : ExchangeRateDTO? = null

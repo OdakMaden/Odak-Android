@@ -1,31 +1,37 @@
 package com.techzilla.odak.main.adapters
 
 import android.annotation.SuppressLint
-import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.R
 import com.techzilla.odak.databinding.ItemInnerViewBinding
-import com.techzilla.odak.shared.model.CurrencyModel
+import com.techzilla.odak.shared.constants.timePatternYearMountDayHourMinuteSecond
+import com.techzilla.odak.shared.model.CurrencyTypeEnum
+import com.techzilla.odak.shared.model.ExchangeRateDTO
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, private val layoutManager: RecyclerView.LayoutManager) : RecyclerView.Adapter<InnerViewRecyclerViewAdapter.ViewHolder>() {
 
-    private val favoriteArrayList = ArrayList<CurrencyModel>()
-    private val dollarArrayList = ArrayList<CurrencyModel>()
-    private val goldBarArrayList = ArrayList<CurrencyModel>()
-    private val cryptoArrayList = ArrayList<CurrencyModel>()
-    private val arrayList = ArrayList<CurrencyModel>()
-    private var selectedModel: CurrencyModel? = null
+    private val favoriteArrayList = ArrayList<ExchangeRateDTO>()
+    private val dollarArrayList = ArrayList<ExchangeRateDTO>()
+    private val goldBarArrayList = ArrayList<ExchangeRateDTO>()
+    private val cryptoArrayList = ArrayList<ExchangeRateDTO>()
+    private val arrayList = ArrayList<ExchangeRateDTO>()
+    private var selectedModel: ExchangeRateDTO? = null
     private var _type = 4
 
     class ViewHolder(private val binding: ItemInnerViewBinding, private val listener: InnerViewListener) : RecyclerView.ViewHolder(binding.root){
 
-        @SuppressLint("UseCompatLoadingForDrawables")
-        fun bind(currencyModel: CurrencyModel, isSelected:Boolean, isFavorite:Boolean){
+        @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n", "SimpleDateFormat")
+        fun bind(exchangeRateDTO: ExchangeRateDTO, isSelected:Boolean, isFavorite:Boolean){
+
+            val percentage="0.0"
+
             if (isSelected){
                 binding.container.setContentPadding(0,15,0,15)
                 binding.menuContainer.visibility = VISIBLE
@@ -35,10 +41,10 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 binding.menuContainer.visibility = GONE
             }
 
-            binding.title.text = currencyModel.currencyCode
-            binding.subTitle.text = currencyModel.currencyName
-            binding.buyText.text = currencyModel.buyPrice.toString()
-            binding.sellText.text = currencyModel.salePrice.toString()
+            binding.title.text = exchangeRateDTO.code
+            binding.subTitle.text = exchangeRateDTO.name
+            binding.buyText.text = exchangeRateDTO.buyingRate.toString()
+            binding.sellText.text = exchangeRateDTO.sellingRate.toString()
             if (isFavorite){
                 binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_selected_favorite, binding.root.resources.newTheme()))
             }
@@ -46,7 +52,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_favorite, binding.root.resources.newTheme()))
             }
 
-            if (currencyModel.percentage.contains("-")){
+            if (percentage.contains("-")){
                 binding.increaseImage.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_increase_down, binding.root.resources.newTheme()))
                 binding.increaseText.setTextColor(binding.root.resources.getColor(R.color.odak_red, binding.root.resources.newTheme()))
             }
@@ -54,19 +60,27 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 binding.increaseImage.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_increase_up, binding.root.resources.newTheme()))
                 binding.increaseText.setTextColor(binding.root.resources.getColor(R.color.odak_green, binding.root.resources.newTheme()))
             }
-            binding.increaseText.text = currencyModel.percentage
+            binding.increaseText.text =  percentage//exchangeRateDTO.percentage
+
+            val dateShow = Calendar.getInstance()
+            val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(exchangeRateDTO.lastChangeTimeStamp.substring(0, exchangeRateDTO.lastChangeTimeStamp.length-14))
+            dateShow.time = date!!
+            val termMinute = if (dateShow.get(Calendar.MINUTE)> 10){dateShow.get(Calendar.MINUTE).toString()}else{"0${dateShow.get(Calendar.MINUTE)}"}
+            val termHour = if (dateShow.get(Calendar.HOUR_OF_DAY) > 10){dateShow.get(Calendar.HOUR_OF_DAY).toString()}else{"0${dateShow.get(Calendar.HOUR_OF_DAY)}"}
+            binding.subDate.text = "${termHour}:${termMinute}"
+
 
             binding.detail.setOnClickListener {
-                listener.innerViewForDetailOnClickListener(currencyModel)
+                listener.innerViewForDetailOnClickListener(exchangeRateDTO)
             }
             binding.favorite.setOnClickListener {
-                listener.innerViewAddFavoriteOnClickListener(currencyModel, isFavorite)
+                listener.innerViewAddFavoriteOnClickListener(exchangeRateDTO, isFavorite)
             }
             binding.converter.setOnClickListener {
-                println("converter")
+                listener.innerViewConverterOnClickListener(exchangeRateDTO)
             }
             binding.alarm.setOnClickListener {
-                println("alarm")
+                listener.innerViewAlarmOnClickListener(exchangeRateDTO)
             }
 
         }
@@ -80,7 +94,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var isFavorite = false
         favoriteArrayList.forEach {
-           if (it.currencyCode == arrayList[position].currencyCode){
+           if (it.code == arrayList[position].code){
                isFavorite = true
            }
         }
@@ -91,7 +105,6 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
             }
             else{
                 listener.innerViewOnClickListener(position)
-                selectedModel = arrayList[0]
             }
         }
     }
@@ -100,21 +113,24 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         return arrayList.size
     }
 
-    fun insertNewParam(currencyModelList: List<CurrencyModel>, favoriteArray: ArrayList<String>){
-        currencyModelList.forEach {
+    fun insertNewParam(exchangeRateDTOList: List<ExchangeRateDTO>, favoriteString: String){
+        exchangeRateDTOList.forEach {
             when (it.currencyType){
-                0 ->{
+                CurrencyTypeEnum.Money->{
                     dollarArrayList.add(it)
                 }
-                1 ->{
+                CurrencyTypeEnum.Metal ->{
                     goldBarArrayList.add(it)
                 }
-                2 ->{
+                CurrencyTypeEnum.Crypto ->{
                     cryptoArrayList.add(it)
                 }
+                CurrencyTypeEnum.Parity ->{
+                    dollarArrayList.add(it)
+                }
             }
-            favoriteArray.let { favoriteArray->
-                if (favoriteArray.contains(it.currencyCode) && !favoriteArrayList.contains(it)){
+            favoriteString.let { favoriteString->
+                if (favoriteString.contains(it.code) && !favoriteArrayList.contains(it)){
                     favoriteArrayList.add(it)
                 }
             }
@@ -124,21 +140,21 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addFavorite(currencyModel: CurrencyModel){
-        favoriteArrayList.add(currencyModel)
-        notifyItemChanged(arrayList.indexOf(currencyModel))
+    fun addFavorite(exchangeRateDTO: ExchangeRateDTO){
+        favoriteArrayList.add(exchangeRateDTO)
+        notifyItemChanged(arrayList.indexOf(exchangeRateDTO))
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun deleteFavorite(currencyModel: CurrencyModel){
+    fun deleteFavorite(exchangeRateDTO: ExchangeRateDTO){
         if (_type>2){
-            favoriteArrayList.remove(currencyModel)
-            arrayList.remove(currencyModel)
+            favoriteArrayList.remove(exchangeRateDTO)
+            arrayList.remove(exchangeRateDTO)
             notifyDataSetChanged()
         }
         else{
-            favoriteArrayList.remove(currencyModel)
-            notifyItemChanged(arrayList.indexOf(currencyModel))
+            favoriteArrayList.remove(exchangeRateDTO)
+            notifyItemChanged(arrayList.indexOf(exchangeRateDTO))
         }
     }
 
@@ -175,13 +191,13 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun changeItems(currencyCode:List<String>, currencyModel: CurrencyModel){
-        val isFavorite = currencyCode.contains(currencyModel.currencyCode)
+    fun changeItems(exchangeRateCodeList:List<String>, exchangeRateDTO: ExchangeRateDTO){
+        val isFavorite = exchangeRateCodeList.contains(exchangeRateDTO.code)
         if (isFavorite){
-            addFavorite(currencyModel)
+            addFavorite(exchangeRateDTO)
         }
         else{
-            deleteFavorite(currencyModel)
+            deleteFavorite(exchangeRateDTO)
         }
 
     }
@@ -205,8 +221,11 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         }
         notifyItemInserted(0)
     }
+
+
     @SuppressLint("NotifyDataSetChanged")
     fun selectItem(position: Int){
+        /*
         val selected = arrayList.removeAt(position)
         arrayList.add(0, selected)
         notifyItemMoved(position, 0)
@@ -219,12 +238,16 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 notifyDataSetChanged()
             }
         }.start()
+
+         */
+        selectedModel = arrayList[position]
+        notifyDataSetChanged()
     }
 
-    private fun searchFunction(searchList: ArrayList<CurrencyModel>, text: String):ArrayList<CurrencyModel>{
-        val result = ArrayList<CurrencyModel>()
+    private fun searchFunction(searchList: ArrayList<ExchangeRateDTO>, text: String):ArrayList<ExchangeRateDTO>{
+        val result = ArrayList<ExchangeRateDTO>()
         searchList.forEach {
-            if (it.currencyCode.lowercase().contains(text) || it.currencyName.lowercase().contains(text)){
+            if (it.code.lowercase().contains(text) || it.name.lowercase().contains(text)){
                 result.add(it)
             }
         }
@@ -233,7 +256,9 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
     interface InnerViewListener{
         fun innerViewOnClickListener(position: Int)
-        fun innerViewForDetailOnClickListener(currencyModel:CurrencyModel)
-        fun innerViewAddFavoriteOnClickListener(currencyModel:CurrencyModel, isFavorite: Boolean)
+        fun innerViewForDetailOnClickListener(exchangeRateDTO:ExchangeRateDTO)
+        fun innerViewAddFavoriteOnClickListener(exchangeRateDTO:ExchangeRateDTO, isFavorite: Boolean)
+        fun innerViewAlarmOnClickListener(exchangeRateDTO:ExchangeRateDTO)
+        fun innerViewConverterOnClickListener(exchangeRateDTO:ExchangeRateDTO)
     }
 }

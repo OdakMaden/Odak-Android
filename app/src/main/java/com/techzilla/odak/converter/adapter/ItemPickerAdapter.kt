@@ -3,24 +3,27 @@ package com.techzilla.odak.converter.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.databinding.ItemPickerElementBinding
-import com.techzilla.odak.shared.model.ConverterCurrency
+import com.techzilla.odak.shared.model.CurrencyTypeEnum
+import com.techzilla.odak.shared.model.ExchangeRateDTO
 
 class ItemPickerAdapter : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
 
-    private val dollarArrayList = ArrayList<ConverterCurrency>()
-    private val goldBarArrayList = ArrayList<ConverterCurrency>()
-    private val cryptoArrayList = ArrayList<ConverterCurrency>()
-    private val arrayList = ArrayList<ConverterCurrency>()
-    private var _type = 0
+    private val dollarArrayList = ArrayList<ExchangeRateDTO>()
+    private val goldBarArrayList = ArrayList<ExchangeRateDTO>()
+    private val cryptoArrayList = ArrayList<ExchangeRateDTO>()
+    private val arrayList = ArrayList<ExchangeRateDTO>()
+    private var _type : CurrencyTypeEnum = CurrencyTypeEnum.Money
     private var selectedPosition = 1
+    private var _layoutManager:RecyclerView.LayoutManager? = null
 
     class ViewHolder(private val binding: ItemPickerElementBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(converterCurrency: ConverterCurrency, isSelected: Boolean){
-            binding.currencyCode.text = converterCurrency.currencyCode
-            binding.currencyName.text = converterCurrency.currencyName
+        fun bind(converterCurrency: ExchangeRateDTO, isSelected: Boolean){
+            binding.currencyCode.text = converterCurrency.code
+            binding.currencyName.text = converterCurrency.name
 
             if (isSelected){
                 binding.currencyName.isSelected = true
@@ -45,33 +48,36 @@ class ItemPickerAdapter : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
         return arrayList.size
     }
 
-    fun addNewItem(currencies: List<ConverterCurrency>){
+    fun addNewItem(currencies: List<ExchangeRateDTO>){
         currencies.forEach {
             when(it.currencyType){
-                0 ->{
+                CurrencyTypeEnum.Money ->{
                     dollarArrayList.add(it)
                 }
-                1 ->{
+                CurrencyTypeEnum.Metal ->{
                     goldBarArrayList.add(it)
                 }
-                2 ->{
+                CurrencyTypeEnum.Crypto ->{
                     cryptoArrayList.add(it)
+                }
+                CurrencyTypeEnum.Parity ->{
+                    dollarArrayList.add(it)
                 }
             }
         }
-        dollarArrayList.add(0, ConverterCurrency(" ", " ",0.0, 0))
-        dollarArrayList.add(ConverterCurrency(" ", " ",0.0, 0))
-        goldBarArrayList.add(0, ConverterCurrency(" ", " ",0.0, 1))
-        goldBarArrayList.add(ConverterCurrency(" ", " ",0.0, 1))
-        cryptoArrayList.add(0,ConverterCurrency(" ", " ",0.0, 2))
-        cryptoArrayList.add(ConverterCurrency(" ", " ",0.0, 2))
+        dollarArrayList.add(0, ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Money, "", 0.0f,0.0f))
+        dollarArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Money, "", 0.0f,0.0f))
+        goldBarArrayList.add(0, ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Metal, "", 0.0f,0.0f))
+        goldBarArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Metal, "", 0.0f,0.0f))
+        cryptoArrayList.add(0,ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Crypto, "", 0.0f,0.0f))
+        cryptoArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Crypto, "", 0.0f,0.0f))
 
         arrayList.addAll(dollarArrayList)
-        notifyItemInserted(0)
+        notifyItemInserted(dollarArrayList.size)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setPositionToItem(position: Int): ConverterCurrency{
+    fun setPositionToItem(position: Int): ExchangeRateDTO{
         if (position != 0 || position != arrayList.size-1){
             selectedPosition = position
             notifyDataSetChanged()
@@ -83,7 +89,7 @@ class ItemPickerAdapter : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
         return selectedPosition
     }
 
-    fun getSelectedItem():ConverterCurrency{
+    fun getSelectedItem():ExchangeRateDTO{
         return arrayList[selectedPosition]
     }
 
@@ -92,24 +98,43 @@ class ItemPickerAdapter : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun changeType(type : Int){
+    fun setFocusItemWithCode(forItem:ExchangeRateDTO, layoutManager: LinearLayoutManager){
+        _layoutManager = layoutManager
+        changeType(forItem.currencyType)
+        arrayList.forEach {
+            if (forItem.code.contains(it.code)){
+                selectedPosition = arrayList.indexOf(it)
+                layoutManager.scrollToPosition(arrayList.indexOf(it) - 1)
+            }
+        }
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun changeType(type : CurrencyTypeEnum){
         when(type){
-            0 ->{
+            CurrencyTypeEnum.Money ->{
                 notifyItemRangeRemoved(0, arrayList.size)
                 arrayList.clear()
                 arrayList.addAll(dollarArrayList)
                 notifyItemInserted(arrayList.size)
             }
-            1 ->{
+            CurrencyTypeEnum.Metal ->{
                 notifyItemRangeRemoved(0, arrayList.size)
                 arrayList.clear()
                 arrayList.addAll(goldBarArrayList)
                 notifyItemInserted(arrayList.size)
             }
-            2 ->{
+            CurrencyTypeEnum.Crypto ->{
                 notifyItemRangeRemoved(0, arrayList.size)
                 arrayList.clear()
                 arrayList.addAll(cryptoArrayList)
+                notifyItemInserted(arrayList.size)
+            }
+            CurrencyTypeEnum.Parity ->{
+                notifyItemRangeRemoved(0, arrayList.size)
+                arrayList.clear()
+                arrayList.addAll(dollarArrayList)
                 notifyItemInserted(arrayList.size)
             }
         }

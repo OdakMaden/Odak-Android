@@ -8,3 +8,5 @@ data class CurrencyModel(
     val percentage : String,
     var currencyType : Int = 0
 )
+
+////silinecek

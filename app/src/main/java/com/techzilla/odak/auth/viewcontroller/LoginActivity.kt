@@ -1,17 +1,24 @@
 package com.techzilla.odak.auth.viewcontroller
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
+import com.techzilla.odak.R
 import com.techzilla.odak.databinding.ActivityLoginBinding
 import com.techzilla.odak.main.viewcontrollers.MainActivity
+import com.techzilla.odak.shared.service.repository.LoginRepository
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
     private var _binding : ActivityLoginBinding? = null
     private val binding get() =  _binding!!
+
+    private lateinit var loginRepository : LoginRepository
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -25,16 +32,26 @@ class LoginActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
+        loginRepository = LoginRepository()
+
         binding.loginButton.setOnClickListener {
             if (binding.password.text.length==6){
-                Intent(this, MainActivity::class.java).apply {
-                    startActivity(this)
-                    finish()
-                }
+                loginRepository.checkPassword(binding.password.text.toString(), this)
             }
         }
+    }
 
-
-
+    override fun checkPasswordListener(isCheck: Boolean) {
+        if (isCheck){
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(this)
+                finish()
+            }
+        }else{
+           AlertDialog.Builder(this).setMessage(resources.getString(R.string.alert_login_message)).setPositiveButton(
+               resources.getText(R.string.shared_Ok)
+           ) { dialog, p1 ->  dialog.dismiss()}.show()
+        }
     }
 }

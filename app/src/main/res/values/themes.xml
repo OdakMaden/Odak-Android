@@ -59,6 +59,13 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <style name="odak.textview.item_inner_view.code" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/metropolis_black</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
     <style name="odak.textview.item_inner_view.mid_text.price" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">16sp</item>

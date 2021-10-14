@@ -1,17 +1,16 @@
 package com.techzilla.odak.alarm.viewcontroller
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
-import android.view.animation.AccelerateInterpolator
-import android.widget.Toast
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.techzilla.odak.R
-import com.techzilla.odak.alarm.constant.currencyModelForDetail
 import com.techzilla.odak.databinding.ActivityAlarmDetailBinding
 import java.text.DecimalFormat
 
@@ -38,11 +37,14 @@ class AlarmDetailActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         }
 
-        if (currencyModelForDetail == null){
+       /* if (currencyModelForDetail == null){
             Toast.makeText(this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_SHORT).show()
             finish()
         }
 
+        */
+
+        /*
         currencyModelForDetail?.let {
             binding.currencyCode.text = it.currencyCode
             binding.currencyName.text = it.currencyName
@@ -55,6 +57,8 @@ class AlarmDetailActivity : AppCompatActivity() {
             binding.ifDownButtonText.isSelected = false
             binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
         }
+
+         */
 
         binding.ifDownButton.setOnClickListener {
             if (!binding.ifDownButtonText.isSelected){
@@ -109,10 +113,37 @@ class AlarmDetailActivity : AppCompatActivity() {
         }
 
 
+        binding.aimPriceIcon.setOnClickListener {
+            binding.aimPrice.requestFocus()
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.showSoftInput(binding.aimPrice, InputMethodManager.SHOW_IMPLICIT)
+        }
+
         binding.aimPrice.addTextChangedListener {
             binding.aimPrice.minWidth = 40
         }
 
+
+        binding.aimPrice.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+
+            /*if (!hasFocus){
+                if (binding.aimPrice.text.toString().toDouble() < (currencyModelForDetail!!.salePrice * 0.8)) {
+                    binding.aimPrice.setText((currencyModelForDetail!!.salePrice * 0.8).toString())
+                    binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
+                    getResultSlider(binding.sliderCircle.x)
+                }
+                else if (binding.aimPrice.text.toString().toDouble() > (currencyModelForDetail!!.salePrice * 1.2)){
+                    binding.aimPrice.setText((currencyModelForDetail!!.salePrice * 1.2).toString())
+                    binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
+                    getResultSlider(binding.sliderCircle.x)
+                }
+                else{
+                    changeSliderTitleWithEditText(binding.aimPrice.text.toString())
+                }
+            }
+
+             */
+        }
 
         binding.sliderCircleWay.setOnTouchListener { view, motionEvent ->
             if (motionEvent.action == MotionEvent.ACTION_MOVE && checkOnSliderWay(motionEvent.x)){
@@ -138,7 +169,7 @@ class AlarmDetailActivity : AppCompatActivity() {
                 (binding.sliderWay.width)
 
         val decimalFactor = DecimalFormat("#.#").format(result * 20).toDouble()
-        currencyModelForDetail?.let {
+        /*currencyModelForDetail?.let {
             if (isPrice && !isDistance){
                 if (isIfUp && !isIfDown){
                     binding.aimPrice.setText(decimalFormat.format(it.salePrice * (decimalFactor / 100 + 1)))
@@ -156,5 +187,33 @@ class AlarmDetailActivity : AppCompatActivity() {
                 }
             }
         }
+
+         */
     }
+
+    private fun changeSliderTitleWithEditText(text : String){
+        /*currencyModelForDetail?.let {
+            if (isPrice && !isDistance){
+                val textFloat = text.toFloat()
+                val sliderValue = (binding.sliderCircleWay.width - (binding.sliderCircleWay.width - binding.sliderWay.width) / 2  )
+                if (isIfUp && !isIfDown){
+                    binding.sliderCircle.x = (sliderValue * (((textFloat - (it.salePrice)) / ((it.salePrice*1.2) - (it.salePrice)))).toFloat()) - binding.sliderCircle.width / 2
+                }
+                else if (!isIfUp && isIfDown){
+                    binding.sliderCircle.x = (sliderValue * (((textFloat - (it.salePrice * 0.8)) / ((it.salePrice) - (it.salePrice * 0.8)))).toFloat()) - binding.sliderCircle.width / 2
+                }
+            }
+            else if(!isPrice && isDistance){
+                if (isIfUp && !isIfDown){
+
+                }
+                else if (!isIfUp && isIfDown){
+
+                }
+            }
+        }
+
+         */
+    }
+
 }

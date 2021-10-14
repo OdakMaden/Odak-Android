@@ -28,6 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
     <TextView
         android:id="@+id/currency_name"
         style="@style/odak.textview.currency_detail.sub_title"

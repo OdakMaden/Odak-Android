@@ -2,7 +2,6 @@ package com.techzilla.odak.currencydetail.viewcontroller
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.DashPathEffect
@@ -29,13 +28,11 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.techzilla.odak.R
-import com.techzilla.odak.alarm.constant.currencyModelForDetail
+import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.alarm.viewcontroller.AlarmDetailActivity
+import com.techzilla.odak.converter.viewcontrollers.ConverterActivity
 import com.techzilla.odak.databinding.ActivityCurrencyDetailBinding
-import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
-import com.techzilla.odak.shared.constants.USER
-import com.techzilla.odak.shared.constants.list
-import com.techzilla.odak.shared.model.CurrencyModel
+import com.techzilla.odak.shared.model.ExchangeRateDTO
 import java.text.DecimalFormat
 
 
@@ -43,7 +40,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
 
     private var _binding : ActivityCurrencyDetailBinding? = null
     private val binding get() = _binding!!
-    private lateinit var currencyModel: CurrencyModel
+    private lateinit var exchangeRateDTO: ExchangeRateDTO
+
+    private val percentage = "0"// silinecek
 
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
         if (result.resultCode == RESULT_OK){
@@ -67,18 +66,25 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
-        val currencyCode = intent.getStringExtra("currencyCode")
+       /* val exchangeRateCode = intent.getStringExtra("exchangeRateCode")
         list.forEach {
-            if (it.currencyCode == currencyCode){
+            if (it.currencyCode == exchangeRateCode){
                 currencyModel = it
             }
         }
 
-        binding.clockText.isSelected = true
-        binding.title.text = currencyModel.currencyCode
-        binding.subTitle.text = currencyModel.currencyName
-        binding.buyText.text = currencyModel.buyPrice.toString()
-        binding.sellText.text = currencyModel.salePrice.toString()
+        */
+        exchangeRateDTOForDetail?.let {
+            exchangeRateDTO = it
+            binding.clockText.isSelected = true
+            binding.title.text = it.code
+            binding.subTitle.text = it.name
+            binding.buyText.text = it.buyingRate.toString()
+            binding.sellText.text = it.sellingRate.toString()
+        }
+
+
+        /*
         if (USER.favoriteCodeList.contains(currencyModel.currencyCode)){
             binding.favorite.setImageDrawable(resources.getDrawable(R.drawable.icon_selected_favorite, resources.newTheme()))
         }
@@ -86,7 +92,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             binding.favorite.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite, resources.newTheme()))
         }
 
-        if (currencyModel.percentage.contains("-")) {
+         */
+
+        if (percentage.contains("-")) {
             binding.increase.setImageDrawable(
                 resources.getDrawable(
                     R.drawable.icon_increase_down,
@@ -104,21 +112,23 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             )
             binding.increaseText.setTextColor(resources.getColor(R.color.odak_green, resources.newTheme()))
         }
-        binding.increaseText.text = currencyModel.percentage
+        binding.increaseText.text = percentage
 
         val decimalFormat = DecimalFormat("#.#####")
 
-        binding.lowestSliderText.text = decimalFormat.format(currencyModel.salePrice / 1.01)
-        binding.highestSliderText.text = decimalFormat.format(currencyModel.salePrice * 1.01)
-        binding.highestText.text = decimalFormat.format(currencyModel.salePrice * 1.01)
-        binding.lowestText.text = decimalFormat.format(currencyModel.salePrice / 1.01)
+        binding.lowestSliderText.text = decimalFormat.format(exchangeRateDTO.sellingRate / 1.01)
+        binding.highestSliderText.text = decimalFormat.format(exchangeRateDTO.sellingRate * 1.01)
+        binding.highestText.text = decimalFormat.format(exchangeRateDTO.sellingRate * 1.01)
+        binding.lowestText.text = decimalFormat.format(exchangeRateDTO.sellingRate / 1.01)
 
         object : CountDownTimer(100,100){
             override fun onTick(p0: Long) {
             }
 
             override fun onFinish() {
-                changeSliderCirclePosition(currencyModel.salePrice, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+                changeSliderCirclePosition(exchangeRateDTO.sellingRate,
+                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
+                )
             }
         }.start()
 
@@ -127,7 +137,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             }
 
             override fun onFinish() {
-                changeSliderCirclePosition(currencyModel.salePrice * 1.005, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+                changeSliderCirclePosition(
+                    (exchangeRateDTO.sellingRate * 1.005).toFloat(),
+                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
+                )
             }
         }.start()
 
@@ -136,7 +149,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             }
 
             override fun onFinish() {
-                changeSliderCirclePosition(currencyModel.salePrice / 1.005, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+                changeSliderCirclePosition((exchangeRateDTO.sellingRate / 1.005).toFloat(),
+                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
+                )
             }
         }.start()
 
@@ -145,7 +160,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             }
 
             override fun onFinish() {
-                changeSliderCirclePosition(8.36, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+                changeSliderCirclePosition(8.36f,
+                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
+                )
             }
         }.start()
 
@@ -154,7 +171,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             }
 
             override fun onFinish() {
-                changeSliderCirclePosition(8.52804, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+                changeSliderCirclePosition(8.52804f,
+                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
+                )
             }
         }.start()
 
@@ -163,7 +182,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             }
 
             override fun onFinish() {
-                changeSliderCirclePosition(currencyModel.salePrice, currencyModel.salePrice / 1.01, currencyModel.salePrice * 1.01)
+                changeSliderCirclePosition(exchangeRateDTO.sellingRate,
+                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
+                )
             }
         }.start()
 
@@ -211,7 +232,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         binding.lineChart.axisLeft.setDrawLimitLinesBehindData(true)
         binding.lineChart.xAxis.setDrawLimitLinesBehindData(true)
 
-       // setData(30, 90f)
+        // setData(30, 90f)
         binding.lineChart.animateX(1500)
         binding.lineChart.legend.form = Legend.LegendForm.NONE
 
@@ -263,7 +284,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
 
             binding.lineChart.invalidate()
         }
-
+/*
         binding.favorite.setOnClickListener {
             if (USER.favoriteCodeList.contains(currencyModel.currencyCode)) {
                 USER.favoriteCodeList.remove(currencyModel.currencyCode)
@@ -285,12 +306,25 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             isChangeInnerViewCurrencyModel = currencyModel
         }
 
-        binding.alarm.setOnClickListener {
-            startResult.launch(Intent(this, AlarmDetailActivity::class.java).also {
-                currencyModelForDetail = currencyModel
+ */
+
+        binding.converter.setOnClickListener {
+            startResult.launch(Intent(this, ConverterActivity::class.java).also {
+              //  exchangeRateDTOForDetail = currencyModel
             })
         }
 
+        binding.alarm.setOnClickListener {
+            startResult.launch(Intent(this, AlarmDetailActivity::class.java).also {
+              //  exchangeRateDTOForDetail = currencyModel
+            })
+        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        exchangeRateDTOForDetail = null
     }
 
     private fun selectedDateButton(textView: TextView){
@@ -381,7 +415,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         }
     }
 
-    private fun changeSliderCirclePosition(salePrice: Double, minSalePrice: Double, maxSalePrice:Double){
+    private fun changeSliderCirclePosition(salePrice: Float, minSalePrice: Float, maxSalePrice:Float){
         binding.sliderCircle.animate().translationX((binding.sliderWay.width * ((salePrice - minSalePrice) / (maxSalePrice - minSalePrice))).toFloat())
             .setInterpolator(AccelerateInterpolator()).setDuration(500).start()
     }

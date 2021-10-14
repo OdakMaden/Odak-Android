@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.techzilla.odak">
 
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
@@ -11,9 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Odak">
         <activity
-            android:name=".alarm.viewcontroller.AlarmDetailActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:name=".converter.viewcontrollers.ConverterActivity"
             android:exported="true" />
+        <activity
+            android:name=".alarm.viewcontroller.AlarmDetailActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".alarm.viewcontroller.AddAlarmActivity"
             android:exported="true" />

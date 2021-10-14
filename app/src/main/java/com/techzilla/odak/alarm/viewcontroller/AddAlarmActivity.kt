@@ -14,7 +14,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.techzilla.odak.R
 import com.techzilla.odak.alarm.adapter.AddAlarmRecyclerviewAdapter
-import com.techzilla.odak.alarm.constant.currencyModelForDetail
 import com.techzilla.odak.databinding.ActivityAddAlarmBinding
 import com.techzilla.odak.shared.constants.list
 import com.techzilla.odak.shared.model.CurrencyModel
@@ -91,7 +90,7 @@ class AddAlarmActivity : AppCompatActivity(), AddAlarmRecyclerviewAdapter.AddAla
         adapter.selectItem(currencyModel)
         startForResult.launch(
             Intent(this, AlarmDetailActivity::class.java).also {
-                currencyModelForDetail = currencyModel
+                //currencyModelForDetail = currencyModel
             }
         )
     }

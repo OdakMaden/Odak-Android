@@ -2,6 +2,7 @@
     <string name="app_name">Odak</string>
     <string name="Odak_shared_pref">odakSharedPref</string>
 
+    <string name="shared.Ok">Tamam</string>
     <!--auth-->
     <string name="auth.password.label">Şifre</string>
     <string name="auth.login.button">giriş</string>
@@ -45,5 +46,9 @@
     <string name="alarm.aim_title.label">HEDEF %@</string>
     <string name="alarm.minimum.label">MİNİMUM</string>
     <string name="alarm.maximum.label">MAKSİMUM</string>
+    <string name="alarm.now_price.label">GÜNCEL FİYAT</string>
+    <string name="alarm.aim_price.label">HEDEF FİYAT</string>
 
+    <!-- Alert -->
+    <string name="alert.login.message">YANLIŞ BİR ŞİFRE GİRDİNİZ. LÜTFEN ŞİFREYİ DOĞRU GİRİNİZ.</string>
 </resources>

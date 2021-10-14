@@ -6,3 +6,4 @@ data class ConverterCurrency(
     val salePrice : Double,
     var currencyType : Int = 0
 )
+//silinecek

@@ -1,59 +1,53 @@
 package com.techzilla.odak.converter.viewcontrollers
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.WindowInsets
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.R
 import com.techzilla.odak.converter.adapter.ItemPickerAdapter
-import com.techzilla.odak.databinding.FragmentConverterBinding
+import com.techzilla.odak.databinding.ActivityConverterBinding
+import com.techzilla.odak.shared.constants.converterList
 import com.techzilla.odak.shared.constants.exchangeRateList
+import com.techzilla.odak.shared.model.CurrencyModel
 import com.techzilla.odak.shared.model.CurrencyTypeEnum
 import com.techzilla.odak.shared.service.repository.MainRepository
 import java.text.DecimalFormat
 
+class ConverterActivity : AppCompatActivity() {
+    private val binding : ActivityConverterBinding by lazy { ActivityConverterBinding.inflate(layoutInflater) }
 
-class ConverterFragment : Fragment() {
-
-    private val binding by lazy { FragmentConverterBinding.inflate(layoutInflater) }
     private val fromAdapter by lazy { ItemPickerAdapter() }
     private val toAdapter by lazy { ItemPickerAdapter() }
     private val decimalFormat = DecimalFormat("#.#####")
 
-    private lateinit var mainRepository : MainRepository
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private lateinit var mainRepository: MainRepository
 
-        return binding.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
-        //selectBottomItem(binding.dollarContainer, true)
-
-        mainRepository = MainRepository()
-        //selectBottomItem(binding.dollarContainer, true)
-
-        binding.fromRecyclerview.adapter = fromAdapter
-        binding.toRecyclerview.adapter = toAdapter
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            window.setDecorFitsSystemWindows(false)
+            window.insetsController?.show(WindowInsets.Type.ime())
+        }
+        else{
+            window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
 /*
         mainRepository = MainRepository()
         //selectBottomItem(binding.dollarContainer, true)
 
         mainRepository.getExchangeRateList()
-        mainRepository.exchangeRateListLiveData.observe(requireActivity(), { list->
+        mainRepository.exchangeRateListLiveData.observe(this, { list->
 
             selectBottomItem(binding.dollarContainer, true)
 
@@ -70,7 +64,6 @@ class ConverterFragment : Fragment() {
         binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().sellingRate / fromAdapter.getSelectedItem().sellingRate)
         binding.resultPrice.text = decimalFormat.format(binding.fromPiece.text.toString().toDouble() * binding.toPiecePrice.text.toString().toDouble())
 
-
         binding.dollarContainer.setOnClickListener {
             selectBottomItem(binding.dollarContainer, false)
         }
@@ -81,14 +74,30 @@ class ConverterFragment : Fragment() {
             selectBottomItem(binding.cryptoContainer, false)
         }
 
+        binding.backBtn.setOnClickListener {
+            setResult(RESULT_CANCELED)
+            finish()
+        }
         //fromAdapter.addNewItem(converterList)
         //toAdapter.addNewItem(converterList)
+
+        /*
+        currencyModelForDetail?.let {
+            fromAdapter.setFocusItemWithCode(CurrencyModel("TÜRK LİRASI", "TRY", 1.0, 1.0, "0", it.currencyType),
+                binding.fromRecyclerview.layoutManager as LinearLayoutManager
+            )
+            toAdapter.setFocusItemWithCode(it,
+                binding.toRecyclerview.layoutManager as LinearLayoutManager
+            )
+        }
+
+         */
 
         binding.fromRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (recyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
-                    context?.resources?.getDimensionPixelSize(R.dimen.item_height)?.let { itemHeight ->
+                    resources?.getDimensionPixelSize(R.dimen.item_height)?.let { itemHeight ->
                         val layoutManager = LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
                         val offset = (binding.fromRecyclerview.height / itemHeight - 1) / 2
                         layoutManager?.let {
@@ -120,7 +129,7 @@ class ConverterFragment : Fragment() {
             val toPosition = toAdapter.getSelectedPosition()
             fromAdapter.setPositionToItem(toPosition)
             toAdapter.setPositionToItem(fromPosition)
-            context?.resources?.getDimensionPixelSize(R.dimen.item_height)?.let {
+            resources?.getDimensionPixelSize(R.dimen.item_height)?.let {
                 LinearLayoutManager::class.java.cast(binding.fromRecyclerview.layoutManager)?.let { fromLayoutManager ->
                     scrollToItem(it, fromLayoutManager, toPosition, binding.fromRecyclerview)
                 }
@@ -135,7 +144,7 @@ class ConverterFragment : Fragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (recyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
-                    context?.resources?.getDimensionPixelSize(R.dimen.item_height)?.let { itemHeight ->
+                    resources?.getDimensionPixelSize(R.dimen.item_height)?.let { itemHeight ->
                         val layoutManager = LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
                         val offset = (binding.toRecyclerview.height / itemHeight - 1) / 2
                         layoutManager?.let {
@@ -172,6 +181,7 @@ class ConverterFragment : Fragment() {
         }
     }
 
+
     private fun updateChangeText(){
         binding.toPiecePrice.text = decimalFormat.format(toAdapter.getSelectedItem().sellingRate / fromAdapter.getSelectedItem().sellingRate)
         binding.fromPiece.text.toString().let { fromPiece->
@@ -193,7 +203,7 @@ class ConverterFragment : Fragment() {
             recyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
                 override fun onGlobalLayout() {
                     recyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    context?.resources?.getDimensionPixelSize(R.dimen.item_height)?.let {
+                    resources?.getDimensionPixelSize(R.dimen.item_height)?.let {
                         layoutManager.scrollToPositionWithOffset(position, (height / 2 - it / 2))
                     }
                 }
@@ -257,5 +267,4 @@ class ConverterFragment : Fragment() {
         }
         return result
     }
-
 }

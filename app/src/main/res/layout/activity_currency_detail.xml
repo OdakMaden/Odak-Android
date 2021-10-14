@@ -63,7 +63,7 @@
                     android:layout_weight="0.33">
                     <TextView
                         style="@style/odak.textview.currency_detail.buy_sell"
-                        android:id="@+id/buy_default"
+                        android:id="@+id/now_price_default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/detail.buy.label"
@@ -74,7 +74,7 @@
                         android:id="@+id/buy_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/buy_default"
+                        app:layout_constraintTop_toBottomOf="@id/now_price_default"
                         app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -85,7 +85,7 @@
 
                     <TextView
                         style="@style/odak.textview.currency_detail.buy_sell"
-                        android:id="@+id/sell_default"
+                        android:id="@+id/aim_price_default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/detail.sell.label"
@@ -96,7 +96,7 @@
                         android:id="@+id/sell_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/sell_default"
+                        app:layout_constraintTop_toBottomOf="@id/aim_price_default"
                         app:layout_constraintBottom_toBottomOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

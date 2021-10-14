@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity() {
         binding.container.isSelected = isOpenMenu
 
         supportFragmentManager.beginTransaction().apply {
-            //add(binding.fragmentContainer.id, MarketFragment())
-
             add(binding.fragmentContainer.id, MarketFragment())
             commit()
         }
