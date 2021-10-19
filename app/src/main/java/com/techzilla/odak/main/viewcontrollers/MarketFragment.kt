@@ -63,7 +63,7 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
         selectBottomItem(binding.favoriteContainer)
         binding.defaultRecyclerview.adapter = adapter
 
-        mainRepository.getExchangeRateList()
+        mainRepository.getExchangeRateList(rememberMemberDTO!!.memberID, "")
 
         binding.searchView.setOnSearchClickListener {
             it.startAnimation(AnimationUtils.makeInAnimation(requireActivity(), false))
@@ -101,9 +101,13 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
 
         mainRepository.exchangeRateListLiveData.observe(viewLifecycleOwner, {
             rememberMemberDTO?.let { memberDTO ->
-                val memberDataJSON = JSONTokener(memberDTO.memberData).nextValue() as JSONObject
-                val favoriteIdList = memberDataJSON.getString("favoriteIdList")
+                var favoriteIdList = ""
+                if (memberDTO.memberData != null) {
+                    val memberDataJSON = JSONTokener(memberDTO.memberData).nextValue() as JSONObject
+                    favoriteIdList = memberDataJSON.getString("favoriteIdList")
+                }
                 adapter.insertNewParam(it,  favoriteIdList)
+
                 exchangeRateList.addAll(it)
             }
 

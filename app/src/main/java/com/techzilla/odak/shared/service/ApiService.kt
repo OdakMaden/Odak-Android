@@ -7,6 +7,7 @@ import com.techzilla.odak.shared.constants.application
 import com.techzilla.odak.shared.constants.sessionKey
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.model.MemberDTO
+import com.techzilla.odak.shared.model.TimeStamp
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -22,7 +23,7 @@ interface ApiService {
 
     @GET("ExchangeRate")
     @Headers(apiKey, sessionKey, application)
-    fun getExchangeRateList() : Call<List<ExchangeRateDTO>>
+    fun getExchangeRateList(@Query("MemberID") memberID: String, @Query("TimeStamp") timeStamp: TimeStamp) : Call<List<ExchangeRateDTO>>
 
     @PATCH("Member/{MemberID}")
     @Headers(apiKey, sessionKey, application)

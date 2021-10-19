@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.model.MemberDTO
+import com.techzilla.odak.shared.model.TimeStamp
 import com.techzilla.odak.shared.service.ApiService
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,8 +20,8 @@ class MainRepository {
     private var errorMutableLiveData = MutableLiveData<String>()
     val errorLiveData get() = errorMutableLiveData
 
-    fun getExchangeRateList(){
-        service.getExchangeRateList().enqueue(object : Callback<List<ExchangeRateDTO>>{
+    fun getExchangeRateList(memberID : String, timeStamp:TimeStamp){
+        service.getExchangeRateList(memberID, timeStamp).enqueue(object : Callback<List<ExchangeRateDTO>>{
             override fun onResponse(
                 call: Call<List<ExchangeRateDTO>>,
                 response: Response<List<ExchangeRateDTO>>
@@ -47,6 +48,7 @@ class MainRepository {
                 if (response.isSuccessful){
                     if (response.code() == 200){
                         rememberMemberDTO = response.body()
+                        println(rememberMemberDTO!!.fCMToken)
                     }
                 }
                 println(response.code())

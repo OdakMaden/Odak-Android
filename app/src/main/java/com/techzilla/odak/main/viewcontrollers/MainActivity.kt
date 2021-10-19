@@ -3,6 +3,7 @@ package com.techzilla.odak.main.viewcontrollers
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -10,9 +11,15 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.Constants
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.JsonObject
 import com.techzilla.odak.converter.viewcontrollers.ConverterFragment
 import com.techzilla.odak.databinding.ActivityMainBinding
 import com.techzilla.odak.alarm.viewcontroller.AlarmFragment
+import com.techzilla.odak.shared.constants.rememberMemberDTO
+import com.techzilla.odak.shared.service.repository.MainRepository
 
 class MainActivity : AppCompatActivity() {
     private var _binding : ActivityMainBinding? = null
@@ -42,6 +49,22 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
 
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(Constants.TAG, "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+                val token = task.result
+
+                if (token != rememberMemberDTO!!.fCMToken){
+                    println(token)
+                    val repositoryMain = MainRepository()
+                    val updateMemberDTO = JsonObject()
+                    updateMemberDTO.addProperty("FCMToken", token)
+                    repositoryMain.updateMemberDTO(updateMemberDTO)
+                }
+            })
 
 
         binding.defaultClickContainer.setOnClickListener {

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "447216739397",
+    "project_id": "odak-f72bf",
+    "storage_bucket": "odak-f72bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447216739397:android:2f55deca9761a18c9b6f2c",
+        "android_client_info": {
+          "package_name": "com.techzilla.odak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "447216739397-0sejss9r0beul682epu4m67be8voulge.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH6w3CXQUiQ1fkHBNWv9UV-HSt086fclQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "447216739397-0sejss9r0beul682epu4m67be8voulge.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "447216739397-irmai298ci1ojl6ign4cfadtuabp332t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.techzilla.Odak",
+                "app_store_id": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
