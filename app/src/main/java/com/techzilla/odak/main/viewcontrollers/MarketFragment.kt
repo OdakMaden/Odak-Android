@@ -24,6 +24,7 @@ import com.techzilla.odak.databinding.FragmentMarketBinding
 import com.techzilla.odak.main.adapters.InnerViewRecyclerViewAdapter
 import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
 import com.techzilla.odak.shared.constants.exchangeRateList
+import com.techzilla.odak.shared.constants.exchangeRateListMap
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.service.repository.MainRepository
@@ -36,6 +37,8 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
     private val binding get() = _binding!!
 
     private val mainRepository by lazy { MainRepository() }
+
+    private var isFirstOpen : Boolean = true
 
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
         if (result.resultCode == AppCompatActivity.RESULT_OK){
@@ -100,17 +103,24 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
         })
 
         mainRepository.exchangeRateListLiveData.observe(viewLifecycleOwner, {
-            rememberMemberDTO?.let { memberDTO ->
-                var favoriteIdList = ""
-                if (memberDTO.memberData != null) {
-                    val memberDataJSON = JSONTokener(memberDTO.memberData).nextValue() as JSONObject
-                    favoriteIdList = memberDataJSON.getString("favoriteIdList")
+            if (isFirstOpen) {
+                rememberMemberDTO?.let { memberDTO ->
+                    var favoriteIdList = ""
+                    if (memberDTO.memberData != null) {
+                        val memberDataJSON =
+                            JSONTokener(memberDTO.memberData).nextValue() as JSONObject
+                        favoriteIdList = memberDataJSON.getString("favoriteIdList")
+                    }
+                    adapter.insertNewParam(it, favoriteIdList)
+                    isFirstOpen = false
+                    println("listelendi")
                 }
-                adapter.insertNewParam(it,  favoriteIdList)
-
-                exchangeRateList.addAll(it)
+            }else{
+                it.forEach { exDTO->
+                    adapter.changeItems(exDTO)
+                    println("değiştirildi")
+                }
             }
-
         })
     }
 

@@ -1,7 +1,12 @@
 package com.techzilla.odak.shared.service.repository
 
+import android.annotation.SuppressLint
+import android.os.CountDownTimer
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
+import com.techzilla.odak.shared.constants.exchangeRateList
+import com.techzilla.odak.shared.constants.exchangeRateListMap
+import com.techzilla.odak.shared.constants.odakTimePattern
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.model.MemberDTO
@@ -10,6 +15,9 @@ import com.techzilla.odak.shared.service.ApiService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainRepository {
     private val service = ApiService.invoke()
@@ -28,7 +36,11 @@ class MainRepository {
             ) {
                 if (response.isSuccessful){
                     if (response.code() == 200){
-                        exchangeRateListMutableLiveData.postValue(response.body())
+                        response.body()?.let {
+                            exchangeRateListMutableLiveData.postValue(exchangeRateList)
+                            addOrChangeList(it)
+                        }
+                        periodicRequest()
                     }
                     else{
                         errorLiveData.postValue("${response.code()}, ağ hatası")
@@ -48,7 +60,6 @@ class MainRepository {
                 if (response.isSuccessful){
                     if (response.code() == 200){
                         rememberMemberDTO = response.body()
-                        println(rememberMemberDTO!!.fCMToken)
                     }
                 }
                 println(response.code())
@@ -58,5 +69,38 @@ class MainRepository {
                 t.printStackTrace()
             }
         })
+    }
+
+    private fun addOrChangeList(list : List<ExchangeRateDTO>){
+        if (exchangeRateList.size == 0){
+            exchangeRateList.addAll(list)
+            var term = 0
+            exchangeRateList.forEach { exDTO ->
+                exchangeRateListMap[exDTO.code] = term
+                term++
+            }
+        }
+        else{
+            list.forEach { exDTO->
+                exchangeRateList.removeAt(exchangeRateListMap[exDTO.code]!!)
+                exchangeRateList.add(exchangeRateListMap[exDTO.code]!!, exDTO)
+            }
+        }
+    }
+
+    private fun periodicRequest(){
+        object : CountDownTimer(3000, 3000){
+            override fun onTick(millisUntilFinished: Long) {
+
+            }
+
+            @SuppressLint("SimpleDateFormat")
+            override fun onFinish() {
+                val calendar = Calendar.getInstance()
+                val timeStamp = SimpleDateFormat(odakTimePattern).format(calendar.time)
+                getExchangeRateList(rememberMemberDTO!!.memberID, timeStamp)
+                println(timeStamp)
+            }
+        }.start()
     }
 }

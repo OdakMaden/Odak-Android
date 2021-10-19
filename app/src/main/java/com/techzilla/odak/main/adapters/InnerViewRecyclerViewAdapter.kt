@@ -14,13 +14,19 @@ import com.techzilla.odak.shared.model.ExchangeRateDTO
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, private val layoutManager: RecyclerView.LayoutManager) : RecyclerView.Adapter<InnerViewRecyclerViewAdapter.ViewHolder>() {
 
     private val favoriteArrayList = ArrayList<ExchangeRateDTO>()
+    private val dollarMapList = HashMap<String, Int>()
     private val dollarArrayList = ArrayList<ExchangeRateDTO>()
+    private val goldBarMapList = HashMap<String, Int>()
     private val goldBarArrayList = ArrayList<ExchangeRateDTO>()
+    private val cryptoMapList = HashMap<String, Int>()
     private val cryptoArrayList = ArrayList<ExchangeRateDTO>()
+
+    private val arrayListMap = HashMap<String, Int>()
     private val arrayList = ArrayList<ExchangeRateDTO>()
     private var selectedModel: ExchangeRateDTO? = null
     private var _type = 4
@@ -118,15 +124,19 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
             when (it.currencyType){
                 CurrencyTypeEnum.Money->{
                     dollarArrayList.add(it)
+                    dollarMapList[it.code] = dollarArrayList.indexOf(it)
                 }
                 CurrencyTypeEnum.Metal ->{
                     goldBarArrayList.add(it)
+                    goldBarMapList[it.code] = goldBarArrayList.indexOf(it)
                 }
                 CurrencyTypeEnum.Crypto ->{
                     cryptoArrayList.add(it)
+                    cryptoMapList[it.code] = cryptoArrayList.indexOf(it)
                 }
                 CurrencyTypeEnum.Parity ->{
                     dollarArrayList.add(it)
+                    dollarMapList[it.code] = dollarArrayList.indexOf(it)
                 }
             }
             favoriteString.let { favoriteString->
@@ -160,6 +170,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
     @SuppressLint("NotifyDataSetChanged")
     fun changeType(type : Int){
+        var term = 0
         when(type){
             0 ->{
                 notifyItemRangeRemoved(0, arrayList.size)
@@ -186,20 +197,41 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 notifyItemInserted(arrayList.size)
             }
         }
+        arrayListMap.clear()
+        arrayList.forEach {
+            arrayListMap[it.code] = term
+            term++
+        }
         selectedModel = null
         _type = type
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun changeItems(exchangeRateCodeList:List<String>, exchangeRateDTO: ExchangeRateDTO){
-        val isFavorite = exchangeRateCodeList.contains(exchangeRateDTO.code)
-        if (isFavorite){
-            addFavorite(exchangeRateDTO)
+    fun changeItems(exchangeRateDTO: ExchangeRateDTO){
+        when(exchangeRateDTO.currencyType){
+            CurrencyTypeEnum.Money ->{
+                dollarArrayList.removeAt(dollarMapList[exchangeRateDTO.code]!!)
+                dollarArrayList.add(dollarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
+            }
+            CurrencyTypeEnum.Metal -> {
+                goldBarArrayList.removeAt(goldBarMapList[exchangeRateDTO.code]!!)
+                goldBarArrayList.add(goldBarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
+            }
+            CurrencyTypeEnum.Crypto -> {
+                cryptoArrayList.removeAt(cryptoMapList[exchangeRateDTO.code]!!)
+                cryptoArrayList.add(cryptoMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
+            }
+            CurrencyTypeEnum.Parity ->{
+                dollarArrayList.removeAt(dollarMapList[exchangeRateDTO.code]!!)
+                dollarArrayList.add(dollarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
+            }
         }
-        else{
-            deleteFavorite(exchangeRateDTO)
+        val isShowList = arrayListMap[exchangeRateDTO.code]
+        if (isShowList != null){
+            arrayList.removeAt(isShowList)
+            arrayList.add(isShowList, exchangeRateDTO)
+            notifyDataSetChanged()
         }
-
     }
 
     fun searchItems(text: String){

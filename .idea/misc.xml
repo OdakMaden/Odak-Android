@@ -4,6 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.22708333333333333" />
+        <entry key="..\:/Users/iris/AndroidStudioProjects/Odak--Android/app/src/main/res/layout/activity_alarm_detail.xml" value="0.16077898550724637" />
+        <entry key="..\:/Users/iris/AndroidStudioProjects/Odak--Android/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/iris/AndroidStudioProjects/Odak--Android/app/src/main/res/layout/fragment_alarm.xml" value="0.1" />
+        <entry key="..\:/Users/iris/AndroidStudioProjects/Odak--Android/app/src/main/res/layout/item_alarm.xml" value="0.16077898550724637" />
+        <entry key="..\:/Users/iris/AndroidStudioProjects/Odak--Android/app/src/main/res/layout/item_user_alarm.xml" value="0.16077898550724637" />
         <entry key="app/src/main/res/drawable/default_background_shape.xml" value="0.125" />
         <entry key="app/src/main/res/drawable/fade_red.xml" value="0.17109375" />
         <entry key="app/src/main/res/drawable/icon_close.xml" value="0.17109375" />

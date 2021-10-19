@@ -2,6 +2,7 @@ package com.techzilla.odak.alarm.viewcontroller
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
@@ -11,15 +12,22 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.google.gson.JsonObject
 import com.techzilla.odak.R
+import com.techzilla.odak.alarm.constant.alarmDTO
 import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.databinding.ActivityAlarmDetailBinding
+import com.techzilla.odak.shared.model.AlarmTypeEnum
+import com.techzilla.odak.shared.service.repository.AlarmRepository
 import java.text.DecimalFormat
 
 class AlarmDetailActivity : AppCompatActivity() {
 
     private val binding : ActivityAlarmDetailBinding by lazy { ActivityAlarmDetailBinding.inflate(layoutInflater) }
 
+    private lateinit var alarmRepository: AlarmRepository
+
+    private var alarmType : AlarmTypeEnum = AlarmTypeEnum.PriceOver
     private var isPrice:Boolean = true
     private var isDistance:Boolean = false
     private var isIfUp:Boolean = true
@@ -43,9 +51,7 @@ class AlarmDetailActivity : AppCompatActivity() {
             Toast.makeText(this, "Bir hata oluştu. Lütfen tekrar deneyiniz.", Toast.LENGTH_SHORT).show()
             finish()
         }
-
-
-
+        alarmRepository = AlarmRepository()
 
         exchangeRateDTOForDetail?.let {
             binding.currencyCode.text = it.code
@@ -108,9 +114,39 @@ class AlarmDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.createAlarmButton.setOnClickListener {
+        alarmRepository.addNewAlarmLiveData.observe(this, {
+            alarmDTO = it
             setResult(RESULT_OK)
             finish()
+        })
+
+        binding.createAlarmButton.setOnClickListener {
+            if (isPrice && !isDistance && isIfUp && !isIfDown){
+                alarmType = AlarmTypeEnum.PriceOver
+            }
+            else if (isPrice && !isDistance && !isIfUp && isIfDown){
+                alarmType = AlarmTypeEnum.PriceUnder
+            }
+            else if (!isPrice && isDistance && isIfUp && !isIfDown){
+                alarmType = AlarmTypeEnum.PercentOver
+            }
+            else if(!isPrice && isDistance && !isIfUp && isIfDown){
+                alarmType = AlarmTypeEnum.PercentUnder
+            }
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("Name",binding.currencyName.text.toString())
+            jsonObject.addProperty("CurrencyCode", binding.currencyCode.text.toString())
+            jsonObject.addProperty("AlarmType", alarmType.value)
+            if (isDistance) {
+                jsonObject.addProperty(
+                    "ReferenceValue",
+                    binding.lastPriceLabel.text.toString().replace("SON FİYAT: ", "").toDouble()
+                )
+            }
+            jsonObject.addProperty("TargetValue", binding.aimPrice.text.toString().replace("% ","").toDouble())
+            alarmRepository.addAlarm(jsonObject)
+            //setResult(RESULT_OK)
+            //finish()
         }
 
 

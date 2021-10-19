@@ -28,6 +28,7 @@ class AddAlarmActivity : AppCompatActivity(), AddAlarmRecyclerviewAdapter.AddAla
 
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result:ActivityResult->
         if (result.resultCode == RESULT_OK){
+            setResult(RESULT_OK)
             finish()
         }
     }

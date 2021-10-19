@@ -5,6 +5,7 @@ import com.techzilla.odak.shared.constants.BASEURL
 import com.techzilla.odak.shared.constants.apiKey
 import com.techzilla.odak.shared.constants.application
 import com.techzilla.odak.shared.constants.sessionKey
+import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.model.MemberDTO
 import com.techzilla.odak.shared.model.TimeStamp
@@ -28,6 +29,27 @@ interface ApiService {
     @PATCH("Member/{MemberID}")
     @Headers(apiKey, sessionKey, application)
     fun patchMemberDTO(@Path("MemberID") memberID: String, @Body memberDTO: JsonObject) : Call<MemberDTO>
+
+    @POST("Member/{MemberID}/Alarm")
+    @Headers(apiKey, sessionKey, application)
+    fun addAlarm(@Path("MemberID") memberID: String, @Body alarmJson: JsonObject) : Call<AlarmDTO>
+
+    @GET("Member/{MemberID}/Alarm")
+    @Headers(apiKey, sessionKey, application)
+    fun getAlarms(@Path("MemberID") memberID: String) : Call<List<AlarmDTO>>
+
+    @GET("Member/{MemberID}/Alarm/{RID}")
+    @Headers(apiKey, sessionKey, application)
+    fun getAlarmDetail(@Path("MemberID") memberID: String, @Path("RID") rID: Int) : Call<AlarmDTO>
+
+    @PATCH("Member/{MemberID}/Alarm/{RID}")
+    @Headers(apiKey, sessionKey, application)
+    fun updateAlarm(@Path("MemberID") memberID: String, @Path("RID") rID: Int, alarmJson: JsonObject): Call<AlarmDTO>
+
+    @DELETE("Member/{MemberID}/Alarm/{RID}")
+    @Headers(apiKey, sessionKey, application)
+    fun deleteAlarm(@Path("MemberID") memberID: String, @Path("RID") rID: Int)
+
 
     companion object{
         operator fun invoke():ApiService{
