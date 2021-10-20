@@ -173,6 +173,7 @@
                 android:layout_marginVertical="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_graph"
+                app:tint="@color/white"
                 />
             <androidx.cardview.widget.CardView
                 android:layout_width="1dp"
@@ -187,6 +188,7 @@
                 android:layout_marginVertical="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_favorite"
+                app:tint="@color/white"
                 />
             <androidx.cardview.widget.CardView
                 android:layout_width="1dp"
@@ -201,6 +203,7 @@
                 android:layout_marginVertical="4dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_converter"
+                app:tint="@color/white"
                 />
             <androidx.cardview.widget.CardView
                 android:layout_width="1dp"
@@ -215,7 +218,8 @@
                 android:layout_weight="0.24"
                 android:layout_marginVertical="4dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_notification" />
+                android:src="@drawable/icon_notification"
+                app:tint="@color/white" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

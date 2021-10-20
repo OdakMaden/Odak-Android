@@ -22,8 +22,8 @@ class AlarmRepository {
     private var errorMutableLiveData = MutableLiveData<String>()
     val errorLiveData get() = errorMutableLiveData
 
-    fun addAlarm(jsonObject: JsonObject){
-        service.addAlarm(rememberMemberDTO!!.memberID, jsonObject).enqueue(object : Callback<AlarmDTO>{
+    fun addAlarm(alarmMap: HashMap<String, Any>){
+        service.addAlarm(rememberMemberDTO!!.memberID, alarmMap).enqueue(object : Callback<AlarmDTO>{
             override fun onResponse(call: Call<AlarmDTO>, response: Response<AlarmDTO>) {
                 if (response.isSuccessful){
                     if (response.code() == 201){

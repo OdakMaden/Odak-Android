@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Odak</string>
+
+    <!--sharedPref-->
+    <string name="password">Password</string>
+    <string name="isLogin">IsLogin</string>
     <string name="Odak_shared_pref">odakSharedPref</string>
 
     <string name="shared.Ok">Tamam</string>
@@ -12,6 +16,7 @@
     <string name="menu.converter.label">ÇEVİRİCİ</string>
     <string name="menu.notification.label">BİLDİRİM</string>
     <string name="menu.call.label">ARA</string>
+    <string name="menu.profile.label">PROFİL</string>
     <string name="menu.logout.label">ÇIKIŞ</string>
 
     <!--Bottom Menu-->
@@ -49,6 +54,12 @@
     <string name="alarm.now_price.label">GÜNCEL FİYAT</string>
     <string name="alarm.aim_price.label">HEDEF FİYAT</string>
 
+    <!-- Alarm default menu-->
+    <string name="alarm.menu.edit.label">DÜZENLE</string>
+    <string name="alarm.menu.delete.label">SİL</string>
+    <string name="alarm.menu.cancel.label">İPTAL</string>
+
     <!-- Alert -->
     <string name="alert.login.message">YANLIŞ BİR ŞİFRE GİRDİNİZ. LÜTFEN ŞİFREYİ DOĞRU GİRİNİZ.</string>
+
 </resources>

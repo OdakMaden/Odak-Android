@@ -18,12 +18,14 @@ import com.google.gson.JsonObject
 import com.techzilla.odak.converter.viewcontrollers.ConverterFragment
 import com.techzilla.odak.databinding.ActivityMainBinding
 import com.techzilla.odak.alarm.viewcontroller.AlarmFragment
+import com.techzilla.odak.profile.viewcontroller.ProfileFragment
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.service.repository.MainRepository
 
 class MainActivity : AppCompatActivity() {
     private var _binding : ActivityMainBinding? = null
     private val binding get() = _binding!!
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         binding.container.isSelected = isOpenMenu
 
         supportFragmentManager.beginTransaction().apply {
-            add(binding.fragmentContainer.id, MarketFragment())
+            add(binding.fragmentContainer.id, MarketFragment(), MarketFragment.TAG)
             commit()
         }
 
@@ -75,6 +77,7 @@ class MainActivity : AppCompatActivity() {
                // .translationY(0.0f)
                 .setInterpolator(AccelerateInterpolator()).duration = 1000
             binding.defaultClickContainer.visibility = GONE
+            backgroundMenu(false)
         }
 
 
@@ -105,20 +108,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.market.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, MarketFragment()).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(binding.fragmentContainer.id, MarketFragment())
+                //.addToBackStack(MarketFragment.TAG)
+                .commit()
         }
         binding.converter.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, ConverterFragment()).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(binding.fragmentContainer.id, ConverterFragment())
+                .addToBackStack(MarketFragment.TAG)
+                .commit()
         }
         binding.call.setOnClickListener {
             println("call")
         }
         binding.notification.setOnClickListener {
-            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id, AlarmFragment()).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(binding.fragmentContainer.id, AlarmFragment())
+                .addToBackStack(MarketFragment.TAG)
+                .commit()
         }
-        binding.logout.setOnClickListener {
-            println("logout")
+        binding.profile.setOnClickListener {
+           supportFragmentManager.beginTransaction()
+               .replace(binding.fragmentContainer.id, ProfileFragment())
+               .addToBackStack(MarketFragment.TAG)
+               .commit()
         }
+
     }
 
     private fun isEnableChange(){
@@ -141,6 +157,6 @@ class MainActivity : AppCompatActivity() {
         binding.converter.isEnabled = isEnable
         binding.call.isEnabled = isEnable
         binding.notification.isEnabled = isEnable
-        binding.logout.isEnabled = isEnable
+        binding.profile.isEnabled = isEnable
     }
 }

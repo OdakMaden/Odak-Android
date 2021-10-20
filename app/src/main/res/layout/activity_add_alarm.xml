@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="@id/guideline_menu_horizontal"
         app:layout_constraintBottom_toBottomOf="@id/guideline_menu_horizontal"
         app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/white"
         />
     <TextView
         android:id="@+id/title"

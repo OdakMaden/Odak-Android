@@ -40,6 +40,10 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
 
     private var isFirstOpen : Boolean = true
 
+    companion object {
+        const val TAG= "MarketFragment"
+    }
+
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
         if (result.resultCode == AppCompatActivity.RESULT_OK){
             AlertDialog.Builder(requireContext()).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"

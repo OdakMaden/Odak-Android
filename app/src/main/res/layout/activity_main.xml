@@ -32,6 +32,7 @@
                 android:layout_marginVertical="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="25dp"
+                app:tint="@color/white"
                 />
             <TextView
                 style="@style/odak.textview.menu_title"
@@ -53,6 +54,7 @@
                 android:layout_marginVertical="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="25dp"
+                app:tint="@color/white"
                 />
             <TextView
                 style="@style/odak.textview.menu_title"
@@ -74,6 +76,7 @@
                 android:layout_marginVertical="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="25dp"
+                app:tint="@color/white"
                 />
             <TextView
                 style="@style/odak.textview.menu_title"
@@ -94,6 +97,7 @@
                 android:layout_marginVertical="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="25dp"
+                app:tint="@color/white"
                 />
             <TextView
                 style="@style/odak.textview.menu_title"
@@ -102,7 +106,7 @@
                 android:text="@string/menu.call.label"/>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/logout"
+            android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -110,16 +114,17 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_logout"
+                android:src="@drawable/icon_user"
                 android:layout_marginVertical="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="25dp"
+                app:tint="@color/white"
                 />
             <TextView
                 style="@style/odak.textview.menu_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/menu.logout.label"/>
+                android:text="@string/menu.profile.label"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -138,6 +143,7 @@
             android:translationZ="0dp"
             android:layout_marginStart="20dp"
             android:background="@android:color/transparent"
+            app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/guideline_menu_horizontal"
             app:layout_constraintBottom_toBottomOf="@id/guideline_menu_horizontal"

@@ -17,6 +17,7 @@
         app:layout_constraintTop_toTopOf="@id/guideline_menu_horizontal"
         app:layout_constraintBottom_toBottomOf="@id/guideline_menu_horizontal"
         app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/white"
         />
 
     <TextView
@@ -137,6 +138,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="@color/white"
                     />
                 <EditText
                     android:id="@+id/aim_price"

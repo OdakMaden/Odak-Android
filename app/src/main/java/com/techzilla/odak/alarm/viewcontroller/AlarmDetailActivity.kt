@@ -28,6 +28,7 @@ class AlarmDetailActivity : AppCompatActivity() {
     private lateinit var alarmRepository: AlarmRepository
 
     private var alarmType : AlarmTypeEnum = AlarmTypeEnum.PriceOver
+    private var alarmName : String = ""
     private var isPrice:Boolean = true
     private var isDistance:Boolean = false
     private var isIfUp:Boolean = true
@@ -123,30 +124,44 @@ class AlarmDetailActivity : AppCompatActivity() {
         binding.createAlarmButton.setOnClickListener {
             if (isPrice && !isDistance && isIfUp && !isIfDown){
                 alarmType = AlarmTypeEnum.PriceOver
+                alarmName = "${binding.currencyName.text} ${binding.aimPrice.text}"
             }
             else if (isPrice && !isDistance && !isIfUp && isIfDown){
                 alarmType = AlarmTypeEnum.PriceUnder
+                alarmName = "${binding.currencyName.text} ${binding.aimPrice.text}"
             }
             else if (!isPrice && isDistance && isIfUp && !isIfDown){
                 alarmType = AlarmTypeEnum.PercentOver
+                alarmName = "${binding.currencyName.text} +${binding.aimPrice.text}"
             }
             else if(!isPrice && isDistance && !isIfUp && isIfDown){
                 alarmType = AlarmTypeEnum.PercentUnder
+                alarmName = "${binding.currencyName.text} -${binding.aimPrice.text}"
             }
+            /*
             val jsonObject = JsonObject()
-            jsonObject.addProperty("Name",binding.currencyName.text.toString())
+            jsonObject.addProperty("Name", "${binding.currencyName.text.toString()} ${binding.aimPrice.text.toString()}")
             jsonObject.addProperty("CurrencyCode", binding.currencyCode.text.toString())
             jsonObject.addProperty("AlarmType", alarmType.value)
-            if (isDistance) {
-                jsonObject.addProperty(
-                    "ReferenceValue",
-                    binding.lastPriceLabel.text.toString().replace("SON FİYAT: ", "").toDouble()
+           // if (isDistance) {
+            jsonObject.addProperty("ReferenceValue", exchangeRateDTOForDetail!!.sellingRate
+                 //   binding.lastPriceLabel.text.toString().replace("SON FİYAT: ", "").toDouble()
                 )
-            }
+        //    }
+
             jsonObject.addProperty("TargetValue", binding.aimPrice.text.toString().replace("% ","").toDouble())
-            alarmRepository.addAlarm(jsonObject)
-            //setResult(RESULT_OK)
-            //finish()
+             */
+
+            val alarmMap = HashMap<String, Any>()
+            alarmMap["Name"] = alarmName
+            alarmMap["CurrencyCode"] = exchangeRateDTOForDetail!!.code
+            alarmMap["AlarmType"] = alarmType.value
+            if (isDistance) {
+                alarmMap["ReferenceValue"] = exchangeRateDTOForDetail!!.sellingRate
+            }
+            alarmMap["TargetValue"] = binding.aimPrice.text.toString().replace("% ","").toDouble()
+
+            alarmRepository.addAlarm(alarmMap)
         }
 
 

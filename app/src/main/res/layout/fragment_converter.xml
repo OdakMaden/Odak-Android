@@ -60,7 +60,8 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/icon_edit"/>
+                            android:src="@drawable/icon_edit"
+                            app:tint="@color/white" />
                         <EditText
                             android:id="@+id/from_piece"
                             android:background="@android:color/transparent"
@@ -93,6 +94,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="@color/white"
                     />
 
                 <TextView

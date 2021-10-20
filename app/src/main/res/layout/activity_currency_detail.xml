@@ -21,6 +21,7 @@
             app:layout_constraintTop_toTopOf="@id/guideline_menu_horizontal"
             app:layout_constraintBottom_toBottomOf="@id/guideline_menu_horizontal"
             app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/white"
             />
 
         <TextView
@@ -371,6 +372,7 @@
                     android:layout_marginVertical="3dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_call"
+                    app:tint="@color/white"
                     />
                 <androidx.cardview.widget.CardView
                     android:layout_width="1dp"
@@ -385,6 +387,7 @@
                     android:layout_marginVertical="3dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_favorite"
+                    app:tint="@color/white"
                     />
                 <androidx.cardview.widget.CardView
                     android:layout_width="1dp"
@@ -399,6 +402,7 @@
                     android:layout_marginVertical="3dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_converter"
+                    app:tint="@color/white"
                     />
                 <androidx.cardview.widget.CardView
                     android:layout_width="1dp"
@@ -413,6 +417,7 @@
                     android:layout_marginVertical="3dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_notification"
+                    app:tint="@color/white"
                     />
             </LinearLayout>
 

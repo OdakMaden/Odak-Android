@@ -1,5 +1,9 @@
 package com.techzilla.odak.shared.service.repository
 
+import android.content.Context
+import android.content.SharedPreferences
+import com.techzilla.odak.R
+import com.techzilla.odak.shared.constants.application
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.MemberDTO
 import com.techzilla.odak.shared.service.ApiService
@@ -12,12 +16,13 @@ class LoginRepository {
     private val service = ApiService.invoke()
 
 
-    fun checkPassword(password:String, listener: CheckListener){
+    fun checkPassword(password:String, listener: CheckListener, sharedPref: SharedPreferences, context: Context){
         service.checkPassword(password).enqueue(object : Callback<MemberDTO>{
             override fun onResponse(call: Call<MemberDTO>, response: Response<MemberDTO>) {
                 if (response.isSuccessful){
                     if(response.code() == 200){
                         rememberMemberDTO = response.body()
+                        rememberUserGSMNoAndPassword(password, sharedPref,context)
                         listener.checkPasswordListener(true)
                     }
                     else{
@@ -30,6 +35,14 @@ class LoginRepository {
                 t.printStackTrace()
             }
         })
+    }
+
+    fun rememberUserGSMNoAndPassword(password:String, sharedPref: SharedPreferences, context: Context){
+        with(sharedPref.edit()){
+            putString(context.getString(R.string.password), password)
+            putBoolean(context.getString(R.string.isLogin), true)
+            apply()
+        }
     }
 
     interface CheckListener{

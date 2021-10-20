@@ -36,7 +36,8 @@ class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
 
         binding.loginButton.setOnClickListener {
             if (binding.password.text.length==6){
-                loginRepository.checkPassword(binding.password.text.toString(), this)
+                val sharedPref = getSharedPreferences(getString(R.string.Odak_shared_pref), MODE_PRIVATE)
+                loginRepository.checkPassword(binding.password.text.toString(), this, sharedPref, this)
             }
         }
     }

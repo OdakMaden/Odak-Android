@@ -32,7 +32,7 @@ interface ApiService {
 
     @POST("Member/{MemberID}/Alarm")
     @Headers(apiKey, sessionKey, application)
-    fun addAlarm(@Path("MemberID") memberID: String, @Body alarmJson: JsonObject) : Call<AlarmDTO>
+    fun addAlarm(@Path("MemberID") memberID: String, @Body alarmMap: HashMap<String, Any>) : Call<AlarmDTO>
 
     @GET("Member/{MemberID}/Alarm")
     @Headers(apiKey, sessionKey, application)

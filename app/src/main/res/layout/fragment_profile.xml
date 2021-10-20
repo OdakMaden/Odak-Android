@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".profile.viewcontroller.ProfileFragment">
+
+    <TextView
+        android:id="@+id/hello_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:text="Merhaba!"
+        android:textSize="14sp"
+        android:fontFamily="@font/metropolis_medium"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.15"
+        />
+
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:fontFamily="@font/metropolis_black"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/hello_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/user_info_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="30dp"
+        app:cardBackgroundColor="@color/odak_dark_blue"
+        app:layout_constraintTop_toBottomOf="@id/name_text"
+        app:cardCornerRadius="5dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:orientation="vertical"
+                android:layout_marginVertical="10dp"
+                android:layout_marginStart="10dp"
+                >
+                <TextView
+                    style="@style/odak.textview.profile.default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="İSİM"
+                    />
+
+                <TextView
+                    style="@style/odak.textview.profile.default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SOYADI"
+                    />
+
+                <TextView
+                    style="@style/odak.textview.profile.default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DOĞUM TARİHİ"
+                    />
+                <TextView
+                    style="@style/odak.textview.profile.default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MAİL ADRESİ"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:orientation="vertical"
+                android:layout_marginVertical="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
+                >
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/odak.textview.profile.dynamic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:id="@+id/surname"
+                    style="@style/odak.textview.profile.dynamic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:id="@+id/birthdate"
+                    style="@style/odak.textview.profile.dynamic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:id="@+id/email"
+                    style="@style/odak.textview.profile.dynamic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/notification_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/user_info_container"
+        app:cardCornerRadius="4dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/odak_dark_blue"
+        >
+        <TextView
+            style="@style/odak.textview.profile.default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="BİLDİRİMLER"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/notification_switchCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            app:trackTint="@color/odak_light_blue"
+            android:layout_gravity="top|end"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/change_password_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/notification_button"
+        app:cardCornerRadius="4dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/odak_dark_blue"
+        >
+        <TextView
+            style="@style/odak.textview.profile.default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="ŞİFRE DEĞİŞTİR"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/logout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/change_password_button"
+        app:cardCornerRadius="4dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/odak_dark_blue"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/icon_logout"
+                app:tint="@color/white" />
+            <TextView
+                style="@style/odak.textview.profile.default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="ÇIKIŞ YAP"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
