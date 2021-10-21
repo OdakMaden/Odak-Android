@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.os.Build
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
@@ -27,13 +26,24 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.google.gson.JsonObject
 import com.techzilla.odak.R
 import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.alarm.viewcontroller.AlarmDetailActivity
 import com.techzilla.odak.converter.viewcontrollers.ConverterActivity
 import com.techzilla.odak.databinding.ActivityCurrencyDetailBinding
+import com.techzilla.odak.main.constant.isAddFavorite
+import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
+import com.techzilla.odak.shared.constants.odakTimePattern
+import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.ExchangeRateDTO
-import java.text.DecimalFormat
+import com.techzilla.odak.shared.model.GraphPeriodEnum
+import com.techzilla.odak.shared.service.repository.GraphRepository
+import org.json.JSONObject
+import org.json.JSONTokener
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener {
@@ -42,7 +52,12 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
     private val binding get() = _binding!!
     private lateinit var exchangeRateDTO: ExchangeRateDTO
 
+    private val repository by lazy { GraphRepository() }
+
     private val percentage = "0"// silinecek
+    private var graphPeriodEnum = GraphPeriodEnum.Hour
+    private val values = ArrayList<Entry>()
+    private var isFavorite : Boolean = false
 
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
         if (result.resultCode == RESULT_OK){
@@ -51,7 +66,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         }
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint("UseCompatLoadingForDrawables", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCurrencyDetailBinding.inflate(layoutInflater)
@@ -66,14 +81,6 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
 
-       /* val exchangeRateCode = intent.getStringExtra("exchangeRateCode")
-        list.forEach {
-            if (it.currencyCode == exchangeRateCode){
-                currencyModel = it
-            }
-        }
-
-        */
         exchangeRateDTOForDetail?.let {
             exchangeRateDTO = it
             binding.clockText.isSelected = true
@@ -81,18 +88,41 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             binding.subTitle.text = it.name
             binding.buyText.text = it.buyingRate.toString()
             binding.sellText.text = it.sellingRate.toString()
+            val calendar = Calendar.getInstance()
+            repository.getGraphData(it.code, graphPeriodEnum.value,
+                SimpleDateFormat(odakTimePattern).format(calendar.time))
         }
 
-
-        /*
-        if (USER.favoriteCodeList.contains(currencyModel.currencyCode)){
-            binding.favorite.setImageDrawable(resources.getDrawable(R.drawable.icon_selected_favorite, resources.newTheme()))
+        if (rememberMemberDTO!!.memberData != null) {
+            val memberDataJSON =
+                JSONTokener(rememberMemberDTO!!.memberData).nextValue() as JSONObject
+            val favoriteIdList = memberDataJSON.getString("favoriteIdList")
+            isFavorite = if (favoriteIdList.contains(exchangeRateDTO.code)){
+                binding.favorite.setImageDrawable(resources.getDrawable(R.drawable.icon_selected_favorite, resources.newTheme()))
+                true
+            } else{
+                binding.favorite.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite, resources.newTheme()))
+                false
+            }
         }
-        else{
-            binding.favorite.setImageDrawable(resources.getDrawable(R.drawable.icon_favorite, resources.newTheme()))
-        }
 
-         */
+        repository.exchangeRateGraphLiveData.observe(this, {
+            binding.sellText.text = it.meanValue.toString()
+            binding.lowestSliderText.text = it.lowestValue.toString()
+            binding.lowestText.text = it. lowestValue.toString()
+            binding.highestText.text = it.highestValue.toString()
+            binding.highestSliderText.text = it.highestValue.toString()
+            changeSliderCirclePosition(it.meanValue, it.lowestValue, it.highestValue)
+            values.clear()
+            var termFloat = 0.0f
+            it.data.forEach { data ->
+                values.add(Entry(termFloat, data, resources.getDrawable(R.drawable.star, resources.newTheme())))
+                termFloat++
+            }
+            setData(values)
+            binding.lineChart.invalidate()
+
+        })
 
         if (percentage.contains("-")) {
             binding.increase.setImageDrawable(
@@ -114,80 +144,6 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         }
         binding.increaseText.text = percentage
 
-        val decimalFormat = DecimalFormat("#.#####")
-
-        binding.lowestSliderText.text = decimalFormat.format(exchangeRateDTO.sellingRate / 1.01)
-        binding.highestSliderText.text = decimalFormat.format(exchangeRateDTO.sellingRate * 1.01)
-        binding.highestText.text = decimalFormat.format(exchangeRateDTO.sellingRate * 1.01)
-        binding.lowestText.text = decimalFormat.format(exchangeRateDTO.sellingRate / 1.01)
-
-        object : CountDownTimer(100,100){
-            override fun onTick(p0: Long) {
-            }
-
-            override fun onFinish() {
-                changeSliderCirclePosition(exchangeRateDTO.sellingRate,
-                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
-                )
-            }
-        }.start()
-
-        object : CountDownTimer(2000,100){
-            override fun onTick(p0: Long) {
-            }
-
-            override fun onFinish() {
-                changeSliderCirclePosition(
-                    (exchangeRateDTO.sellingRate * 1.005).toFloat(),
-                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
-                )
-            }
-        }.start()
-
-        object : CountDownTimer(5000,100){
-            override fun onTick(p0: Long) {
-            }
-
-            override fun onFinish() {
-                changeSliderCirclePosition((exchangeRateDTO.sellingRate / 1.005).toFloat(),
-                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
-                )
-            }
-        }.start()
-
-        object : CountDownTimer(8000,100){
-            override fun onTick(p0: Long) {
-            }
-
-            override fun onFinish() {
-                changeSliderCirclePosition(8.36f,
-                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
-                )
-            }
-        }.start()
-
-        object : CountDownTimer(11000,100){
-            override fun onTick(p0: Long) {
-            }
-
-            override fun onFinish() {
-                changeSliderCirclePosition(8.52804f,
-                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
-                )
-            }
-        }.start()
-
-        object : CountDownTimer(14000,100){
-            override fun onTick(p0: Long) {
-            }
-
-            override fun onFinish() {
-                changeSliderCirclePosition(exchangeRateDTO.sellingRate,
-                    (exchangeRateDTO.sellingRate / 1.01).toFloat(), (exchangeRateDTO.sellingRate * 1.01).toFloat()
-                )
-            }
-        }.start()
-
         binding.backBtn.setOnClickListener {
             finish()
         }
@@ -201,15 +157,6 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         binding.lineChart.isDragEnabled = true
         binding.lineChart.setScaleEnabled(true)
         binding.lineChart.setPinchZoom(true)
-
-
-
-        val values = ArrayList<String>()
-        for (i in 0..7){
-            values.add(i, "$i.gün")
-        }
-        binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
-        setData(values.size, 100f)
 
         binding.lineChart.xAxis.apply {
             setDrawGridLines(false)
@@ -231,92 +178,77 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
 
         binding.lineChart.axisLeft.setDrawLimitLinesBehindData(true)
         binding.lineChart.xAxis.setDrawLimitLinesBehindData(true)
-
-        // setData(30, 90f)
         binding.lineChart.animateX(1500)
         binding.lineChart.legend.form = Legend.LegendForm.NONE
 
         binding.clockText.setOnClickListener {
             selectedDateButton(it as TextView)
 
-            val values = ArrayList<String>()
-            for (i in 0..60){
-                values.add(i, "$i.dakika")
-            }
-            binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
-            setData(values.size, 100f)
+            graphPeriodEnum = GraphPeriodEnum.Hour
 
-            binding.lineChart.invalidate()
+            val calendar = Calendar.getInstance()
+            repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
+                SimpleDateFormat(odakTimePattern).format(calendar.time))
         }
         binding.dayText.setOnClickListener {
             selectedDateButton(it as TextView)
 
-            val values = ArrayList<String>()
-            for (i in 0..24){
-                values.add(i, "$i.saat")
-            }
-            binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
-            setData(values.size, 100f)
+            graphPeriodEnum = GraphPeriodEnum.Day
 
-            binding.lineChart.invalidate()
+            val calendar = Calendar.getInstance()
+            repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
+                SimpleDateFormat(odakTimePattern).format(calendar.time))
         }
         binding.weekText.setOnClickListener {
             selectedDateButton(it as TextView)
 
-            val values = ArrayList<String>()
-            for (i in 0..7){
-                values.add(i, "$i.gün")
-            }
-            binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
-            setData(values.size, 100f)
+            graphPeriodEnum = GraphPeriodEnum.Week
 
-            binding.lineChart.invalidate()
+            val calendar = Calendar.getInstance()
+            repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
+                SimpleDateFormat(odakTimePattern).format(calendar.time))
         }
         binding.monthText.setOnClickListener {
             selectedDateButton(it as TextView)
 
-            val values = ArrayList<String>()
-            for (i in 0..30){
-                values.add(i, "$i.GÜN")
-            }
-            binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(values.toTypedArray())
-            setData(values.size, 100f)
-
-            binding.lineChart.invalidate()
+            graphPeriodEnum = GraphPeriodEnum.Month
+            val calendar = Calendar.getInstance()
+            repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
+                SimpleDateFormat(odakTimePattern).format(calendar.time))
         }
-/*
+
         binding.favorite.setOnClickListener {
-            if (USER.favoriteCodeList.contains(currencyModel.currencyCode)) {
-                USER.favoriteCodeList.remove(currencyModel.currencyCode)
+            if (isFavorite) {
                 binding.favorite.setImageDrawable(
                     resources.getDrawable(
                         R.drawable.icon_favorite,
                         resources.newTheme()
                     )
                 )
+                deleteFavoriteList(exchangeRateDTO.code)
+                isAddFavorite = false
             } else {
-                USER.favoriteCodeList.add(currencyModel.currencyCode)
                 binding.favorite.setImageDrawable(
                     resources.getDrawable(
                         R.drawable.icon_selected_favorite,
                         resources.newTheme()
                     )
                 )
+                addFavoriteList(exchangeRateDTO.code)
+                isAddFavorite = true
             }
-            isChangeInnerViewCurrencyModel = currencyModel
+            isChangeInnerViewCurrencyModel = exchangeRateDTO
         }
-
- */
 
         binding.converter.setOnClickListener {
             startResult.launch(Intent(this, ConverterActivity::class.java).also {
-              //  exchangeRateDTOForDetail = currencyModel
+                exchangeRateDTOForDetail = exchangeRateDTO
             })
         }
 
         binding.alarm.setOnClickListener {
             startResult.launch(Intent(this, AlarmDetailActivity::class.java).also {
-              //  exchangeRateDTOForDetail = currencyModel
+                exchangeRateDTOForDetail = exchangeRateDTO
             })
         }
 
@@ -350,12 +282,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setData(count: Int, range: Float) {
-        val values: ArrayList<Entry> = ArrayList()
-        for (i in 0 until count) {
-            val `val` = (Math.random() * range).toFloat()
-            values.add(Entry(i.toFloat(), `val`, resources.getDrawable(R.drawable.star, resources.newTheme())))
-        }
+    private fun setData(values : ArrayList<Entry>) {
+        changeChartY(graphPeriodEnum, values.size)
+
         val set1: LineDataSet
         if (binding.lineChart.data != null &&
             binding.lineChart.data.dataSetCount > 0
@@ -416,12 +345,77 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
     }
 
     private fun changeSliderCirclePosition(salePrice: Float, minSalePrice: Float, maxSalePrice:Float){
-        binding.sliderCircle.animate().translationX((binding.sliderWay.width * ((salePrice - minSalePrice) / (maxSalePrice - minSalePrice))).toFloat())
+        binding.sliderCircle.animate().translationX((binding.sliderWay.width * ((salePrice - minSalePrice) / (maxSalePrice - minSalePrice))))
             .setInterpolator(AccelerateInterpolator()).setDuration(500).start()
     }
 
-    override fun onValueSelected(e: Entry?, h: Highlight?) {
+    private fun changeChartY(type:GraphPeriodEnum, size : Int){
+        val value = ArrayList<String>()
+        println("size")
+        when(type){
+            GraphPeriodEnum.Hour -> {
+                for (i in 0..size){
+                    value.add(i, "$i.dakika")
+                }
+            }
+            GraphPeriodEnum.Day ->{
+                for (i in 0..size){
+                    value.add(i, "$i.saat")
+                }
+            }
+            GraphPeriodEnum.Week ->{
+                for (i in 0..size){
+                    value.add(i, "$i.gün")
+                }
+            }
+            GraphPeriodEnum.Month ->{
+                for (i in 0..size){
+                    value.add(i, "$i.GÜN")
+                }
+            }
+        }
 
+        binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(value.toTypedArray())
+    }
+
+    private fun addFavoriteList(favoriteCodeId:String){
+        rememberMemberDTO?.let {
+            if (it.memberData != null){
+                val memberDataJSON = JSONTokener(it.memberData).nextValue() as JSONObject
+                var favoriteIdList = memberDataJSON.getString("favoriteIdList")
+                favoriteIdList += ",$favoriteCodeId"
+                val updateMemberDTO = JsonObject()
+                updateMemberDTO.addProperty("MemberData", """{"favoriteIdList": "$favoriteIdList"}""")
+
+                println(updateMemberDTO)
+                repository.updateMemberDTO(updateMemberDTO)
+            }
+            else{
+                val updateMemberDTO = JsonObject()
+                updateMemberDTO.addProperty("MemberData", """{"favoriteIdList": "$favoriteCodeId"}""")
+
+                println(updateMemberDTO)
+                repository.updateMemberDTO(updateMemberDTO)
+            }
+        }
+    }
+
+    private fun deleteFavoriteList(favoriteCodeId:String){
+        rememberMemberDTO?.let {
+            if (it.memberData != null){
+                val memberDataJSON = JSONTokener(it.memberData).nextValue() as JSONObject
+                var favoriteIdList = memberDataJSON.getString("favoriteIdList")
+                if (favoriteIdList.contains(favoriteCodeId)){
+                    favoriteIdList = favoriteIdList.replace(",$favoriteCodeId", "")
+                    val updateMemberDTO = JsonObject()
+                    updateMemberDTO.addProperty("MemberData", """{"favoriteIdList": "$favoriteIdList"}""")
+                    repository.updateMemberDTO(updateMemberDTO)
+                }
+            }
+        }
+    }
+
+    override fun onValueSelected(e: Entry?, h: Highlight?) {
         Log.i("Entry selected", e.toString())
         Log.i("LOW HIGH", "low: " + binding.lineChart.lowestVisibleX + ", high: " + binding.lineChart.highestVisibleX)
         Log.i("MIN MAX", "xMin: " + binding.lineChart.xChartMin + ", xMax: " + binding.lineChart.xChartMax + ", yMin: " + binding.lineChart.yChartMin + ", yMax: " + binding.lineChart.yChartMax)

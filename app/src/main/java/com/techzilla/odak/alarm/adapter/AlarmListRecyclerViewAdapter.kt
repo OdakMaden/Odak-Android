@@ -30,7 +30,7 @@ class AlarmListRecyclerViewAdapter : RecyclerView.Adapter<AlarmListRecyclerViewA
                 Calendar.MINUTE)}"}
             val termHour = if (dateShow.get(Calendar.HOUR_OF_DAY) > 10){dateShow.get(Calendar.HOUR_OF_DAY).toString()}else{"0${dateShow.get(
                 Calendar.HOUR_OF_DAY)}"}
-            binding.subDate.text = "${termHour}:${termMinute}"
+            //binding.subDate.text = "${termHour}:${termMinute}"
 
             binding.title.text = alarm.currencyCode
             binding.subTitle.text = alarm.name

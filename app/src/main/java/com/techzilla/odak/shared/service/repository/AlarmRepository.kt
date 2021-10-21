@@ -60,4 +60,23 @@ class AlarmRepository {
             }
         })
     }
+
+    fun deleteAlarm(rId:Int){
+        service.deleteAlarm(rememberMemberDTO!!.memberID, rId).enqueue(object : Callback<Void>{
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful){
+                    if (response.code() == 200){
+                        println("silindi")
+                    }
+                    else{
+                        println("silinmedi")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
+    }
 }

@@ -5,10 +5,7 @@ import com.techzilla.odak.shared.constants.BASEURL
 import com.techzilla.odak.shared.constants.apiKey
 import com.techzilla.odak.shared.constants.application
 import com.techzilla.odak.shared.constants.sessionKey
-import com.techzilla.odak.shared.model.AlarmDTO
-import com.techzilla.odak.shared.model.ExchangeRateDTO
-import com.techzilla.odak.shared.model.MemberDTO
-import com.techzilla.odak.shared.model.TimeStamp
+import com.techzilla.odak.shared.model.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -48,8 +45,11 @@ interface ApiService {
 
     @DELETE("Member/{MemberID}/Alarm/{RID}")
     @Headers(apiKey, sessionKey, application)
-    fun deleteAlarm(@Path("MemberID") memberID: String, @Path("RID") rID: Int)
+    fun deleteAlarm(@Path("MemberID") memberID: String, @Path("RID") rID: Int) : Call<Void>
 
+    @GET("ExchangeRateGraph")
+    @Headers(apiKey, sessionKey, application)
+    fun getGraphData(@Query("MemberID") memberID : String, @Query("CurrencyCode") currencyCode:String, @Query("GraphPeriodEnum") graphPeriodEnum:String, @Query("TimeStamp") timeStamp:String): Call<ExchangeRateGraphDTO>
 
     companion object{
         operator fun invoke():ApiService{

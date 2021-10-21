@@ -160,6 +160,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         if (_type>2){
             favoriteArrayList.remove(exchangeRateDTO)
             arrayList.remove(exchangeRateDTO)
+            arrayListMap.remove(exchangeRateDTO.code)
             notifyDataSetChanged()
         }
         else{
@@ -231,6 +232,36 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
             arrayList.removeAt(isShowList)
             arrayList.add(isShowList, exchangeRateDTO)
             notifyDataSetChanged()
+        }
+    }
+
+    fun changeFavoriteState(exchangeRateDTO: ExchangeRateDTO, favoriteString: String){
+        favoriteString.let { favoriteString->
+            if (favoriteString.contains(exchangeRateDTO.code) && !favoriteArrayList.contains(exchangeRateDTO)){
+                favoriteArrayList.add(exchangeRateDTO)
+            }
+            else{
+                favoriteArrayList.remove(exchangeRateDTO)
+            }
+        }
+
+        when (exchangeRateDTO.currencyType) {
+            CurrencyTypeEnum.Money ->{
+                dollarArrayList.removeAt(dollarMapList[exchangeRateDTO.code]!!)
+                dollarArrayList.add(dollarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
+            }
+            CurrencyTypeEnum.Metal -> {
+                goldBarArrayList.removeAt(goldBarMapList[exchangeRateDTO.code]!!)
+                goldBarArrayList.add(goldBarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
+            }
+            CurrencyTypeEnum.Crypto -> {
+                cryptoArrayList.removeAt(cryptoMapList[exchangeRateDTO.code]!!)
+                cryptoArrayList.add(cryptoMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
+            }
+            CurrencyTypeEnum.Parity ->{
+                dollarArrayList.removeAt(dollarMapList[exchangeRateDTO.code]!!)
+                dollarArrayList.add(dollarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
+            }
         }
     }
 
