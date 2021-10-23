@@ -19,6 +19,9 @@ class AlarmRepository {
     private var alarmsListMutableLiveData = MutableLiveData<List<AlarmDTO>>()
     val alarmsListLiveData get() = alarmsListMutableLiveData
 
+    private var alarmDeleteMutableLiveData = MutableLiveData<AlarmDTO>()
+    val alarmDeleteLiveData get() = alarmDeleteMutableLiveData
+
     private var errorMutableLiveData = MutableLiveData<String>()
     val errorLiveData get() = errorMutableLiveData
 
@@ -61,12 +64,12 @@ class AlarmRepository {
         })
     }
 
-    fun deleteAlarm(rId:Int){
-        service.deleteAlarm(rememberMemberDTO!!.memberID, rId).enqueue(object : Callback<Void>{
+    fun deleteAlarm(alarmDTO: AlarmDTO){
+        service.deleteAlarm(rememberMemberDTO!!.memberID, alarmDTO.rID).enqueue(object : Callback<Void>{
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful){
                     if (response.code() == 200){
-                        println("silindi")
+                        alarmDeleteMutableLiveData.postValue(alarmDTO)
                     }
                     else{
                         println("silinmedi")

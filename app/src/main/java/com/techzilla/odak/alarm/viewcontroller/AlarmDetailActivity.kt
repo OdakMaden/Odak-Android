@@ -2,9 +2,9 @@ package com.techzilla.odak.alarm.viewcontroller
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
@@ -12,11 +12,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import com.google.gson.JsonObject
 import com.techzilla.odak.R
 import com.techzilla.odak.alarm.constant.alarmDTO
 import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.databinding.ActivityAlarmDetailBinding
+import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.model.AlarmTypeEnum
 import com.techzilla.odak.shared.service.repository.AlarmRepository
 import java.text.DecimalFormat
@@ -27,12 +27,11 @@ class AlarmDetailActivity : AppCompatActivity() {
 
     private lateinit var alarmRepository: AlarmRepository
 
+    private var isEdit:Boolean = false
+
     private var alarmType : AlarmTypeEnum = AlarmTypeEnum.PriceOver
     private var alarmName : String = ""
-    private var isPrice:Boolean = true
-    private var isDistance:Boolean = false
-    private var isIfUp:Boolean = true
-    private var isIfDown:Boolean = false
+
     private val decimalFormat = DecimalFormat("#.####")
 
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
@@ -53,6 +52,8 @@ class AlarmDetailActivity : AppCompatActivity() {
             finish()
         }
         alarmRepository = AlarmRepository()
+        isEdit = intent.getBooleanExtra("edit", false)
+
 
         exchangeRateDTOForDetail?.let {
             binding.currencyCode.text = it.code
@@ -67,13 +68,36 @@ class AlarmDetailActivity : AppCompatActivity() {
             binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
         }
 
+        if (isEdit){
+            alarmDTO?.let {
+                alarmType = it.alarmType
+                setSelectButton(it.alarmType)
+                if (it.alarmType == AlarmTypeEnum.PriceUnder || it.alarmType == AlarmTypeEnum.PriceOver){
+                    binding.aimPrice.setText(decimalFormat.format(it.targetValue))
+                }
+                else if(it.alarmType == AlarmTypeEnum.PercentOver){
+                    binding.aimPrice.setText("% ${decimalFormat.format(it.targetValue)}")
+                }
+                else if (it.alarmType == AlarmTypeEnum.PercentUnder){
+                    binding.aimPrice.setText("% ${decimalFormat.format(it.targetValue)}")
+                }
+
+                object : CountDownTimer(2000, 1000){
+                    override fun onTick(millisUntilFinished: Long) {
+                    }
+
+                    override fun onFinish() {
+                        setSliderXForEdit(it)
+                    }
+                }.start()
+            }
+        }
 
         binding.ifDownButton.setOnClickListener {
             if (!binding.ifDownButtonText.isSelected){
                 binding.ifUpButtonText.isSelected = false
                 binding.ifDownButtonText.isSelected = true
-                isIfDown = true
-                isIfUp = false
+                alarmType = setAlarmType()
                 binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
                 getResultSlider(binding.sliderCircle.x)
             }
@@ -83,30 +107,27 @@ class AlarmDetailActivity : AppCompatActivity() {
             if (!binding.ifUpButtonText.isSelected){
                 binding.ifDownButtonText.isSelected = false
                 binding.ifUpButtonText.isSelected = true
-                isIfDown = false
-                isIfUp = true
+                alarmType = setAlarmType()
                 binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
                 getResultSlider(binding.sliderCircle.x)
             }
         }
 
-        binding.distanceButton.setOnClickListener {
-            binding.distanceButton.isSelected = true
+        binding.percentButton.setOnClickListener {
+            binding.percentButton.isSelected = true
             binding.priceButton.isSelected = false
             binding.aimLabelTitle.text =
-                resources.getString(R.string.alarm_aim_title_label).replace("%@", binding.distanceButton.text.toString())
-            isDistance = true
-            isPrice = false
+                resources.getString(R.string.alarm_aim_title_label).replace("%@", binding.percentButton.text.toString())
+            alarmType = setAlarmType()
             getResultSlider(binding.sliderCircle.x)
         }
 
         binding.priceButton.setOnClickListener {
-            binding.distanceButton.isSelected = false
+            binding.percentButton.isSelected = false
             binding.priceButton.isSelected = true
             binding.aimLabelTitle.text =
                 resources.getString(R.string.alarm_aim_title_label).replace("%@", binding.priceButton.text.toString())
-            isDistance = false
-            isPrice = true
+            alarmType = setAlarmType()
             getResultSlider(binding.sliderCircle.x)
         }
 
@@ -122,44 +143,29 @@ class AlarmDetailActivity : AppCompatActivity() {
         })
 
         binding.createAlarmButton.setOnClickListener {
-            if (isPrice && !isDistance && isIfUp && !isIfDown){
-                alarmType = AlarmTypeEnum.PriceOver
-                alarmName = "${binding.currencyName.text} ${binding.aimPrice.text}"
+            alarmName = when (alarmType) {
+                AlarmTypeEnum.PriceOver -> {
+                    "${binding.currencyName.text} ${binding.aimPrice.text}"
+                }
+                AlarmTypeEnum.PriceUnder -> {
+                    "${binding.currencyName.text} ${binding.aimPrice.text}"
+                }
+                AlarmTypeEnum.PercentOver -> {
+                    "${binding.currencyName.text} +${binding.aimPrice.text}"
+                }
+                AlarmTypeEnum.PercentUnder -> {
+                    "${binding.currencyName.text} -${binding.aimPrice.text.toString().replace("-", "")}"
+                }
             }
-            else if (isPrice && !isDistance && !isIfUp && isIfDown){
-                alarmType = AlarmTypeEnum.PriceUnder
-                alarmName = "${binding.currencyName.text} ${binding.aimPrice.text}"
-            }
-            else if (!isPrice && isDistance && isIfUp && !isIfDown){
-                alarmType = AlarmTypeEnum.PercentOver
-                alarmName = "${binding.currencyName.text} +${binding.aimPrice.text}"
-            }
-            else if(!isPrice && isDistance && !isIfUp && isIfDown){
-                alarmType = AlarmTypeEnum.PercentUnder
-                alarmName = "${binding.currencyName.text} -${binding.aimPrice.text}"
-            }
-            /*
-            val jsonObject = JsonObject()
-            jsonObject.addProperty("Name", "${binding.currencyName.text.toString()} ${binding.aimPrice.text.toString()}")
-            jsonObject.addProperty("CurrencyCode", binding.currencyCode.text.toString())
-            jsonObject.addProperty("AlarmType", alarmType.value)
-           // if (isDistance) {
-            jsonObject.addProperty("ReferenceValue", exchangeRateDTOForDetail!!.sellingRate
-                 //   binding.lastPriceLabel.text.toString().replace("SON FİYAT: ", "").toDouble()
-                )
-        //    }
-
-            jsonObject.addProperty("TargetValue", binding.aimPrice.text.toString().replace("% ","").toDouble())
-             */
 
             val alarmMap = HashMap<String, Any>()
             alarmMap["Name"] = alarmName
             alarmMap["CurrencyCode"] = exchangeRateDTOForDetail!!.code
             alarmMap["AlarmType"] = alarmType.value
-            if (isDistance) {
+            if (alarmType == AlarmTypeEnum.PercentOver || alarmType == AlarmTypeEnum.PercentUnder) {
                 alarmMap["ReferenceValue"] = exchangeRateDTOForDetail!!.sellingRate
             }
-            alarmMap["TargetValue"] = binding.aimPrice.text.toString().replace("% ","").toDouble()
+            alarmMap["TargetValue"] = binding.aimPrice.text.toString().replace("%","").replace(" ","").replace("-", "").toDouble()
 
             alarmRepository.addAlarm(alarmMap)
         }
@@ -175,65 +181,65 @@ class AlarmDetailActivity : AppCompatActivity() {
             binding.aimPrice.minWidth = 40
         }
 
-
         binding.aimPrice.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
             if (!hasFocus){
-                if (isPrice && !isDistance){
+                val aimPriceValue = binding.aimPrice.text.toString().replace("%", "").replace(" ","").toDouble()
+                if (alarmType == AlarmTypeEnum.PriceOver || alarmType == AlarmTypeEnum.PriceUnder){
                     when {
-                        binding.aimPrice.text.toString().replace("% ", "").toDouble() < (exchangeRateDTOForDetail!!.sellingRate * 0.8) -> {
+                         aimPriceValue < (exchangeRateDTOForDetail!!.sellingRate * 0.8) -> {
                             binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 0.8).toString())
                             binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
                             getResultSlider(binding.sliderCircle.x)
                         }
-                        binding.aimPrice.text.toString().replace("% ", "").toDouble() > (exchangeRateDTOForDetail!!.sellingRate * 1.2) -> {
+                        aimPriceValue > (exchangeRateDTOForDetail!!.sellingRate * 1.2) -> {
                             binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 1.2).toString())
                             binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
                             getResultSlider(binding.sliderCircle.x)
                         }
                         else -> {
-                            changeSliderTitleWithEditText(binding.aimPrice.text.toString().replace("% ", ""))
+                            setSliderXToChangeEditText(binding.aimPrice.text.toString())
                         }
                     }
                 }
-                else if(!isPrice && isDistance){
+                else if (alarmType == AlarmTypeEnum.PercentOver){
                     when {
-                        binding.aimPrice.text.toString().replace("% ", "").toDouble() < (exchangeRateDTOForDetail!!.sellingRate * 0.8) -> {
+                        aimPriceValue < 0 -> {
                             binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 0.8).toString())
                             binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
                             getResultSlider(binding.sliderCircle.x)
                         }
-                        binding.aimPrice.text.toString().replace("% ", "").toDouble() > (exchangeRateDTOForDetail!!.sellingRate * 1.2) -> {
+                        aimPriceValue > 20 -> {
                             binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 1.2).toString())
                             binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
                             getResultSlider(binding.sliderCircle.x)
                         }
                         else -> {
-                            changeSliderTitleWithEditText(binding.aimPrice.text.toString().replace("% ", ""))
+                            setSliderXToChangeEditText(binding.aimPrice.text.toString())
                         }
                     }
                 }
-                /*when {
-                    binding.aimPrice.text.toString().replace("% ", "").toDouble() < (exchangeRateDTOForDetail!!.sellingRate * 0.8) -> {
-                        binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 0.8).toString())
-                        binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
-                        getResultSlider(binding.sliderCircle.x)
-                    }
-                    binding.aimPrice.text.toString().replace("% ", "").toDouble() > (exchangeRateDTOForDetail!!.sellingRate * 1.2) -> {
-                        binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 1.2).toString())
-                        binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
-                        getResultSlider(binding.sliderCircle.x)
-                    }
-                    else -> {
-                        changeSliderTitleWithEditText(binding.aimPrice.text.toString().replace("% ", ""))
+                else if (alarmType == AlarmTypeEnum.PercentUnder){
+                    when {
+                        aimPriceValue < -20 -> {
+                            binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 0.8).toString())
+                            binding.sliderCircle.x = ((binding.sliderCircleWay.width - binding.sliderWay.width - binding.sliderCircle.width) / 2).toFloat()
+                            getResultSlider(binding.sliderCircle.x)
+                        }
+                        aimPriceValue > 0 -> {
+                            binding.aimPrice.setText((exchangeRateDTOForDetail!!.sellingRate * 1.2).toString())
+                            binding.sliderCircle.x = (binding.sliderWay.width + binding.sliderCircle.width / 2).toFloat()
+                            getResultSlider(binding.sliderCircle.x)
+                        }
+                        else -> {
+                            setSliderXToChangeEditText(binding.aimPrice.text.toString())
+                        }
                     }
                 }
-
-                 */
             }
 
         }
 
-        binding.sliderCircleWay.setOnTouchListener { view, motionEvent ->
+        binding.sliderCircleWay.setOnTouchListener {view, motionEvent ->
             if (motionEvent.action == MotionEvent.ACTION_MOVE && checkOnSliderWay(motionEvent.x)){
                 binding.sliderCircle.x = motionEvent.x - binding.sliderCircle.width / 2
                 getResultSlider(binding.sliderCircle.x)
@@ -253,49 +259,128 @@ class AlarmDetailActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun getResultSlider(x:Float){
-        val result = (x + (binding.sliderCircle.width / 2) - ((binding.sliderCircleWay.width - binding.sliderWay.width ) / 2 )) /
-                (binding.sliderWay.width)
-
-        val decimalFactor = DecimalFormat("#.#").format(result * 20).toDouble()
+        val result = (x / binding.sliderWay.width) - (binding.sliderCircleWay.width / (2 * binding.sliderWay.width) - 1/2)
+        val decimalFactor = DecimalFormat("#.#").format(result * 20 - 0.4).toDouble()
         exchangeRateDTOForDetail?.let {
-            if (isPrice && !isDistance){
-                if (isIfUp && !isIfDown){
+            when (alarmType) {
+                AlarmTypeEnum.PriceOver -> {
                     binding.aimPrice.setText(decimalFormat.format(it.sellingRate * (decimalFactor / 100 + 1)))
                 }
-                else if (!isIfUp && isIfDown){
+                AlarmTypeEnum.PriceUnder -> {
                     binding.aimPrice.setText(decimalFormat.format((it.sellingRate ) * (0.8 + decimalFactor / 100)))
                 }
-            }
-            else if(!isPrice && isDistance){
-                if (isIfUp && !isIfDown){
+                AlarmTypeEnum.PercentOver -> {
                     binding.aimPrice.setText("% ${DecimalFormat("#.#").format(decimalFactor)}")
                 }
-                else if (!isIfUp && isIfDown){
+                AlarmTypeEnum.PercentUnder -> {
                     binding.aimPrice.setText("% ${DecimalFormat("#.#").format(decimalFactor - 20)}")
                 }
             }
         }
     }
 
-    private fun changeSliderTitleWithEditText(text : String){
+    private fun setSliderXToChangeEditText(targetValueText:String){
+        val targetValue = targetValueText.replace("%", "").replace(" ","").toFloat()
         exchangeRateDTOForDetail?.let {
-            if (isPrice && !isDistance){
-                val textFloat = text.toFloat()
-                val sliderValue = (binding.sliderCircleWay.width - (binding.sliderCircleWay.width - binding.sliderWay.width) / 2  )
-                if (isIfUp && !isIfDown){
-                    binding.sliderCircle.x = (sliderValue * (((textFloat - (it.sellingRate)) / ((it.sellingRate*1.2) - (it.sellingRate)))).toFloat()) - binding.sliderCircle.width / 2
+            when (alarmType) {
+                AlarmTypeEnum.PriceOver -> {
+                    val decimalFactor = DecimalFormat("#.#").format(100 * ((targetValue / it.sellingRate) - 1)).toFloat()
+                    val result = (decimalFactor + 0.4) / 20
+
+                    binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
                 }
-                else if (!isIfUp && isIfDown){
-                    binding.sliderCircle.x = (sliderValue * (((textFloat - (it.sellingRate * 0.8)) / ((it.sellingRate) - (it.sellingRate * 0.8)))).toFloat()) - binding.sliderCircle.width / 2
+                AlarmTypeEnum.PriceUnder -> {
+                    val decimalFactor = DecimalFormat("#.#").format((100 *((targetValue/it.sellingRate) - 0.8))).toFloat()
+                    val result = (decimalFactor + 0.4) / 20
+
+                    binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
+                }
+                AlarmTypeEnum.PercentOver -> {
+                    val result = (targetValue + 0.4) / 20
+                    binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
+                }
+                AlarmTypeEnum.PercentUnder -> {
+                    val decimalFactor = targetValue + 20
+                    val result = (decimalFactor + 0.4) / 20
+
+                    binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
                 }
             }
-            else if(!isPrice && isDistance){
-                if (isIfUp && !isIfDown){
+        }
+    }
 
-                }
-                else if (!isIfUp && isIfDown){
+    private fun setSliderXForEdit(alarmDTO: AlarmDTO){
+        exchangeRateDTOForDetail?.let {
+            val targetValue = alarmDTO.targetValue
+            when (alarmDTO.alarmType) {
+                AlarmTypeEnum.PriceOver -> {
+                    val decimalFactor = DecimalFormat("#.#").format(100 * ((targetValue / it.sellingRate) - 1)).toFloat()
+                    val result = (decimalFactor + 0.4) / 20
 
+                    binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
                 }
+                AlarmTypeEnum.PriceUnder -> {
+                    val decimalFactor = DecimalFormat("#.#").format((100 *((targetValue/it.sellingRate) - 0.8))).toFloat()
+                    val result = (decimalFactor + 0.4) / 20
+
+                    binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
+                }
+                AlarmTypeEnum.PercentOver -> {
+                    val result = (targetValue + 0.4) / 20
+                    binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
+                }
+                AlarmTypeEnum.PercentUnder -> {
+                    val decimalFactor = (targetValue * (-1)) + 20
+                    val result = (decimalFactor + 0.4) / 20
+
+                    binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
+                }
+            }
+        }
+    }
+
+    private fun setAlarmType(): AlarmTypeEnum{
+        var result : AlarmTypeEnum = AlarmTypeEnum.PriceOver
+        if (binding.ifUpButtonText.isSelected && binding.priceButton.isSelected){
+            result = AlarmTypeEnum.PriceOver
+        }
+        else if (binding.ifDownButtonText.isSelected && binding.priceButton.isSelected){
+            result = AlarmTypeEnum.PriceUnder
+        }
+        else if (binding.ifUpButtonText.isSelected && binding.percentButton.isSelected){
+            result = AlarmTypeEnum.PercentOver
+        }
+        else if (binding.ifDownButtonText.isSelected && binding.percentButton.isSelected){
+            result = AlarmTypeEnum.PercentUnder
+        }
+        return result
+    }
+
+    private fun setSelectButton(alarmTypeEnum: AlarmTypeEnum){
+        when(alarmTypeEnum){
+            AlarmTypeEnum.PriceOver ->{
+                binding.priceButton.isSelected = true
+                binding.percentButton.isSelected = false
+                binding.ifUpButtonText.isSelected = true
+                binding.ifDownButtonText.isSelected = false
+            }
+            AlarmTypeEnum.PriceUnder ->{
+                binding.priceButton.isSelected = true
+                binding.percentButton.isSelected = false
+                binding.ifUpButtonText.isSelected = false
+                binding.ifDownButtonText.isSelected = true
+            }
+            AlarmTypeEnum.PercentOver ->{
+                binding.priceButton.isSelected = false
+                binding.percentButton.isSelected = true
+                binding.ifUpButtonText.isSelected = true
+                binding.ifDownButtonText.isSelected = false
+            }
+            AlarmTypeEnum.PercentUnder ->{
+                binding.priceButton.isSelected = false
+                binding.percentButton.isSelected = true
+                binding.ifUpButtonText.isSelected = false
+                binding.ifDownButtonText.isSelected = true
             }
         }
     }

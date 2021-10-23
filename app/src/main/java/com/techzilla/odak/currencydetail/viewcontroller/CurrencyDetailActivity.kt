@@ -351,7 +351,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
 
     private fun changeChartY(type:GraphPeriodEnum, size : Int){
         val value = ArrayList<String>()
-        println("size")
+        println(size)
         when(type){
             GraphPeriodEnum.Hour -> {
                 for (i in 0..size){

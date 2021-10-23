@@ -220,7 +220,10 @@
 
     <style name="odak.textview.alarm_detail.last_price_label" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/metropolis_semi_bold</item>
-        <item name="android:layout_margin">30dp</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
@@ -240,7 +243,8 @@
     </style>
 
     <style name="odak.edit_view.alarm_detail.aim_price" parent="Widget.AppCompat.EditText">
-        <item name="android:inputType">numberDecimal</item>
+        <item name="android:inputType">numberSigned|numberDecimal</item>
+        <item name="android:digits">0123456789-%.,</item>
         <item name="android:textSize">26sp</item>
         <item name="fontFamily">@font/metropolis_black</item>
         <item name="android:textColor">@color/white</item>

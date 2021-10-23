@@ -16,5 +16,6 @@ var rememberMemberDTO : MemberDTO? = null
 const val odakTimePattern:String = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
 const val timePatternYearMountDayHourMinuteSecond:String = "yyyy-MM-dd'T'HH:mm:ss"
 
-val exchangeRateListMap = HashMap<String, Int>()
+val exchangeRateListForIndexMap = HashMap<String, Int>()
 val exchangeRateList = ArrayList<ExchangeRateDTO>()
+val exchangeRateDTOListMap = HashMap<String, ExchangeRateDTO>()

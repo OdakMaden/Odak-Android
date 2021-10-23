@@ -4,10 +4,7 @@ import android.annotation.SuppressLint
 import android.os.CountDownTimer
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
-import com.techzilla.odak.shared.constants.exchangeRateList
-import com.techzilla.odak.shared.constants.exchangeRateListMap
-import com.techzilla.odak.shared.constants.odakTimePattern
-import com.techzilla.odak.shared.constants.rememberMemberDTO
+import com.techzilla.odak.shared.constants.*
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.model.MemberDTO
 import com.techzilla.odak.shared.model.TimeStamp
@@ -17,10 +14,23 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MainRepository {
     private val service = ApiService.invoke()
+
+    private val periodTimeGetExchangeRateList = object : CountDownTimer(3000, 3000){
+        override fun onTick(millisUntilFinished: Long) {
+
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        override fun onFinish() {
+            val calendar = Calendar.getInstance()
+            val timeStamp = SimpleDateFormat(odakTimePattern).format(calendar.time)
+            getExchangeRateList(rememberMemberDTO!!.memberID, timeStamp)
+            println(timeStamp)
+        }
+    }
 
     private var exchangeRateListMutableLiveData = MutableLiveData<List<ExchangeRateDTO>>()
     val exchangeRateListLiveData get() = exchangeRateListMutableLiveData
@@ -76,31 +86,25 @@ class MainRepository {
             exchangeRateList.addAll(list)
             var term = 0
             exchangeRateList.forEach { exDTO ->
-                exchangeRateListMap[exDTO.code] = term
+                exchangeRateDTOListMap[exDTO.code] = exDTO
+                exchangeRateListForIndexMap[exDTO.code] = term
                 term++
             }
         }
         else{
             list.forEach { exDTO->
-                exchangeRateList.removeAt(exchangeRateListMap[exDTO.code]!!)
-                exchangeRateList.add(exchangeRateListMap[exDTO.code]!!, exDTO)
+                exchangeRateDTOListMap[exDTO.code] = exDTO
+                exchangeRateList.removeAt(exchangeRateListForIndexMap[exDTO.code]!!)
+                exchangeRateList.add(exchangeRateListForIndexMap[exDTO.code]!!, exDTO)
             }
         }
     }
 
     private fun periodicRequest(){
-        object : CountDownTimer(3000, 3000){
-            override fun onTick(millisUntilFinished: Long) {
+        periodTimeGetExchangeRateList.start()
+    }
 
-            }
-
-            @SuppressLint("SimpleDateFormat")
-            override fun onFinish() {
-                val calendar = Calendar.getInstance()
-                val timeStamp = SimpleDateFormat(odakTimePattern).format(calendar.time)
-                getExchangeRateList(rememberMemberDTO!!.memberID, timeStamp)
-                println(timeStamp)
-            }
-        }.start()
+    fun periodicRequestClose(){
+        periodTimeGetExchangeRateList.cancel()
     }
 }

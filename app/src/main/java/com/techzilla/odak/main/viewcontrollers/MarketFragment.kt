@@ -24,8 +24,6 @@ import com.techzilla.odak.databinding.FragmentMarketBinding
 import com.techzilla.odak.main.adapters.InnerViewRecyclerViewAdapter
 import com.techzilla.odak.main.constant.isAddFavorite
 import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
-import com.techzilla.odak.shared.constants.exchangeRateList
-import com.techzilla.odak.shared.constants.exchangeRateListMap
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.service.repository.MainRepository
@@ -145,6 +143,7 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
     override fun onDestroy() {
         super.onDestroy()
         isChangeInnerViewCurrencyModel = null
+        mainRepository.periodicRequestClose()
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
