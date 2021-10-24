@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,7 @@ class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
 
         binding.loginButton.setOnClickListener {
             if (binding.password.text.length==6){
+                binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
                 val sharedPref = getSharedPreferences(getString(R.string.Odak_shared_pref), MODE_PRIVATE)
                 loginRepository.checkPassword(binding.password.text.toString(), this, sharedPref, this)
             }
@@ -43,6 +45,7 @@ class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
     }
 
     override fun checkPasswordListener(isCheck: Boolean) {
+        binding.componentProgressBar.progressbarContainer.visibility = View.GONE
         if (isCheck){
             Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_SINGLE_TOP

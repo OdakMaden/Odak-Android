@@ -54,6 +54,19 @@
     <string name="alarm.now_price.label">GÜNCEL FİYAT</string>
     <string name="alarm.aim_price.label">HEDEF FİYAT</string>
 
+    <!-- Profile -->
+    <string name="profile.name.label">İSİM</string>
+    <string name="profile.surname.label">SOYİSİM</string>
+    <string name="profile.birthday.label">Doğum Tarihi</string>
+    <string name="profile.email.label">MAİL ADRESİ</string>
+    <string name="profile.notification.button">BİLDİRİMLER</string>
+    <string name="profile.change_password.label">ŞİFRE DEĞİŞTİR</string>
+    <string name="profile.logout.label">ÇIKIŞ YAP</string>
+    <string name="profile.old_password.label">ESKİ ŞİFRE</string>
+    <string name="profile.new_password.label">YENİ ŞİFRE</string>
+    <string name="profile.repeat_new_password.label">YENİ ŞİFRE TEKRAR</string>
+    <string name="profile.save.button">KAYDET</string>
+    
     <!-- Alarm default menu-->
     <string name="alarm.menu.edit.label">DÜZENLE</string>
     <string name="alarm.menu.delete.label">SİL</string>
@@ -61,5 +74,4 @@
 
     <!-- Alert -->
     <string name="alert.login.message">YANLIŞ BİR ŞİFRE GİRDİNİZ. LÜTFEN ŞİFREYİ DOĞRU GİRİNİZ.</string>
-
 </resources>

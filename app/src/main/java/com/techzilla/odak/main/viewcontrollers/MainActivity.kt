@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         binding.market.setOnClickListener {
             supportFragmentManager.beginTransaction()
                 .replace(binding.fragmentContainer.id, MarketFragment())
-                //.addToBackStack(MarketFragment.TAG)
+                .addToBackStack(MarketFragment.TAG)
                 .commit()
         }
         binding.converter.setOnClickListener {

@@ -20,4 +20,5 @@
     <color name="odak_line_blue">#00FFFF</color>
     <color name="odak_chart_bakground_line_blue">#00B9FF</color>
     <color name="odak_blue_gray">#858FA7</color>
+    <color name="progressbar_container_background">#39D3D3D3</color>
 </resources>

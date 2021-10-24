@@ -42,7 +42,6 @@ class ConverterFragment : Fragment() {
         binding.fromRecyclerview.adapter = fromAdapter
         binding.toRecyclerview.adapter = toAdapter
 
-
         binding.fromRecyclerview.adapter = fromAdapter
         binding.toRecyclerview.adapter = toAdapter
 

@@ -298,4 +298,24 @@
         <item name="android:textSize">12sp</item>
         <item name="fontFamily">@font/metropolis_black</item>
     </style>
+
+    <style name="odak.textview.profile.title" parent="Widget.AppCompat.TextView">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/metropolis_medium</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="odak.textview.profile.change_password" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/metropolis_medium</item>
+    </style>
+
+    <style name="odak.textview.profile.save_button" parent="Widget.AppCompat.TextView">
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="fontFamily">@font/metropolis_black</item>
+        <item name="android:textColor">@color/odak_light_blue</item>
+    </style>
 </resources>

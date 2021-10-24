@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.techzilla.odak">
 
-
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,8 +11,11 @@
         android:logo="@mipmap/logo"
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.Odak">
+        android:theme="@style/Theme.Odak"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".profile.viewcontroller.ChangePasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".converter.viewcontrollers.ConverterActivity"
             android:exported="true" />

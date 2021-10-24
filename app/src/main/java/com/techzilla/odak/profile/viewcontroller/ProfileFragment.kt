@@ -64,7 +64,9 @@ class ProfileFragment : Fragment() {
         }
 
         binding.changePasswordButton.setOnClickListener {
-            println("asdsad")
+            Intent(requireActivity(), ChangePasswordActivity::class.java).apply {
+                startActivity(this)
+            }
         }
     }
 
