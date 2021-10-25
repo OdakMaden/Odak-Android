@@ -374,10 +374,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 calendar.time = date!!
                 calendar.add(Calendar.MINUTE, -60)
                 for (i in 0..60){
-                    calendar.add(Calendar.MINUTE, 1)
                     val hour = if (calendar[Calendar.HOUR]<10){"0${calendar[Calendar.HOUR]}"} else{calendar[Calendar.HOUR]}
                     val minute = if(calendar[Calendar.MINUTE]<10){"0${calendar[Calendar.MINUTE]}"}else{calendar[Calendar.MINUTE]}
                     value.add(i, "${hour}:${minute}")
+                    calendar.add(Calendar.MINUTE, 1)
                 }
             }
             GraphPeriodEnum.Day ->{
@@ -386,10 +386,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 calendar.time = date!!
                 calendar.add(Calendar.MINUTE, -1440)
                 for (i in 0..96){
-                    calendar.add(Calendar.MINUTE, 15)
                     val hour = if (calendar[Calendar.HOUR]<10){"0${calendar[Calendar.HOUR]}"} else{calendar[Calendar.HOUR]}
                     val minute = if(calendar[Calendar.MINUTE]<10){"0${calendar[Calendar.MINUTE]}"}else{calendar[Calendar.MINUTE]}
                     value.add(i, "${hour}:${minute}")
+                    calendar.add(Calendar.MINUTE, 15)
                 }
             }
             GraphPeriodEnum.Week ->{
@@ -398,10 +398,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 calendar.time = date!!
                 calendar.add(Calendar.HOUR, -168)
                 for (i in 0..168){
-                    calendar.add(Calendar.HOUR, 1)
                     val day = if (calendar[Calendar.DAY_OF_MONTH]<10){"0${calendar[Calendar.DAY_OF_MONTH]}"} else {"${calendar[Calendar.DAY_OF_MONTH]}" }
                     val month = if(calendar[Calendar.MONTH]<10){"0${calendar[Calendar.MONTH]}"} else {"${calendar[Calendar.MONTH]}"}
                     value.add(i, "${day}/${month}")
+                    calendar.add(Calendar.HOUR, 1)
                 }
             }
             GraphPeriodEnum.Month ->{
@@ -410,10 +410,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 calendar.time = date!!
                 calendar.add(Calendar.HOUR, -720)
                 for (i in 0..240){
-                    calendar.add(Calendar.HOUR, 3)
                     val day = if (calendar[Calendar.DAY_OF_MONTH]<10){"0${calendar[Calendar.DAY_OF_MONTH]}"} else {"${calendar[Calendar.DAY_OF_MONTH]}" }
                     val month = if(calendar[Calendar.MONTH]<10){"0${calendar[Calendar.MONTH]}"} else {"${calendar[Calendar.MONTH]}"}
                     value.add(i, "${day}/${month}")
+                    calendar.add(Calendar.HOUR, 3)
                 }
             }
         }
