@@ -1,7 +1,6 @@
 package com.techzilla.odak.main.viewcontrollers
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +24,7 @@ import com.techzilla.odak.main.adapters.InnerViewRecyclerViewAdapter
 import com.techzilla.odak.main.constant.isAddFavorite
 import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
 import com.techzilla.odak.shared.constants.rememberMemberDTO
+import com.techzilla.odak.shared.helper_interface.MenuButtonListener
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.service.repository.MainRepository
 import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
@@ -32,7 +32,7 @@ import org.json.JSONObject
 import org.json.JSONTokener
 
 
-class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListener {
+class MarketFragment constructor(private val listener:MenuButtonListener) : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListener {
     private var _binding: FragmentMarketBinding? = null
     private val binding get() = _binding!!
 
@@ -70,6 +70,7 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
         binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
         selectBottomItem(binding.favoriteContainer)
         binding.defaultRecyclerview.adapter = adapter
+        listener.menuVisible(View.VISIBLE)
         binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
 
         mainRepository.getExchangeRateList(rememberMemberDTO!!.memberID, "")
@@ -109,8 +110,8 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
         })
 
         mainRepository.exchangeRateListLiveData.observe(viewLifecycleOwner, {
+            binding.componentProgressBar.progressbarContainer.visibility = View.GONE
             if (isFirstOpen) {
-                binding.componentProgressBar.progressbarContainer.visibility = View.GONE
                 rememberMemberDTO?.let { memberDTO ->
                     var favoriteIdList = ""
                     if (memberDTO.memberData != null) {
@@ -120,12 +121,10 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
                     }
                     adapter.insertNewParam(it, favoriteIdList)
                     isFirstOpen = false
-                    println("listelendi")
                 }
             }else{
                 it.forEach { exDTO->
                     adapter.changeItems(exDTO)
-                    println("değiştirildi")
                 }
             }
         })

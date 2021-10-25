@@ -9,17 +9,20 @@ import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.techzilla.odak.R
 import com.techzilla.odak.converter.adapter.ItemPickerAdapter
 import com.techzilla.odak.databinding.FragmentConverterBinding
+import com.techzilla.odak.main.viewcontrollers.MarketFragment
 import com.techzilla.odak.shared.constants.exchangeRateList
+import com.techzilla.odak.shared.helper_interface.MenuButtonListener
 import com.techzilla.odak.shared.model.CurrencyTypeEnum
 import java.text.DecimalFormat
 
 
-class ConverterFragment : Fragment() {
+class ConverterFragment constructor(private val listener: MenuButtonListener) : Fragment() {
 
     private val binding by lazy { FragmentConverterBinding.inflate(layoutInflater) }
     private val fromAdapter by lazy { ItemPickerAdapter(0) }
@@ -38,6 +41,7 @@ class ConverterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
+        listener.menuVisible(View.GONE)
 
         binding.fromRecyclerview.adapter = fromAdapter
         binding.toRecyclerview.adapter = toAdapter
@@ -59,6 +63,10 @@ class ConverterFragment : Fragment() {
         }
         binding.cryptoContainer.setOnClickListener {
             selectBottomItem(binding.cryptoContainer, false)
+        }
+
+        binding.backBtn.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack(MarketFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
 
         binding.fromRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -175,6 +183,10 @@ class ConverterFragment : Fragment() {
                     }
                 }
             })
+        }
+
+        binding.backBtn.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack(MarketFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }
 

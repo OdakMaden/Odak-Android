@@ -1,7 +1,6 @@
 package com.techzilla.odak.currencydetail.viewcontroller
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.DashPathEffect
@@ -41,6 +40,7 @@ import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.model.GraphPeriodEnum
 import com.techzilla.odak.shared.model.TimeStamp
 import com.techzilla.odak.shared.service.repository.GraphRepository
+import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.text.SimpleDateFormat
@@ -63,8 +63,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
 
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
         if (result.resultCode == RESULT_OK){
-            AlertDialog.Builder(this).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"
-            ) { dialog, p1 ->  dialog.dismiss()}.show()
+            AlertDialogViewController.buildAlertDialog(this, resources.getString(R.string.alert_alarm_title),
+                resources.getString(R.string.alert_alarm_message), "", "", resources.getString(R.string.shared_Ok))
+            //AlertDialog.Builder(this).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"
+            //) { dialog, p1 ->  dialog.dismiss()}.show()
         }
     }
 
@@ -123,7 +125,6 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             }
             setData(values, it.baseTimeStamp)
             binding.lineChart.invalidate()
-
         })
 
         if (percentage.contains("-")) {

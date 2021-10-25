@@ -10,13 +10,16 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.techzilla.odak.alarm.adapter.AlarmListRecyclerViewAdapter
 import com.techzilla.odak.alarm.constant.alarmDTO
 import com.techzilla.odak.databinding.FragmentAlarmBinding
+import com.techzilla.odak.main.viewcontrollers.MarketFragment
+import com.techzilla.odak.shared.helper_interface.MenuButtonListener
 import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.service.repository.AlarmRepository
 
-class AlarmFragment : Fragment(), AlarmListRecyclerViewAdapter.AlarmListMenuListener {
+class AlarmFragment constructor(private val listener: MenuButtonListener) : Fragment(), AlarmListRecyclerViewAdapter.AlarmListMenuListener {
 
     private val binding: FragmentAlarmBinding by lazy { FragmentAlarmBinding.inflate(layoutInflater) }
 
@@ -55,6 +58,7 @@ class AlarmFragment : Fragment(), AlarmListRecyclerViewAdapter.AlarmListMenuList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        listener.menuVisible(View.GONE)
         binding.alarmRecyclerview.adapter = adapter
         repository = AlarmRepository()
         repository.getAlarms()
@@ -85,6 +89,10 @@ class AlarmFragment : Fragment(), AlarmListRecyclerViewAdapter.AlarmListMenuList
             startForResult.launch(
                 Intent(requireActivity(), AddAlarmActivity::class.java)
             )
+        }
+
+        binding.backBtn.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack(MarketFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }
 

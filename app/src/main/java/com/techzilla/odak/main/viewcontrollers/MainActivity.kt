@@ -20,9 +20,10 @@ import com.techzilla.odak.databinding.ActivityMainBinding
 import com.techzilla.odak.alarm.viewcontroller.AlarmFragment
 import com.techzilla.odak.profile.viewcontroller.ProfileFragment
 import com.techzilla.odak.shared.constants.rememberMemberDTO
+import com.techzilla.odak.shared.helper_interface.MenuButtonListener
 import com.techzilla.odak.shared.service.repository.MainRepository
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MenuButtonListener {
     private var _binding : ActivityMainBinding? = null
     private val binding get() = _binding!!
 
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         binding.container.isSelected = isOpenMenu
 
         supportFragmentManager.beginTransaction().apply {
-            add(binding.fragmentContainer.id, MarketFragment(), MarketFragment.TAG)
+            add(binding.fragmentContainer.id, MarketFragment(this@MainActivity), MarketFragment.TAG)
             commit()
         }
 
@@ -109,30 +110,78 @@ class MainActivity : AppCompatActivity() {
 
         binding.market.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, MarketFragment())
+                .replace(binding.fragmentContainer.id, MarketFragment(this))
                 .addToBackStack(MarketFragment.TAG)
                 .commit()
+
+            isEnableChange()
+            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1000
+            binding.container.animate()
+                .translationX(0.0f)
+                //.translationY(0.0f)
+                .setInterpolator(AccelerateInterpolator()).duration = 1000
+            binding.defaultClickContainer.visibility = GONE
+            isOpenMenu = false
+            binding.container.isSelected = isOpenMenu
+
+            backgroundMenu(isOpenMenu)
         }
         binding.converter.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, ConverterFragment())
+                .replace(binding.fragmentContainer.id, ConverterFragment(this))
                 .addToBackStack(MarketFragment.TAG)
                 .commit()
+
+            isEnableChange()
+            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1000
+            binding.container.animate()
+                .translationX(0.0f)
+                //.translationY(0.0f)
+                .setInterpolator(AccelerateInterpolator()).duration = 1000
+            binding.defaultClickContainer.visibility = GONE
+            isOpenMenu = false
+            binding.container.isSelected = isOpenMenu
+
+            backgroundMenu(isOpenMenu)
         }
         binding.call.setOnClickListener {
             println("call")
         }
         binding.notification.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, AlarmFragment())
+                .replace(binding.fragmentContainer.id, AlarmFragment(this))
                 .addToBackStack(MarketFragment.TAG)
                 .commit()
+
+            isEnableChange()
+            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1000
+            binding.container.animate()
+                .translationX(0.0f)
+                //.translationY(0.0f)
+                .setInterpolator(AccelerateInterpolator()).duration = 1000
+            binding.defaultClickContainer.visibility = GONE
+            isOpenMenu = false
+            binding.container.isSelected = isOpenMenu
+
+            backgroundMenu(isOpenMenu)
         }
         binding.profile.setOnClickListener {
            supportFragmentManager.beginTransaction()
-               .replace(binding.fragmentContainer.id, ProfileFragment())
+               .replace(binding.fragmentContainer.id, ProfileFragment(this))
                .addToBackStack(MarketFragment.TAG)
                .commit()
+
+            isEnableChange()
+            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1000
+            binding.container.animate()
+                .translationX(0.0f)
+                //.translationY(0.0f)
+                .setInterpolator(AccelerateInterpolator()).duration = 1000
+            binding.defaultClickContainer.visibility = GONE
+            isOpenMenu = false
+            binding.container.isSelected = isOpenMenu
+
+            backgroundMenu(isOpenMenu)
         }
 
     }
@@ -158,5 +207,9 @@ class MainActivity : AppCompatActivity() {
         binding.call.isEnabled = isEnable
         binding.notification.isEnabled = isEnable
         binding.profile.isEnabled = isEnable
+    }
+
+    override fun menuVisible(visible: Int) {
+        binding.menuButton.visibility = visible
     }
 }

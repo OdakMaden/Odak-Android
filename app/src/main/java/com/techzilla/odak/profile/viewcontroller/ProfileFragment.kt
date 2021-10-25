@@ -2,22 +2,23 @@ package com.techzilla.odak.profile.viewcontroller
 
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.techzilla.odak.R
 import com.techzilla.odak.auth.viewcontroller.LoginActivity
 import com.techzilla.odak.databinding.FragmentProfileBinding
-import com.techzilla.odak.shared.constants.odakTimePattern
+import com.techzilla.odak.main.viewcontrollers.MarketFragment
 import com.techzilla.odak.shared.constants.rememberMemberDTO
+import com.techzilla.odak.shared.helper_interface.MenuButtonListener
 
-class ProfileFragment : Fragment() {
+class ProfileFragment constructor(private val listener: MenuButtonListener) : Fragment() {
 
     private var _binding : FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -32,6 +33,8 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        listener.menuVisible(View.GONE)
 
         rememberMemberDTO?.let {
             binding.nameText.text = it.firstName
@@ -64,6 +67,10 @@ class ProfileFragment : Fragment() {
             Intent(requireActivity(), ChangePasswordActivity::class.java).apply {
                 startActivity(this)
             }
+        }
+
+        binding.backBtn.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack(MarketFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }
 

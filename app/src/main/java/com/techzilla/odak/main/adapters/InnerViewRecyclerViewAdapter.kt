@@ -235,6 +235,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         }
     }
 
+    /*
     fun changeFavoriteState(exchangeRateDTO: ExchangeRateDTO, favoriteString: String){
         favoriteString.let { favoriteString->
             if (favoriteString.contains(exchangeRateDTO.code) && !favoriteArrayList.contains(exchangeRateDTO)){
@@ -264,7 +265,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
             }
         }
     }
-
+     */
     fun searchItems(text: String){
         notifyItemRangeRemoved(0, arrayList.size)
         arrayList.clear()
@@ -282,7 +283,15 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 arrayList.addAll(searchFunction(favoriteArrayList, text))
             }
         }
-        notifyItemInserted(0)
+
+        arrayListMap.clear()
+        var term = 0
+        arrayList.forEach {
+            arrayListMap[it.code] = term
+            term++
+        }
+
+        notifyItemInserted(arrayList.size)
     }
 
 
@@ -314,6 +323,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 result.add(it)
             }
         }
+
         return result
     }
 

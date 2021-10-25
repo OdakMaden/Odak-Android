@@ -76,7 +76,8 @@
     <string name="alert.login.message">YANLIŞ BİR ŞİFRE GİRDİNİZ. LÜTFEN ŞİFREYİ DOĞRU GİRİNİZ.</string>
     <string name="alert.dont_same_password.message">YENİ ŞİFRENİZ, YENİ ŞİFRE TEKRAR İLE UYUŞMAMAKTADIR. LÜTFEN AYNISINI GİRİNİZ.</string>
     <string name="alert.dont_same_old_password.message">YENİ ŞİFRE, ESKİ ŞİFRENİZ İLE AYNI OLAMAZ.</string>
-    <string name="alert.alarm.title">Alarm</string>
-    <string name="alert.alarm.message">Alarm Başarılı Olarak Kaydedilmiştir.</string>
+    <string name="alert.change_password.message">ŞİFRE BAŞARILI BİR ŞEKİLDE DEĞİŞTİRİLDİ. YENİ ŞİFRE İLE YENİDEN GİRİŞ YAPINIZ.</string>
+    <string name="alert.alarm.title">ALARM</string>
+    <string name="alert.alarm.message">ALARM BAŞARILI OLARAK KAYDEDİLMİŞTİR.</string>
 
 </resources>
