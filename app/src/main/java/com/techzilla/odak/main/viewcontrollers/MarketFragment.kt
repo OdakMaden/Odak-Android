@@ -27,6 +27,7 @@ import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.service.repository.MainRepository
+import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 import org.json.JSONObject
 import org.json.JSONTokener
 
@@ -45,8 +46,10 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
 
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
         if (result.resultCode == AppCompatActivity.RESULT_OK){
-            AlertDialog.Builder(requireContext()).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"
-            ) { dialog, p1 ->  dialog.dismiss()}.show()
+            AlertDialogViewController.buildAlertDialog(requireContext(), resources.getString(R.string.alert_alarm_title),
+                resources.getString(R.string.alert_alarm_message), "","",resources.getString(R.string.shared_Ok))
+            //AlertDialog.Builder(requireContext()).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"
+            //) { dialog, p1 ->  dialog.dismiss()}.show()
         }
     }
 
@@ -64,10 +67,10 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
         selectBottomItem(binding.favoriteContainer)
         binding.defaultRecyclerview.adapter = adapter
+        binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
 
         mainRepository.getExchangeRateList(rememberMemberDTO!!.memberID, "")
 
@@ -107,6 +110,7 @@ class MarketFragment : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListene
 
         mainRepository.exchangeRateListLiveData.observe(viewLifecycleOwner, {
             if (isFirstOpen) {
+                binding.componentProgressBar.progressbarContainer.visibility = View.GONE
                 rememberMemberDTO?.let { memberDTO ->
                     var favoriteIdList = ""
                     if (memberDTO.memberData != null) {

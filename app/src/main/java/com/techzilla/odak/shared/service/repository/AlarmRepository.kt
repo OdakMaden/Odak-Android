@@ -72,7 +72,7 @@ class AlarmRepository {
                         alarmDeleteMutableLiveData.postValue(alarmDTO)
                     }
                     else{
-                        println("silinmedi")
+                        errorMutableLiveData.postValue("Silinme işlemi yapılamadı. Lütfen tekrar deneyiniz.")
                     }
                 }
             }

@@ -22,11 +22,6 @@ class ProfileFragment : Fragment() {
     private var _binding : FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,12 +43,14 @@ class ProfileFragment : Fragment() {
 
 
         binding.logoutButton.setOnClickListener {
+            binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
             val sharedPref = requireActivity().getSharedPreferences(resources.getString(R.string.Odak_shared_pref), MODE_PRIVATE)
             with(sharedPref.edit()){
                 putBoolean(resources.getString(R.string.isLogin), false)
                 apply()
             }
             Intent(requireActivity(), LoginActivity::class.java).apply {
+                binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
                 startActivity(this)
                 requireActivity().finish()
             }

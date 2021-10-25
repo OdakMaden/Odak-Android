@@ -44,6 +44,7 @@ class LoginRepository {
                 if (response.isSuccessful){
                     if (response.code() == 200){
                         rememberMemberDTO = response.body()
+                        listener.updatePasswordListener("Success")
                     }
                     else{
                         listener.updatePasswordListener(response.message())

@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.techzilla.odak.R
 import com.techzilla.odak.alarm.constant.alarmDTO
 import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.databinding.FragmentAlarmDefaultMenuBinding
 import com.techzilla.odak.shared.constants.exchangeRateList
 import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.service.repository.AlarmRepository
+import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 
 class AlarmDefaultMenuFragment
     (private val _alarmDTO: AlarmDTO, private val repository: AlarmRepository, private val startForResult: ActivityResultLauncher<Intent>)
@@ -51,6 +53,11 @@ class AlarmDefaultMenuFragment
             )
             dialog?.dismiss()
         }
+
+        repository.errorLiveData.observe(requireActivity(), {
+            AlertDialogViewController.buildAlertDialog(requireContext(), "",it,"",
+                "",  resources.getString(R.string.shared_Ok))
+        })
 
         binding.deleteButton.setOnClickListener {
             repository.deleteAlarm(_alarmDTO)

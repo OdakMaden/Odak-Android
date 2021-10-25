@@ -192,4 +192,7 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <include
+        android:id="@+id/component_progress_bar"
+        layout="@layout/component_progress_bar"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,7 @@ import com.techzilla.odak.databinding.ActivityAlarmDetailBinding
 import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.model.AlarmTypeEnum
 import com.techzilla.odak.shared.service.repository.AlarmRepository
+import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 import java.text.DecimalFormat
 
 class AlarmDetailActivity : AppCompatActivity() {
@@ -137,12 +138,19 @@ class AlarmDetailActivity : AppCompatActivity() {
         }
 
         alarmRepository.addNewAlarmLiveData.observe(this, {
+            binding.componentProgressBar.progressbarContainer.visibility = View.GONE
             alarmDTO = it
             setResult(RESULT_OK)
             finish()
         })
 
+        alarmRepository.errorLiveData.observe(this, {
+            binding.componentProgressBar.progressbarContainer.visibility = View.GONE
+            AlertDialogViewController.buildAlertDialog(this, "", it, "","",resources.getString(R.string.shared_Ok))
+        })
+
         binding.createAlarmButton.setOnClickListener {
+            binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
             alarmName = when (alarmType) {
                 AlarmTypeEnum.PriceOver -> {
                     "${binding.currencyName.text} ${binding.aimPrice.text}"

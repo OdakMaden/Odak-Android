@@ -298,4 +298,8 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.08" />
 
+    <include
+        android:id="@+id/component_progress_bar"
+        layout="@layout/component_progress_bar"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import com.techzilla.odak.R
 import com.techzilla.odak.databinding.ActivityLoginBinding
 import com.techzilla.odak.main.viewcontrollers.MainActivity
 import com.techzilla.odak.shared.service.repository.LoginRepository
+import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 
 class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
     private var _binding : ActivityLoginBinding? = null
@@ -53,9 +54,13 @@ class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
                 finish()
             }
         }else{
-           AlertDialog.Builder(this).setMessage(resources.getString(R.string.alert_login_message)).setPositiveButton(
+            AlertDialogViewController.buildAlertDialog(this, "",resources.getString(R.string.alert_login_message),
+                "","", resources.getString(R.string.shared_Ok))
+          /* AlertDialog.Builder(this).setMessage(resources.getString(R.string.alert_login_message)).setPositiveButton(
                resources.getText(R.string.shared_Ok)
            ) { dialog, p1 ->  dialog.dismiss()}.show()
+
+           */
         }
     }
 }

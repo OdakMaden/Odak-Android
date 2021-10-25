@@ -36,8 +36,10 @@ import com.techzilla.odak.main.constant.isAddFavorite
 import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
 import com.techzilla.odak.shared.constants.odakTimePattern
 import com.techzilla.odak.shared.constants.rememberMemberDTO
+import com.techzilla.odak.shared.constants.timePatternYearMountDayHourMinuteSecond
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.model.GraphPeriodEnum
+import com.techzilla.odak.shared.model.TimeStamp
 import com.techzilla.odak.shared.service.repository.GraphRepository
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -119,7 +121,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 values.add(Entry(termFloat, data, resources.getDrawable(R.drawable.star, resources.newTheme())))
                 termFloat++
             }
-            setData(values)
+            setData(values, it.baseTimeStamp)
             binding.lineChart.invalidate()
 
         })
@@ -182,16 +184,21 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         binding.lineChart.legend.form = Legend.LegendForm.NONE
 
         binding.clockText.setOnClickListener {
-            selectedDateButton(it as TextView)
+            if (!binding.clockText.isSelected) {
+                selectedDateButton(it as TextView)
 
-            graphPeriodEnum = GraphPeriodEnum.Hour
+                graphPeriodEnum = GraphPeriodEnum.Hour
 
-            val calendar = Calendar.getInstance()
-            repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
-                SimpleDateFormat(odakTimePattern).format(calendar.time))
+                val calendar = Calendar.getInstance()
+                repository.getGraphData(
+                    exchangeRateDTO.code, graphPeriodEnum.value,
+                    SimpleDateFormat(odakTimePattern).format(calendar.time)
+                )
+            }
         }
         binding.dayText.setOnClickListener {
-            selectedDateButton(it as TextView)
+            if (!binding.dayText.isSelected)
+                selectedDateButton(it as TextView)
 
             graphPeriodEnum = GraphPeriodEnum.Day
 
@@ -200,21 +207,27 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 SimpleDateFormat(odakTimePattern).format(calendar.time))
         }
         binding.weekText.setOnClickListener {
-            selectedDateButton(it as TextView)
+            if (!binding.weekText.isSelected) {
+                selectedDateButton(it as TextView)
 
-            graphPeriodEnum = GraphPeriodEnum.Week
+                graphPeriodEnum = GraphPeriodEnum.Week
 
-            val calendar = Calendar.getInstance()
-            repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
-                SimpleDateFormat(odakTimePattern).format(calendar.time))
+                val calendar = Calendar.getInstance()
+                repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
+                    SimpleDateFormat(odakTimePattern).format(calendar.time))
+            }
         }
         binding.monthText.setOnClickListener {
-            selectedDateButton(it as TextView)
+            if (!binding.monthText.isSelected) {
+                selectedDateButton(it as TextView)
 
-            graphPeriodEnum = GraphPeriodEnum.Month
-            val calendar = Calendar.getInstance()
-            repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
-                SimpleDateFormat(odakTimePattern).format(calendar.time))
+                graphPeriodEnum = GraphPeriodEnum.Month
+                val calendar = Calendar.getInstance()
+                repository.getGraphData(
+                    exchangeRateDTO.code, graphPeriodEnum.value,
+                    SimpleDateFormat(odakTimePattern).format(calendar.time)
+                )
+            }
         }
 
         binding.favorite.setOnClickListener {
@@ -282,8 +295,8 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setData(values : ArrayList<Entry>) {
-        changeChartY(graphPeriodEnum, values.size)
+    private fun setData(values: ArrayList<Entry>, timestamp: TimeStamp) {
+        changeChartY(graphPeriodEnum, values.size, timestamp)
 
         val set1: LineDataSet
         if (binding.lineChart.data != null &&
@@ -320,7 +333,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             set1.formSize = 15f
 
             // text size of values
-            set1.valueTextSize = 9f
+            set1.valueTextSize = 11f
             set1.setDrawValues(false)
 
             // draw selection line as dashed
@@ -349,28 +362,57 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             .setInterpolator(AccelerateInterpolator()).setDuration(500).start()
     }
 
-    private fun changeChartY(type:GraphPeriodEnum, size : Int){
+    @SuppressLint("SimpleDateFormat")
+    private fun changeChartY(type:GraphPeriodEnum, size : Int, timestamp: TimeStamp){
         val value = ArrayList<String>()
         println(size)
         when(type){
             GraphPeriodEnum.Hour -> {
-                for (i in 0..size){
-                    value.add(i, "$i.dakika")
+                val calendar = Calendar.getInstance()
+                val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
+                calendar.time = date!!
+                calendar.add(Calendar.MINUTE, -60)
+                for (i in 0..60){
+                    calendar.add(Calendar.MINUTE, 1)
+                    val hour = if (calendar[Calendar.HOUR]<10){"0${calendar[Calendar.HOUR]}"} else{calendar[Calendar.HOUR]}
+                    val minute = if(calendar[Calendar.MINUTE]<10){"0${calendar[Calendar.MINUTE]}"}else{calendar[Calendar.MINUTE]}
+                    value.add(i, "${hour}:${minute}")
                 }
             }
             GraphPeriodEnum.Day ->{
-                for (i in 0..size){
-                    value.add(i, "$i.saat")
+                val calendar = Calendar.getInstance()
+                val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
+                calendar.time = date!!
+                calendar.add(Calendar.MINUTE, -1440)
+                for (i in 0..96){
+                    calendar.add(Calendar.MINUTE, 15)
+                    val hour = if (calendar[Calendar.HOUR]<10){"0${calendar[Calendar.HOUR]}"} else{calendar[Calendar.HOUR]}
+                    val minute = if(calendar[Calendar.MINUTE]<10){"0${calendar[Calendar.MINUTE]}"}else{calendar[Calendar.MINUTE]}
+                    value.add(i, "${hour}:${minute}")
                 }
             }
             GraphPeriodEnum.Week ->{
-                for (i in 0..size){
-                    value.add(i, "$i.gün")
+                val calendar = Calendar.getInstance()
+                val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
+                calendar.time = date!!
+                calendar.add(Calendar.HOUR, -168)
+                for (i in 0..168){
+                    calendar.add(Calendar.HOUR, 1)
+                    val day = if (calendar[Calendar.DAY_OF_MONTH]<10){"0${calendar[Calendar.DAY_OF_MONTH]}"} else {"${calendar[Calendar.DAY_OF_MONTH]}" }
+                    val month = if(calendar[Calendar.MONTH]<10){"0${calendar[Calendar.MONTH]}"} else {"${calendar[Calendar.MONTH]}"}
+                    value.add(i, "${day}/${month}")
                 }
             }
             GraphPeriodEnum.Month ->{
-                for (i in 0..size){
-                    value.add(i, "$i.GÜN")
+                val calendar = Calendar.getInstance()
+                val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
+                calendar.time = date!!
+                calendar.add(Calendar.HOUR, -720)
+                for (i in 0..240){
+                    calendar.add(Calendar.HOUR, 3)
+                    val day = if (calendar[Calendar.DAY_OF_MONTH]<10){"0${calendar[Calendar.DAY_OF_MONTH]}"} else {"${calendar[Calendar.DAY_OF_MONTH]}" }
+                    val month = if(calendar[Calendar.MONTH]<10){"0${calendar[Calendar.MONTH]}"} else {"${calendar[Calendar.MONTH]}"}
+                    value.add(i, "${day}/${month}")
                 }
             }
         }

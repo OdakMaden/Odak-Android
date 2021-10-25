@@ -186,4 +186,7 @@
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <include
+        android:id="@+id/component_progress_bar"
+        layout="@layout/component_progress_bar"/>
 </FrameLayout>
