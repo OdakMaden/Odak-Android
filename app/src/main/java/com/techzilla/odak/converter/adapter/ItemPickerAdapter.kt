@@ -17,7 +17,6 @@ class ItemPickerAdapter (private val adapterType:Int) : RecyclerView.Adapter<Ite
     private val arrayList = ArrayList<ExchangeRateDTO>()
     private var _type : CurrencyTypeEnum = CurrencyTypeEnum.Money
     private var selectedPosition = 1
-   // private var _layoutManager:RecyclerView.LayoutManager? = null
 
     class ViewHolder(private val binding: ItemPickerElementBinding): RecyclerView.ViewHolder(binding.root){
 

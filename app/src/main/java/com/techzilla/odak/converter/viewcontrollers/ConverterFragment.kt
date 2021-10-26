@@ -75,23 +75,40 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
                 if (recyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
                     context?.resources?.getDimensionPixelSize(R.dimen.item_height)?.let { itemHeight ->
                         val layoutManager = LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
-                        val offset = (binding.fromRecyclerview.height / itemHeight - 1) / 2
+                        val offset = (binding.fromRecyclerview.height / itemHeight) / 2
                         layoutManager?.let {
                             var position = it.findFirstCompletelyVisibleItemPosition()
                             val lastPosition = it.findLastCompletelyVisibleItemPosition()
                             if (position+1 != fromAdapter.getSelectedPosition()){
-                                position += offset
-                                if (position in 0 until fromAdapter.getShowListSize()) {
-                                    fromAdapter.setPositionToItem(position)
-                                    scrollToItem(itemHeight, it, position, recyclerView)
-                                    updateChangeText()
+                                if (lastPosition < fromAdapter.getShowListSize()-1) {
+                                    position += offset
+                                    if (position in 0 until fromAdapter.getShowListSize()) {
+                                        fromAdapter.setPositionToItem(position)
+                                        scrollToItem(itemHeight, it, position, recyclerView)
+                                        updateChangeText()
+                                    }
+                                }else{
+                                    position += offset
+                                    if (position in 0 until fromAdapter.getShowListSize()) {
+                                        fromAdapter.setPositionToItem(position - 1)
+                                        scrollToItem(itemHeight, it, position - 1, recyclerView)
+                                        updateChangeText()
+                                    }
                                 }
                             }
                             else if (lastPosition == fromAdapter.getSelectedPosition()){
-                                if (position in 0 until fromAdapter.getShowListSize()) {
-                                    fromAdapter.setPositionToItem(position)
-                                    scrollToItem(itemHeight, it, position, recyclerView)
-                                    updateChangeText()
+                                if (position != 0) {
+                                    if (position in 0 until fromAdapter.getShowListSize()) {
+                                        fromAdapter.setPositionToItem(position)
+                                        scrollToItem(itemHeight, it, position, recyclerView)
+                                        updateChangeText()
+                                    }
+                                }else{
+                                    if (position+1 in 0 until fromAdapter.getShowListSize()) {
+                                        fromAdapter.setPositionToItem(position+1)
+                                        scrollToItem(itemHeight, it, position + 1, recyclerView)
+                                        updateChangeText()
+                                    }
                                 }
                             }
                         }
@@ -101,8 +118,8 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
         })
 
         binding.changeItemButton.setOnClickListener {
-            val fromPosition = fromAdapter.getSelectedPosition()
-            val toPosition = toAdapter.getSelectedPosition()
+            val fromPosition = if(fromAdapter.getSelectedItem().code != "TRY")fromAdapter.getSelectedPosition() + 1 else 0
+            val toPosition = if(toAdapter.getSelectedItem().code != "TRY") toAdapter.getSelectedPosition() - 1 else toAdapter.getShowListSize()-2
             fromAdapter.setPositionToItem(toPosition)
             toAdapter.setPositionToItem(fromPosition)
             context?.resources?.getDimensionPixelSize(R.dimen.item_height)?.let {
@@ -122,23 +139,42 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
                 if (recyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
                     context?.resources?.getDimensionPixelSize(R.dimen.item_height)?.let { itemHeight ->
                         val layoutManager = LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
-                        val offset = (binding.toRecyclerview.height / itemHeight - 1) / 2
+                        val offset = (binding.toRecyclerview.height / itemHeight) / 2
                         layoutManager?.let {
                             var position = it.findFirstCompletelyVisibleItemPosition()
                             val lastPosition = it.findLastCompletelyVisibleItemPosition()
                             if (position+1 != toAdapter.getSelectedPosition()){
-                                position += offset
-                                if (position in 0 until toAdapter.getShowListSize()) {
-                                    toAdapter.setPositionToItem(position)
-                                    scrollToItem(itemHeight, it, position, recyclerView)
-                                    updateChangeText()
+                                if (lastPosition < toAdapter.getShowListSize() -1){
+                                    position += offset
+                                    if (position in 0 until toAdapter.getShowListSize()) {
+                                        toAdapter.setPositionToItem(position)
+                                        scrollToItem(itemHeight, it, position, recyclerView)
+                                        updateChangeText()
+                                    }
+                                }
+                                else{
+                                    position += offset
+                                    if (position in 0 until toAdapter.getShowListSize()) {
+                                        toAdapter.setPositionToItem(position - 1)
+                                        scrollToItem(itemHeight, it, position - 1, recyclerView)
+                                        updateChangeText()
+                                    }
                                 }
                             }
                             else if (lastPosition == toAdapter.getSelectedPosition()){
-                                if (position in 0 until toAdapter.getShowListSize()) {
-                                    toAdapter.setPositionToItem(position)
-                                    scrollToItem(itemHeight, it, position, recyclerView)
-                                    updateChangeText()
+                                if (position != 0) {
+                                    if (position in 0 until toAdapter.getShowListSize()) {
+                                        toAdapter.setPositionToItem(position)
+                                        scrollToItem(itemHeight, it, position, recyclerView)
+                                        updateChangeText()
+                                    }
+                                }
+                                else{
+                                    if (position+1 in 0 until toAdapter.getShowListSize()) {
+                                        toAdapter.setPositionToItem(position+1)
+                                        scrollToItem(itemHeight, it, position + 1, recyclerView)
+                                        updateChangeText()
+                                    }
                                 }
                             }
                         }
@@ -158,7 +194,10 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
     }
 
     private fun updateChangeText(){
-        binding.toPiecePrice.text = decimalFormat.format(fromAdapter.getSelectedItem().sellingRate / toAdapter.getSelectedItem().sellingRate)
+        if (toAdapter.getSelectedItem().sellingRate != 0f) {
+            binding.toPiecePrice.text =
+                decimalFormat.format(fromAdapter.getSelectedItem().sellingRate / toAdapter.getSelectedItem().sellingRate)
+        }
         binding.fromPiece.text.toString().let { fromPiece->
             if (fromPiece == ""){
                 binding.resultPrice.text = decimalFormat.format(0 * binding.toPiecePrice.text.toString().toDouble())
