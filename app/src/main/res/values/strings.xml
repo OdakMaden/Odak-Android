@@ -79,5 +79,6 @@
     <string name="alert.change_password.message">ŞİFRE BAŞARILI BİR ŞEKİLDE DEĞİŞTİRİLDİ. YENİ ŞİFRE İLE YENİDEN GİRİŞ YAPINIZ.</string>
     <string name="alert.alarm.title">ALARM</string>
     <string name="alert.alarm.message">ALARM BAŞARILI OLARAK KAYDEDİLMİŞTİR.</string>
+    <string name="alert.notification_permision_message">İŞLEM BAŞARISIZ OLDU! LÜTFEN YENİDEN DENEYİNİZ.</string>
 
 </resources>

@@ -9,5 +9,6 @@ data class ExchangeRateDTO(
     @SerializedName("CurrencyType") val currencyType:CurrencyTypeEnum,
     @SerializedName("LastChangeTimeStamp") val lastChangeTimeStamp:TimeStamp,
     @SerializedName("SellingRate") val sellingRate:Float,
-    @SerializedName("BuyingRate") val buyingRate:Float
+    @SerializedName("BuyingRate") val buyingRate:Float,
+    @SerializedName("ChangePercentage") val changePercentage:Float
 )

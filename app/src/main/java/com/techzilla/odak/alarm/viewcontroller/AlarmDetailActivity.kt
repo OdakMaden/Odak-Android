@@ -151,31 +151,68 @@ class AlarmDetailActivity : AppCompatActivity() {
 
         binding.createAlarmButton.setOnClickListener {
             binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
-            alarmName = when (alarmType) {
-                AlarmTypeEnum.PriceOver -> {
-                    "${binding.currencyName.text} ${binding.aimPrice.text}"
-                }
-                AlarmTypeEnum.PriceUnder -> {
-                    "${binding.currencyName.text} ${binding.aimPrice.text}"
-                }
-                AlarmTypeEnum.PercentOver -> {
-                    "${binding.currencyName.text} +${binding.aimPrice.text}"
-                }
-                AlarmTypeEnum.PercentUnder -> {
-                    "${binding.currencyName.text} -${binding.aimPrice.text.toString().replace("-", "")}"
+            if (isEdit){
+                val alarmMap = HashMap<String, Any>()
+                alarmDTO?.let {
+                    alarmName = when (alarmType) {
+                        AlarmTypeEnum.PriceOver -> {
+                            "${binding.currencyName.text} ${binding.aimPrice.text}"
+                        }
+                        AlarmTypeEnum.PriceUnder -> {
+                            "${binding.currencyName.text} ${binding.aimPrice.text}"
+                        }
+                        AlarmTypeEnum.PercentOver -> {
+                            "${binding.currencyName.text} +${binding.aimPrice.text}"
+                        }
+                        AlarmTypeEnum.PercentUnder -> {
+                            "${binding.currencyName.text} -${
+                                binding.aimPrice.text.toString().replace("-", "")
+                            }"
+                        }
+                    }
+                    alarmMap["Name"] = alarmName
+                    alarmMap["CurrencyCode"] = it.currencyCode
+                    alarmMap["AlarmType"] = alarmType.value
+                    if (alarmType == AlarmTypeEnum.PercentOver || alarmType == AlarmTypeEnum.PercentUnder) {
+                        alarmMap["ReferenceValue"] = exchangeRateDTOForDetail!!.sellingRate
+                    }
+                    alarmMap["TargetValue"] =
+                        binding.aimPrice.text.toString().replace("%", "").replace(" ", "")
+                            .replace("-", "").toDouble()
+                    alarmRepository.updateAlarm(it.rID, alarmMap)
                 }
             }
+            else {
+                alarmName = when (alarmType) {
+                    AlarmTypeEnum.PriceOver -> {
+                        "${binding.currencyName.text} ${binding.aimPrice.text}"
+                    }
+                    AlarmTypeEnum.PriceUnder -> {
+                        "${binding.currencyName.text} ${binding.aimPrice.text}"
+                    }
+                    AlarmTypeEnum.PercentOver -> {
+                        "${binding.currencyName.text} +${binding.aimPrice.text}"
+                    }
+                    AlarmTypeEnum.PercentUnder -> {
+                        "${binding.currencyName.text} -${
+                            binding.aimPrice.text.toString().replace("-", "")
+                        }"
+                    }
+                }
 
-            val alarmMap = HashMap<String, Any>()
-            alarmMap["Name"] = alarmName
-            alarmMap["CurrencyCode"] = exchangeRateDTOForDetail!!.code
-            alarmMap["AlarmType"] = alarmType.value
-            if (alarmType == AlarmTypeEnum.PercentOver || alarmType == AlarmTypeEnum.PercentUnder) {
-                alarmMap["ReferenceValue"] = exchangeRateDTOForDetail!!.sellingRate
+                val alarmMap = HashMap<String, Any>()
+                alarmMap["Name"] = alarmName
+                alarmMap["CurrencyCode"] = exchangeRateDTOForDetail!!.code
+                alarmMap["AlarmType"] = alarmType.value
+                if (alarmType == AlarmTypeEnum.PercentOver || alarmType == AlarmTypeEnum.PercentUnder) {
+                    alarmMap["ReferenceValue"] = exchangeRateDTOForDetail!!.sellingRate
+                }
+                alarmMap["TargetValue"] =
+                    binding.aimPrice.text.toString().replace("%", "").replace(" ", "")
+                        .replace("-", "").toDouble()
+
+                alarmRepository.addAlarm(alarmMap)
             }
-            alarmMap["TargetValue"] = binding.aimPrice.text.toString().replace("%","").replace(" ","").replace("-", "").toDouble()
-
-            alarmRepository.addAlarm(alarmMap)
         }
 
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.JsonObject
 import com.techzilla.odak.R
-import com.techzilla.odak.shared.constants.application
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.MemberDTO
 import com.techzilla.odak.shared.service.ApiService
@@ -38,20 +37,20 @@ class LoginRepository {
         })
     }
 
-    fun updateMemberDTO(memberDTO: JsonObject, listener:UpdatePasswordListener){
+    fun updateMemberDTO(memberDTO: JsonObject, listener:UpdateMemberDTOListener){
         service.patchMemberDTO(rememberMemberDTO!!.memberID, memberDTO).enqueue(object : Callback<MemberDTO>{
             override fun onResponse(call: Call<MemberDTO>, response: Response<MemberDTO>) {
                 if (response.isSuccessful){
                     if (response.code() == 200){
                         rememberMemberDTO = response.body()
-                        listener.updatePasswordListener("Success")
+                        listener.updateMemberDTOListener("Success")
                     }
                     else{
-                        listener.updatePasswordListener(response.message())
+                        listener.updateMemberDTOListener(response.message())
                     }
                 }
                 else{
-                    listener.updatePasswordListener(response.message())
+                    listener.updateMemberDTOListener(response.message())
                 }
             }
 
@@ -72,7 +71,7 @@ class LoginRepository {
     interface CheckListener{
         fun checkPasswordListener(isCheck:Boolean)
     }
-    interface UpdatePasswordListener{
-        fun updatePasswordListener(message:String)
+    interface UpdateMemberDTOListener{
+        fun updateMemberDTOListener(message:String)
     }
 }

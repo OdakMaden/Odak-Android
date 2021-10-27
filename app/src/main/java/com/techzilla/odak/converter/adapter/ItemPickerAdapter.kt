@@ -70,21 +70,21 @@ class ItemPickerAdapter (private val adapterType:Int) : RecyclerView.Adapter<Ite
                 }
             }
         }
-        dollarArrayList.add(0, ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Money, "", 0.0f,0.0f))
-        dollarArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Money, "", 0.0f,0.0f))
-        goldBarArrayList.add(0, ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Metal, "", 0.0f,0.0f))
-        goldBarArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Metal, "", 0.0f,0.0f))
-        cryptoArrayList.add(0,ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Crypto, "", 0.0f,0.0f))
-        cryptoArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Crypto, "", 0.0f,0.0f))
+        dollarArrayList.add(0, ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Money, "", 0.0f,0.0f, 0.0f))
+        dollarArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Money, "", 0.0f,0.0f, 0.0f))
+        goldBarArrayList.add(0, ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Metal, "", 0.0f,0.0f, 0.0f))
+        goldBarArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Metal, "", 0.0f,0.0f, 0.0f))
+        cryptoArrayList.add(0,ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Crypto, "", 0.0f,0.0f, 0.0f))
+        cryptoArrayList.add(ExchangeRateDTO(" ", " ","",CurrencyTypeEnum.Crypto, "", 0.0f,0.0f, 0.0f))
         if (adapterType == 0){
-            dollarArrayList.add(dollarArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Money, "", 1.0f, 1.0f))
-            goldBarArrayList.add(goldBarArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Metal, "", 1.0f, 1.0f))
-            cryptoArrayList.add(cryptoArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Crypto, "", 1.0f, 1.0f))
+            dollarArrayList.add(dollarArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Money, "", 1.0f, 1.0f, 0.0f))
+            goldBarArrayList.add(goldBarArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Metal, "", 1.0f, 1.0f, 0.0f))
+            cryptoArrayList.add(cryptoArrayList.size - 1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Crypto, "", 1.0f, 1.0f,0.0f))
         }
         else{
-            dollarArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Money, "", 1.0f, 1.0f))
-            goldBarArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Metal, "", 1.0f, 1.0f))
-            cryptoArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Crypto, "", 1.0f, 1.0f))
+            dollarArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Money, "", 1.0f, 1.0f, 0.0f))
+            goldBarArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Metal, "", 1.0f, 1.0f, 0.0f))
+            cryptoArrayList.add(1, ExchangeRateDTO("TRY", "TRY","Türk Lirası",CurrencyTypeEnum.Crypto, "", 1.0f, 1.0f, 0.0f))
         }
         arrayList.addAll(dollarArrayList)
         notifyItemInserted(dollarArrayList.size)

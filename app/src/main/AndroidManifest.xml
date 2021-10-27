@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Odak"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".profile.viewcontroller.ChangePasswordActivity"
+            android:name=".profile.viewcontroller.ChangeMemberDTOActivity"
             android:exported="false" />
         <activity
             android:name=".converter.viewcontrollers.ConverterActivity"

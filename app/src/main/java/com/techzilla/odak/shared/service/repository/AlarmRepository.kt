@@ -82,4 +82,23 @@ class AlarmRepository {
             }
         })
     }
+
+    fun updateAlarm(alarmRID:Int, alarmMap: HashMap<String, Any>){
+        service.updateAlarm(rememberMemberDTO!!.memberID, alarmRID, alarmMap).enqueue(object : Callback<AlarmDTO>{
+            override fun onResponse(call: Call<AlarmDTO>, response: Response<AlarmDTO>) {
+                if (response.isSuccessful){
+                    if (response.code() == 200){
+                        addNewAlarmMutableLiveData.postValue(response.body())
+                    }
+                    else{
+                        errorMutableLiveData.postValue("Alarm Güncellenemedi.")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<AlarmDTO>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
+    }
 }

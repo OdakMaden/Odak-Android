@@ -14,7 +14,7 @@ import com.techzilla.odak.databinding.ActivityChangePasswordBinding
 import com.techzilla.odak.shared.service.repository.LoginRepository
 import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 
-class ChangePasswordActivity : AppCompatActivity(), LoginRepository.UpdatePasswordListener{
+class ChangeMemberDTOActivity : AppCompatActivity(), LoginRepository.UpdateMemberDTOListener{
 
     private val binding : ActivityChangePasswordBinding by lazy { ActivityChangePasswordBinding.inflate(layoutInflater) }
 
@@ -62,7 +62,7 @@ class ChangePasswordActivity : AppCompatActivity(), LoginRepository.UpdatePasswo
         }
     }
 
-    override fun updatePasswordListener(message: String) {
+    override fun updateMemberDTOListener(message: String) {
         binding.componentProgressBar.progressbarContainer.visibility = View.GONE
         if (message == "Success"){
             AlertDialog.Builder(this).setMessage(resources.getString(R.string.alert_change_password_message))

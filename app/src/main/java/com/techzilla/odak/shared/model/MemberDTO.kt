@@ -9,6 +9,7 @@ data class MemberDTO(
     @SerializedName("GSMNo") val gSMNo:String,
     @SerializedName("MemberID") val memberID:String,
     @SerializedName("IsActive") val isActive:Boolean,
+    @SerializedName("IsPushMessageAllowed") val isPushMessageAllowed:Boolean,
     @SerializedName("IsVerified") val isVerified:Boolean,
     @SerializedName("IsTester") val isTester:Boolean,
     @SerializedName("Email") val email:String,

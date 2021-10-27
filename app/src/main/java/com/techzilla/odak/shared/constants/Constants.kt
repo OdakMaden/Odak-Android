@@ -1,7 +1,5 @@
 package com.techzilla.odak.shared.constants
 
-import com.techzilla.odak.shared.model.ConverterCurrency
-import com.techzilla.odak.shared.model.CurrencyModel
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 import com.techzilla.odak.shared.model.MemberDTO
 

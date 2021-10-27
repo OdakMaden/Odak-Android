@@ -41,7 +41,7 @@ interface ApiService {
 
     @PATCH("Member/{MemberID}/Alarm/{RID}")
     @Headers(apiKey, sessionKey, application)
-    fun updateAlarm(@Path("MemberID") memberID: String, @Path("RID") rID: Int, alarmJson: JsonObject): Call<AlarmDTO>
+    fun updateAlarm(@Path("MemberID") memberID: String, @Path("RID") rID: Int, @Body alarmMap: HashMap<String, Any>): Call<AlarmDTO>
 
     @DELETE("Member/{MemberID}/Alarm/{RID}")
     @Headers(apiKey, sessionKey, application)

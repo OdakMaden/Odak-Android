@@ -35,9 +35,6 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
         @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n", "SimpleDateFormat")
         fun bind(exchangeRateDTO: ExchangeRateDTO, isSelected:Boolean, isFavorite:Boolean){
-
-            val percentage="0.0"
-
             if (isSelected){
                 binding.container.setContentPadding(0,15,0,15)
                 binding.menuContainer.visibility = VISIBLE
@@ -58,7 +55,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_favorite, binding.root.resources.newTheme()))
             }
 
-            if (percentage.contains("-")){
+            if (exchangeRateDTO.changePercentage < 0){
                 binding.increaseImage.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_increase_down, binding.root.resources.newTheme()))
                 binding.increaseText.setTextColor(binding.root.resources.getColor(R.color.odak_red, binding.root.resources.newTheme()))
             }
@@ -66,7 +63,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 binding.increaseImage.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_increase_up, binding.root.resources.newTheme()))
                 binding.increaseText.setTextColor(binding.root.resources.getColor(R.color.odak_green, binding.root.resources.newTheme()))
             }
-            binding.increaseText.text =  percentage//exchangeRateDTO.percentage
+            binding.increaseText.text = "% ${exchangeRateDTO.changePercentage}"
 
             val dateShow = Calendar.getInstance()
             val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(exchangeRateDTO.lastChangeTimeStamp.substring(0, exchangeRateDTO.lastChangeTimeStamp.length-14))

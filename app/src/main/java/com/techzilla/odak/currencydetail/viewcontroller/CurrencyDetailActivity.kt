@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
@@ -33,6 +34,7 @@ import com.techzilla.odak.converter.viewcontrollers.ConverterActivity
 import com.techzilla.odak.databinding.ActivityCurrencyDetailBinding
 import com.techzilla.odak.main.constant.isAddFavorite
 import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
+import com.techzilla.odak.shared.constants.exchangeRateDTOListMap
 import com.techzilla.odak.shared.constants.odakTimePattern
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.constants.timePatternYearMountDayHourMinuteSecond
@@ -56,17 +58,27 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
 
     private val repository by lazy { GraphRepository() }
 
-    private val percentage = "0"// silinecek
     private var graphPeriodEnum = GraphPeriodEnum.Hour
     private val values = ArrayList<Entry>()
     private var isFavorite : Boolean = false
+    private var isRunGraphUpdateTimer : Boolean = true
+
+    private var graphUpdateTimer = object : CountDownTimer(15000, 15000){
+        override fun onTick(millisUntilFinished: Long) {
+        }
+
+        @SuppressLint("SimpleDateFormat")
+        override fun onFinish() {
+            isRunGraphUpdateTimer = true
+            repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
+                SimpleDateFormat(odakTimePattern).format(Calendar.getInstance().time))
+        }
+    }
 
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
         if (result.resultCode == RESULT_OK){
             AlertDialogViewController.buildAlertDialog(this, resources.getString(R.string.alert_alarm_title),
                 resources.getString(R.string.alert_alarm_message), "", "", resources.getString(R.string.shared_Ok))
-            //AlertDialog.Builder(this).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"
-            //) { dialog, p1 ->  dialog.dismiss()}.show()
         }
     }
 
@@ -92,9 +104,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             binding.subTitle.text = it.name
             binding.buyText.text = it.buyingRate.toString()
             binding.sellText.text = it.sellingRate.toString()
-            val calendar = Calendar.getInstance()
+            setChangePercentage(it.changePercentage)
             repository.getGraphData(it.code, graphPeriodEnum.value,
-                SimpleDateFormat(odakTimePattern).format(calendar.time))
+                SimpleDateFormat(odakTimePattern).format(Calendar.getInstance().time))
+            updatePeriodic()
         }
 
         if (rememberMemberDTO!!.memberData != null) {
@@ -111,7 +124,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         }
 
         repository.exchangeRateGraphLiveData.observe(this, {
-            binding.sellText.text = it.meanValue.toString()
+            //binding.sellText.text = it.meanValue.toString()
             binding.lowestSliderText.text = it.lowestValue.toString()
             binding.lowestText.text = it. lowestValue.toString()
             binding.highestText.text = it.highestValue.toString()
@@ -125,9 +138,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             }
             setData(values, it.baseTimeStamp)
             binding.lineChart.invalidate()
+            graphUpdateTimer.start()
         })
 
-        if (percentage.contains("-")) {
+        if (exchangeRateDTO.changePercentage < 0) {
             binding.increase.setImageDrawable(
                 resources.getDrawable(
                     R.drawable.icon_increase_down,
@@ -145,7 +159,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             )
             binding.increaseText.setTextColor(resources.getColor(R.color.odak_green, resources.newTheme()))
         }
-        binding.increaseText.text = percentage
+        binding.increaseText.text = exchangeRateDTO.changePercentage.toString()
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -196,7 +210,12 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                     SimpleDateFormat(odakTimePattern).format(calendar.time)
                 )
             }
+
+            if (!isRunGraphUpdateTimer){
+                graphUpdateTimer.start()
+            }
         }
+
         binding.dayText.setOnClickListener {
             if (!binding.dayText.isSelected)
                 selectedDateButton(it as TextView)
@@ -206,7 +225,12 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             val calendar = Calendar.getInstance()
             repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
                 SimpleDateFormat(odakTimePattern).format(calendar.time))
+
+            if (!isRunGraphUpdateTimer){
+                graphUpdateTimer.start()
+            }
         }
+
         binding.weekText.setOnClickListener {
             if (!binding.weekText.isSelected) {
                 selectedDateButton(it as TextView)
@@ -216,6 +240,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 val calendar = Calendar.getInstance()
                 repository.getGraphData(exchangeRateDTO.code, graphPeriodEnum.value,
                     SimpleDateFormat(odakTimePattern).format(calendar.time))
+            }
+            if (isRunGraphUpdateTimer){
+                graphUpdateTimer.cancel()
             }
         }
         binding.monthText.setOnClickListener {
@@ -228,6 +255,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                     exchangeRateDTO.code, graphPeriodEnum.value,
                     SimpleDateFormat(odakTimePattern).format(calendar.time)
                 )
+            }
+            if (isRunGraphUpdateTimer){
+                graphUpdateTimer.cancel()
             }
         }
 
@@ -271,6 +301,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
     override fun onDestroy() {
         super.onDestroy()
         exchangeRateDTOForDetail = null
+        graphUpdateTimer.cancel()
     }
 
     private fun selectedDateButton(textView: TextView){
@@ -419,6 +450,47 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         }
 
         binding.lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(value.toTypedArray())
+    }
+
+    private fun updatePeriodic(){
+        object : CountDownTimer(3000, 3000){
+            override fun onTick(millisUntilFinished: Long) {
+            }
+
+            override fun onFinish() {
+                exchangeRateDTOListMap[exchangeRateDTO.code]?.let{
+                    exchangeRateDTO = it
+                    setChangePercentage(it.changePercentage)
+                    binding.buyText.text = it.buyingRate.toString()
+                    binding.sellText.text = it.sellingRate.toString()
+
+                    updatePeriodic()
+                }
+            }
+        }.start()
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setChangePercentage(changePercentage:Float){
+        if (changePercentage < 0) {
+            binding.increase.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.icon_increase_down,
+                    resources.newTheme()
+                )
+            )
+            binding.increaseText.setTextColor(resources.getColor(R.color.odak_red, resources.newTheme()))
+        }
+        else{
+            binding.increase.setImageDrawable(
+                resources.getDrawable(
+                    R.drawable.icon_increase_up,
+                    resources.newTheme()
+                )
+            )
+            binding.increaseText.setTextColor(resources.getColor(R.color.odak_green, resources.newTheme()))
+        }
+        binding.increaseText.text = "% ${changePercentage}"
     }
 
     private fun addFavoriteList(favoriteCodeId:String){
