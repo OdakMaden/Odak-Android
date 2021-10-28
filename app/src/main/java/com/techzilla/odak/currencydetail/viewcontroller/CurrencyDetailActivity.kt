@@ -179,7 +179,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             setDrawGridLines(false)
             textColor = Color.WHITE
             labelRotationAngle = -90f
-            setLabelCount(4, false)
+            setLabelCount(4, true)
             position = XAxis.XAxisPosition.BOTTOM
         }
 
@@ -397,54 +397,50 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
     @SuppressLint("SimpleDateFormat")
     private fun changeChartY(type:GraphPeriodEnum, size : Int, timestamp: TimeStamp){
         val value = ArrayList<String>()
-        println(size)
+        val calendar = Calendar.getInstance()
+        println(calendar.time)
+        calendar.timeZone = TimeZone.getTimeZone("Turkey")
+        val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
+        calendar.time = date!!
+        calendar.add(Calendar.HOUR, 3)
+        println(calendar.time)
         when(type){
             GraphPeriodEnum.Hour -> {
-                val calendar = Calendar.getInstance()
-                val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
-                calendar.time = date!!
                 calendar.add(Calendar.MINUTE, -60)
                 for (i in 0..60){
-                    val hour = if (calendar[Calendar.HOUR]<10){"0${calendar[Calendar.HOUR]}"} else{calendar[Calendar.HOUR]}
-                    val minute = if(calendar[Calendar.MINUTE]<10){"0${calendar[Calendar.MINUTE]}"}else{calendar[Calendar.MINUTE]}
-                    value.add(i, "${hour}:${minute}")
                     calendar.add(Calendar.MINUTE, 1)
+                    val hour = if (calendar[Calendar.HOUR_OF_DAY]<10){"0${calendar[Calendar.HOUR_OF_DAY]}"} else{calendar[Calendar.HOUR_OF_DAY]}
+                    val minute = if(calendar[Calendar.MINUTE]<10){"0${calendar[Calendar.MINUTE]}"}else{calendar[Calendar.MINUTE]}
+
+                    value.add(i, "${hour}:${minute}")
+
                 }
             }
             GraphPeriodEnum.Day ->{
-                val calendar = Calendar.getInstance()
-                val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
-                calendar.time = date!!
                 calendar.add(Calendar.MINUTE, -1440)
                 for (i in 0..96){
+                    calendar.add(Calendar.MINUTE, 15)
                     val hour = if (calendar[Calendar.HOUR]<10){"0${calendar[Calendar.HOUR]}"} else{calendar[Calendar.HOUR]}
                     val minute = if(calendar[Calendar.MINUTE]<10){"0${calendar[Calendar.MINUTE]}"}else{calendar[Calendar.MINUTE]}
                     value.add(i, "${hour}:${minute}")
-                    calendar.add(Calendar.MINUTE, 15)
                 }
             }
             GraphPeriodEnum.Week ->{
-                val calendar = Calendar.getInstance()
-                val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
-                calendar.time = date!!
                 calendar.add(Calendar.HOUR, -168)
                 for (i in 0..168){
+                    calendar.add(Calendar.HOUR, 1)
                     val day = if (calendar[Calendar.DAY_OF_MONTH]<10){"0${calendar[Calendar.DAY_OF_MONTH]}"} else {"${calendar[Calendar.DAY_OF_MONTH]}" }
                     val month = if(calendar[Calendar.MONTH]<10){"0${calendar[Calendar.MONTH]}"} else {"${calendar[Calendar.MONTH]}"}
                     value.add(i, "${day}/${month}")
-                    calendar.add(Calendar.HOUR, 1)
                 }
             }
             GraphPeriodEnum.Month ->{
-                val calendar = Calendar.getInstance()
-                val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(timestamp)
-                calendar.time = date!!
                 calendar.add(Calendar.HOUR, -720)
                 for (i in 0..240){
+                    calendar.add(Calendar.HOUR, 3)
                     val day = if (calendar[Calendar.DAY_OF_MONTH]<10){"0${calendar[Calendar.DAY_OF_MONTH]}"} else {"${calendar[Calendar.DAY_OF_MONTH]}" }
                     val month = if(calendar[Calendar.MONTH]<10){"0${calendar[Calendar.MONTH]}"} else {"${calendar[Calendar.MONTH]}"}
                     value.add(i, "${day}/${month}")
-                    calendar.add(Calendar.HOUR, 3)
                 }
             }
         }

@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_bar"
         app:layout_constraintTop_toBottomOf="@id/guideline_menu_horizontal">
         <LinearLayout
             android:id="@+id/recyclerview_container"
@@ -52,7 +52,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/from_recyclerview"
                         android:layout_width="match_parent"
-                        android:layout_height="210dp"
+                        android:layout_height="@dimen/recyclerview_height"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/item_picker_element"
                         app:layout_constraintTop_toTopOf="parent"
@@ -136,7 +136,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/to_recyclerview"
                         android:layout_width="match_parent"
-                        android:layout_height="210dp"
+                        android:layout_height="@dimen/recyclerview_height"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/item_picker_element"
                         app:layout_constraintStart_toStartOf="parent"

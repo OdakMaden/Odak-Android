@@ -9,7 +9,7 @@ import com.techzilla.odak.databinding.ItemPickerElementBinding
 import com.techzilla.odak.shared.model.CurrencyTypeEnum
 import com.techzilla.odak.shared.model.ExchangeRateDTO
 
-class ItemPickerAdapter (private val adapterType:Int) : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
+class ItemPickerAdapter (private val adapterType:Int, private val listener:ChangeTypeListener) : RecyclerView.Adapter<ItemPickerAdapter.ViewHolder>() {
 
     private val dollarArrayList = ArrayList<ExchangeRateDTO>()
     private val goldBarArrayList = ArrayList<ExchangeRateDTO>()
@@ -21,17 +21,11 @@ class ItemPickerAdapter (private val adapterType:Int) : RecyclerView.Adapter<Ite
     class ViewHolder(private val binding: ItemPickerElementBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(converterCurrency: ExchangeRateDTO, isSelected: Boolean){
-            binding.currencyCode.text = converterCurrency.code
-            binding.currencyName.text = converterCurrency.name
+            binding.currencyCode.text = converterCurrency.name.split("/")[0]
+            //binding.currencyName.text = converterCurrency.name
 
-            if (isSelected){
-                binding.currencyName.isSelected = true
-                binding.currencyCode.isSelected = true
-            }
-            else{
-                binding.currencyName.isSelected = false
-                binding.currencyCode.isSelected = false
-            }
+            //binding.currencyName.isSelected = isSelected
+            binding.currencyCode.isSelected = isSelected
         }
     }
 
@@ -151,5 +145,10 @@ class ItemPickerAdapter (private val adapterType:Int) : RecyclerView.Adapter<Ite
         }
         selectedPosition = 1
         _type = type
+        listener.changeTypeListener(_type == CurrencyTypeEnum.Crypto)
+    }
+
+    interface ChangeTypeListener{
+        fun changeTypeListener(isCrypto: Boolean)
     }
 }

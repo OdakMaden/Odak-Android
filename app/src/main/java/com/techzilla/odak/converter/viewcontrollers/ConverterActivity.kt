@@ -15,16 +15,19 @@ import com.techzilla.odak.R
 import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.converter.adapter.ItemPickerAdapter
 import com.techzilla.odak.databinding.ActivityConverterBinding
+import com.techzilla.odak.shared.constants.exchangeRateDTOListMap
 import com.techzilla.odak.shared.constants.exchangeRateList
 import com.techzilla.odak.shared.model.CurrencyTypeEnum
 import java.text.DecimalFormat
 
-class ConverterActivity : AppCompatActivity() {
+class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeListener{
     private val binding : ActivityConverterBinding by lazy { ActivityConverterBinding.inflate(layoutInflater) }
 
-    private val fromAdapter by lazy { ItemPickerAdapter(0) }
-    private val toAdapter by lazy { ItemPickerAdapter(1) }
+    private val fromAdapter by lazy { ItemPickerAdapter(0, this) }
+    private val toAdapter by lazy { ItemPickerAdapter(1, this) }
     private val decimalFormat = DecimalFormat("#.#####")
+    private var isCrypto : Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +80,7 @@ class ConverterActivity : AppCompatActivity() {
                             var position = it.findFirstCompletelyVisibleItemPosition()
                             val lastPosition = it.findLastCompletelyVisibleItemPosition()
                             if (position+1 != fromAdapter.getSelectedPosition()){
-                                if (lastPosition < fromAdapter.getShowListSize()-1) {
+                                if (lastPosition < fromAdapter.getShowListSize()) {
                                     position += offset
                                     if (position in 0 until fromAdapter.getShowListSize()) {
                                         fromAdapter.setPositionToItem(position)
@@ -142,7 +145,7 @@ class ConverterActivity : AppCompatActivity() {
                             var position = it.findFirstCompletelyVisibleItemPosition()
                             val lastPosition = it.findLastCompletelyVisibleItemPosition()
                             if (position+1 != toAdapter.getSelectedPosition()){
-                                if (lastPosition < toAdapter.getShowListSize()-1) {
+                                if (lastPosition < toAdapter.getShowListSize()) {
                                     position += offset
                                     if (position in 0 until toAdapter.getShowListSize()) {
                                         toAdapter.setPositionToItem(position)
@@ -182,29 +185,38 @@ class ConverterActivity : AppCompatActivity() {
         })
 
         binding.fromPiece.addTextChangedListener { _it ->
+            val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toDouble() else 1.0
+            val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toDouble() else 1.0
             if (_it.toString() != ""){
-                binding.resultPrice.text = decimalFormat.format(_it.toString().toDouble() * binding.toPiecePrice.text.toString().toDouble())
+                val fromPiece = decimalFormat.parse(_it.toString())?.toDouble()
+                val toPiece = decimalFormat.parse(binding.toPiecePrice.text.toString())?.toDouble()
+                binding.resultPrice.text = decimalFormat.format(fromPiece!! * toPiece!! * fromTermUSDPrice / toTermUSDPrice)
             }
             else{
-                binding.resultPrice.text = decimalFormat.format(0 * binding.toPiecePrice.text.toString().toDouble())
+                val toPiece = decimalFormat.parse(binding.toPiecePrice.text.toString())?.toDouble()
+                binding.resultPrice.text = decimalFormat.format(0 * toPiece!! )
             }
         }
     }
-
-
+    
     private fun updateChangeText(){
+        val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toDouble() else 1.0
+        val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toDouble() else 1.0
         if (toAdapter.getSelectedItem().sellingRate != 0f) {
             binding.toPiecePrice.text =
-                decimalFormat.format(fromAdapter.getSelectedItem().sellingRate / toAdapter.getSelectedItem().sellingRate)
+                decimalFormat.format((fromAdapter.getSelectedItem().sellingRate * fromTermUSDPrice) / (toAdapter.getSelectedItem().sellingRate * toTermUSDPrice))
         }
-        binding.fromPiece.text.toString().let { fromPiece->
-            if (fromPiece == ""){
-                binding.resultPrice.text = decimalFormat.format(0 * binding.toPiecePrice.text.toString().toDouble())
+        binding.fromPiece.text.toString().let { fromPieceString->
+            val fromPiece = decimalFormat.parse(fromPieceString)?.toDouble()
+            val toPiece = decimalFormat.parse(binding.toPiecePrice.text.toString())?.toDouble()
+            if (fromPiece == 0.0){
+                binding.resultPrice.text = decimalFormat.format(0 * (toPiece!!* toTermUSDPrice))
             }else{
-                binding.resultPrice.text = decimalFormat.format(fromPiece.toDouble() * binding.toPiecePrice.text.toString().toDouble())
+                binding.resultPrice.text = decimalFormat.format(fromPiece!! * toPiece!!)
             }
         }
     }
+
 
     private fun scrollToItem(itemHeight: Int, layoutManager : LinearLayoutManager, position:Int, recyclerView: RecyclerView) {
         val height = recyclerView.height
@@ -272,6 +284,10 @@ class ConverterActivity : AppCompatActivity() {
         }
     }
 
+    override fun changeTypeListener(isCrypto: Boolean) {
+        this.isCrypto = isCrypto
+    }
+/*
     private fun getStatusBarHeight(): Int{
         var result = 0
         val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
@@ -280,4 +296,6 @@ class ConverterActivity : AppCompatActivity() {
         }
         return result
     }
+
+ */
 }
