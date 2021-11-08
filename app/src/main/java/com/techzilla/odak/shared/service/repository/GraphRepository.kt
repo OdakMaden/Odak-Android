@@ -26,10 +26,10 @@ class GraphRepository {
             ) {
                 if (response.isSuccessful){
                     if (response.code() == 200){
+                        println(response.body()!!.baseTimeStamp)
                         exchangeRateGraphMutableLiveData.postValue(response.body())
                     }
                 }
-                println("graph -> ${response.code()}")
             }
 
             override fun onFailure(call: Call<ExchangeRateGraphDTO>, t: Throwable) {

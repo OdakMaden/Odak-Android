@@ -24,9 +24,14 @@ import com.techzilla.odak.shared.helper_interface.MenuButtonListener
 import com.techzilla.odak.shared.service.repository.MainRepository
 
 class MainActivity : AppCompatActivity(), MenuButtonListener {
+
     private var _binding : ActivityMainBinding? = null
     private val binding get() = _binding!!
 
+    private val marketFragment = MarketFragment(this)
+    private val converterFragment = ConverterFragment(this)
+    private val profileFragment = ProfileFragment(this)
+    private val alarmFragment = AlarmFragment(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +53,7 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
         binding.container.isSelected = isOpenMenu
 
         supportFragmentManager.beginTransaction().apply {
-            add(binding.fragmentContainer.id, MarketFragment(this@MainActivity), MarketFragment.TAG)
+            replace(binding.fragmentContainer.id, marketFragment, MarketFragment.TAG)
             commit()
         }
 
@@ -108,9 +113,10 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
             backgroundMenu(isOpenMenu)
         }
 
+        /*
         binding.market.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, MarketFragment(this))
+                .replace(binding.fragmentContainer.id, marketFragment)
                 .addToBackStack(MarketFragment.TAG)
                 .commit()
 
@@ -126,9 +132,11 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
 
             backgroundMenu(isOpenMenu)
         }
+
+         */
         binding.converter.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, ConverterFragment(this))
+                .replace(binding.fragmentContainer.id, converterFragment)
                 .addToBackStack(MarketFragment.TAG)
                 .commit()
 
@@ -149,7 +157,7 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
         }
         binding.notification.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, AlarmFragment(this))
+                .replace(binding.fragmentContainer.id, alarmFragment)
                 .addToBackStack(MarketFragment.TAG)
                 .commit()
 
@@ -167,7 +175,7 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
         }
         binding.profile.setOnClickListener {
            supportFragmentManager.beginTransaction()
-               .replace(binding.fragmentContainer.id, ProfileFragment(this))
+               .replace(binding.fragmentContainer.id, profileFragment)
                .addToBackStack(MarketFragment.TAG)
                .commit()
 
@@ -202,7 +210,7 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
 
 
     private fun backgroundMenu(isEnable:Boolean){
-        binding.market.isEnabled = isEnable
+       // binding.market.isEnabled = isEnable
         binding.converter.isEnabled = isEnable
         binding.call.isEnabled = isEnable
         binding.notification.isEnabled = isEnable

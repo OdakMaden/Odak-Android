@@ -20,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.35"
         app:layout_constraintHorizontal_bias="0.07">
+        <!--
         <LinearLayout
             android:id="@+id/market"
             android:layout_width="match_parent"
@@ -40,7 +41,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/menu.market.label"/>
         </LinearLayout>
-
+-->
         <LinearLayout
             android:id="@+id/converter"
             android:layout_width="match_parent"

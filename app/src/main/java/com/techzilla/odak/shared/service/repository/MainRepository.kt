@@ -28,7 +28,6 @@ class MainRepository {
             val calendar = Calendar.getInstance()
             val timeStamp = SimpleDateFormat(odakTimePattern).format(calendar.time)
             getExchangeRateList(rememberMemberDTO!!.memberID, timeStamp)
-            println(timeStamp)
         }
     }
 
@@ -72,7 +71,6 @@ class MainRepository {
                         rememberMemberDTO = response.body()
                     }
                 }
-                println(response.code())
             }
 
             override fun onFailure(call: Call<MemberDTO>, t: Throwable) {

@@ -1,7 +1,6 @@
 package com.techzilla.odak.shared.service.repository
 
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.JsonObject
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.service.ApiService
@@ -36,7 +35,6 @@ class AlarmRepository {
                         errorMutableLiveData.postValue("Alarm Oluşturulamadı.")
                     }
                 }
-                println(response.code())
             }
 
             override fun onFailure(call: Call<AlarmDTO>, t: Throwable) {

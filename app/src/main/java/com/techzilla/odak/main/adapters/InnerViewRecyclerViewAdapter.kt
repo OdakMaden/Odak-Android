@@ -68,8 +68,8 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
             val dateShow = Calendar.getInstance()
             val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(exchangeRateDTO.lastChangeTimeStamp.substring(0, exchangeRateDTO.lastChangeTimeStamp.length-14))
             dateShow.time = date!!
-            val termMinute = if (dateShow.get(Calendar.MINUTE)> 10){dateShow.get(Calendar.MINUTE).toString()}else{"0${dateShow.get(Calendar.MINUTE)}"}
-            val termHour = if (dateShow.get(Calendar.HOUR_OF_DAY) > 10){dateShow.get(Calendar.HOUR_OF_DAY).toString()}else{"0${dateShow.get(Calendar.HOUR_OF_DAY)}"}
+            val termMinute = if (dateShow.get(Calendar.MINUTE) >= 10){dateShow.get(Calendar.MINUTE).toString()}else{"0${dateShow.get(Calendar.MINUTE)}"}
+            val termHour = if (dateShow.get(Calendar.HOUR_OF_DAY) >= 10){dateShow.get(Calendar.HOUR_OF_DAY).toString()}else{"0${dateShow.get(Calendar.HOUR_OF_DAY)}"}
             binding.subDate.text = "${termHour}:${termMinute}"
 
 
