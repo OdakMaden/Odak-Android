@@ -60,16 +60,24 @@ class AddAlarmRecyclerviewAdapter(private val listener:AddAlarmListener) : Recyc
         fullData.forEach {
             when(it.currencyType){
                 CurrencyTypeEnum.Money ->{
-                    dollarArrayList.add(it)
+                    if (!dollarArrayList.contains(it)) {
+                        dollarArrayList.add(it)
+                    }
                 }
                 CurrencyTypeEnum.Metal ->{
-                    goldBarArrayList.add(it)
+                    if (!goldBarArrayList.contains(it)) {
+                        goldBarArrayList.add(it)
+                    }
                 }
                 CurrencyTypeEnum.Crypto ->{
-                    cryptoArrayList.add(it)
+                    if (!cryptoArrayList.contains(it)) {
+                        cryptoArrayList.add(it)
+                    }
                 }
                 CurrencyTypeEnum.Parity ->{
-                    dollarArrayList.add(it)
+                    if (!dollarArrayList.contains(it)) {
+                        dollarArrayList.add(it)
+                    }
                 }
             }
         }

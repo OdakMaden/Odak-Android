@@ -52,13 +52,13 @@ class AlarmListRecyclerViewAdapter (private val listener : AlarmListMenuListener
     }
 
     fun addItemsToList(alarms : List<AlarmDTO>){
-        alarmArrayList.addAll(alarms)
-        var term = 0
-        alarmArrayList.forEach {
-            alarmArrayMap[it.rID] = term
-            term++
+        alarms.forEach {
+            if (!alarmArrayList.contains(it)){
+                alarmArrayList.add(it)
+                alarmArrayMap[it.rID] = alarmArrayList.indexOf(it)
+                notifyItemInserted(alarmArrayList.size)
+            }
         }
-        notifyItemInserted(alarmArrayList.size)
     }
 
     @SuppressLint("NotifyDataSetChanged")

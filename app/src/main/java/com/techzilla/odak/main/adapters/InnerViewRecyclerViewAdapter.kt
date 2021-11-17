@@ -11,6 +11,7 @@ import com.techzilla.odak.databinding.ItemInnerViewBinding
 import com.techzilla.odak.shared.constants.timePatternYearMountDayHourMinuteSecond
 import com.techzilla.odak.shared.model.CurrencyTypeEnum
 import com.techzilla.odak.shared.model.ExchangeRateDTO
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,8 +47,10 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
             binding.title.text = exchangeRateDTO.code
             binding.subTitle.text = exchangeRateDTO.name
-            binding.buyText.text = exchangeRateDTO.buyingRate.toString()
-            binding.sellText.text = exchangeRateDTO.sellingRate.toString()
+            val buyText = DecimalFormat("#.####").format(exchangeRateDTO.buyingRate)
+            val sellText =  DecimalFormat("#.####").format(exchangeRateDTO.sellingRate)
+            binding.buyText.text = if (buyText.length > 7) buyText.subSequence(0,7) else buyText
+            binding.sellText.text = if (sellText.length > 7) sellText.subSequence(0,7) else sellText
             if (isFavorite){
                 binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_selected_favorite, binding.root.resources.newTheme()))
             }
