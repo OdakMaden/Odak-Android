@@ -28,7 +28,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
     private val arrayListMap = HashMap<String, Int>()
     private val arrayList = ArrayList<ExchangeRateDTO>()
-    private var selectedModel: ExchangeRateDTO? = null
+    private var selectedItemPosition = -1
     private var _type = 4
 
     class ViewHolder(private val binding: ItemInnerViewBinding, private val listener: InnerViewListener) : RecyclerView.ViewHolder(binding.root){
@@ -101,9 +101,9 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                isFavorite = true
            }
         }
-        holder.bind(arrayList[position], arrayList[position] == selectedModel, isFavorite)
+        holder.bind(arrayList[position],selectedItemPosition == position, isFavorite)
         holder.itemView.setOnClickListener {
-            if (arrayList[position] == selectedModel){
+            if (selectedItemPosition == position){
                 listener.innerViewForDetailOnClickListener(arrayList[position])
             }
             else{
@@ -200,7 +200,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
             arrayListMap[it.code] = term
             term++
         }
-        selectedModel = null
+        selectedItemPosition = -1
         _type = type
     }
 
@@ -232,37 +232,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         }
     }
 
-    /*
-    fun changeFavoriteState(exchangeRateDTO: ExchangeRateDTO, favoriteString: String){
-        favoriteString.let { favoriteString->
-            if (favoriteString.contains(exchangeRateDTO.code) && !favoriteArrayList.contains(exchangeRateDTO)){
-                favoriteArrayList.add(exchangeRateDTO)
-            }
-            else{
-                favoriteArrayList.remove(exchangeRateDTO)
-            }
-        }
 
-        when (exchangeRateDTO.currencyType) {
-            CurrencyTypeEnum.Money ->{
-                dollarArrayList.removeAt(dollarMapList[exchangeRateDTO.code]!!)
-                dollarArrayList.add(dollarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
-            }
-            CurrencyTypeEnum.Metal -> {
-                goldBarArrayList.removeAt(goldBarMapList[exchangeRateDTO.code]!!)
-                goldBarArrayList.add(goldBarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
-            }
-            CurrencyTypeEnum.Crypto -> {
-                cryptoArrayList.removeAt(cryptoMapList[exchangeRateDTO.code]!!)
-                cryptoArrayList.add(cryptoMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
-            }
-            CurrencyTypeEnum.Parity ->{
-                dollarArrayList.removeAt(dollarMapList[exchangeRateDTO.code]!!)
-                dollarArrayList.add(dollarMapList[exchangeRateDTO.code]!!, exchangeRateDTO)
-            }
-        }
-    }
-     */
     fun searchItems(text: String){
         notifyItemRangeRemoved(0, arrayList.size)
         arrayList.clear()
@@ -309,7 +279,8 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
         }.start()
 
          */
-        selectedModel = arrayList[position]
+        //selectedModel = arrayList[position]
+        selectedItemPosition = position
         notifyDataSetChanged()
     }
 
@@ -320,7 +291,6 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 result.add(it)
             }
         }
-
         return result
     }
 
