@@ -1,6 +1,5 @@
 package com.techzilla.odak.auth.viewcontroller
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -42,6 +41,10 @@ class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
                 val sharedPref = getSharedPreferences(getString(R.string.Odak_shared_pref), MODE_PRIVATE)
                 loginRepository.checkPassword(binding.password.text.toString(), this, sharedPref, this)
             }
+            else {
+                AlertDialogViewController.buildAlertDialog(this, "",resources.getString(R.string.alert_login_password),
+                    "","", resources.getString(R.string.shared_Ok))
+            }
         }
     }
 
@@ -56,11 +59,6 @@ class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
         }else{
             AlertDialogViewController.buildAlertDialog(this, "",resources.getString(R.string.alert_login_message),
                 "","", resources.getString(R.string.shared_Ok))
-          /* AlertDialog.Builder(this).setMessage(resources.getString(R.string.alert_login_message)).setPositiveButton(
-               resources.getText(R.string.shared_Ok)
-           ) { dialog, p1 ->  dialog.dismiss()}.show()
-
-           */
         }
     }
 }

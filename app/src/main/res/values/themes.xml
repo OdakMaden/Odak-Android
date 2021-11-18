@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.Odak" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/odak_dark_blue</item>
+        <item name="colorPrimaryVariant">@color/odak_blue</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -68,7 +68,7 @@
 
     <style name="odak.textview.item_inner_view.mid_text.price" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="fontFamily">@font/metropolis_black</item>
         <item name="android:gravity">center_horizontal</item>
@@ -289,6 +289,8 @@
         <item name="android:layout_marginBottom">3dp</item>
         <item name="android:fontFamily">@font/metropolis_medium</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:lines">2</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="odak.textview.profile.dynamic" parent="Widget.AppCompat.TextView">
@@ -296,6 +298,8 @@
         <item name="android:layout_marginTop">3dp</item>
         <item name="android:layout_marginBottom">3dp</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:lines">2</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="fontFamily">@font/metropolis_black</item>
     </style>
 

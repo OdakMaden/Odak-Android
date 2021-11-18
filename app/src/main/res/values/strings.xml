@@ -73,6 +73,7 @@
     <string name="alarm.menu.cancel.label">İPTAL</string>
 
     <!-- Alert -->
+    <string name="alert.login.password">6 HANELİ ŞİFRENİZİ GİRİNİZ</string>
     <string name="alert.login.message">YANLIŞ BİR ŞİFRE GİRDİNİZ. LÜTFEN ŞİFREYİ DOĞRU GİRİNİZ.</string>
     <string name="alert.dont_same_password.message">YENİ ŞİFRENİZ, YENİ ŞİFRE TEKRAR İLE UYUŞMAMAKTADIR. LÜTFEN AYNISINI GİRİNİZ.</string>
     <string name="alert.dont_same_old_password.message">YENİ ŞİFRE, ESKİ ŞİFRENİZ İLE AYNI OLAMAZ.</string>

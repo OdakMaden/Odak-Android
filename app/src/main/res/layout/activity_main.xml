@@ -20,28 +20,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.35"
         app:layout_constraintHorizontal_bias="0.07">
-        <!--
-        <LinearLayout
-            android:id="@+id/market"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_graph"
-                android:layout_marginVertical="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="25dp"
-                app:tint="@color/white"
-                />
-            <TextView
-                style="@style/odak.textview.menu_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/menu.market.label"/>
-        </LinearLayout>
--->
         <LinearLayout
             android:id="@+id/converter"
             android:layout_width="match_parent"
@@ -142,7 +120,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_menu"
             android:translationZ="0dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
             android:background="@android:color/transparent"
             app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"

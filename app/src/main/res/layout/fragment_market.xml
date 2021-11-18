@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constrainedWidth="true"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="55dp"
             android:queryBackground="@drawable/search_query_background"
             android:searchIcon="@drawable/icon_search"
@@ -35,11 +35,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constrainedHeight="true"
+            android:layout_marginHorizontal="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/search_view"
             app:layout_constraintBottom_toTopOf="@id/bottom_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            tools:listitem="@layout/item_inner_view"
             />
 
 

@@ -1,6 +1,5 @@
 package com.techzilla.odak.profile.viewcontroller
 
-import android.app.AlertDialog
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
@@ -71,11 +70,6 @@ class ProfileFragment constructor(private val listener: MenuButtonListener) : Fr
                 binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
             }
         }
-        /*
-        binding.notificationButton.setOnClickListener {
-            openNotificationSetting()
-        }
-         */
 
         binding.changePasswordButton.setOnClickListener {
             Intent(requireActivity(), ChangeMemberDTOActivity::class.java).apply {
@@ -88,11 +82,6 @@ class ProfileFragment constructor(private val listener: MenuButtonListener) : Fr
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        //getNotificationPermission()
-    }
-
     override fun updateMemberDTOListener(message: String) {
         binding.componentProgressBar.progressbarContainer.visibility = View.GONE
         if (message != "Success"){
@@ -100,21 +89,4 @@ class ProfileFragment constructor(private val listener: MenuButtonListener) : Fr
             AlertDialogViewController.buildAlertDialog(requireContext(), "", resources.getString(R.string.alert_notification_permision_message),"","",resources.getString(R.string.shared_Ok))
         }
     }
-
-    /*
-    private fun getNotificationPermission(){
-        val notificationManagerCompat : NotificationManagerCompat = NotificationManagerCompat.from(requireContext())
-        binding.notificationSwitchCompat.isChecked = notificationManagerCompat.areNotificationsEnabled()
-    }
-
-    private fun openNotificationSetting(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                .putExtra(Settings.EXTRA_APP_PACKAGE, requireActivity().packageName).apply {
-                    startActivity(this)
-                }
-        }
-    }
-
-     */
 }

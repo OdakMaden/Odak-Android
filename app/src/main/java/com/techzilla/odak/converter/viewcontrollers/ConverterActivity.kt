@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowInsets
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
@@ -50,7 +52,19 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
         toAdapter.addNewItem(exchangeRateList)
 
         exchangeRateDTOForDetail?.let {
-            fromAdapter.setFocusItemWithCode(it, binding.fromRecyclerview.layoutManager as LinearLayoutManager)
+            if (it.currencyType == CurrencyTypeEnum.Parity){
+                bottomMenu(CurrencyTypeEnum.Money)
+                fromAdapter.changeType(CurrencyTypeEnum.Money)
+                toAdapter.changeType(CurrencyTypeEnum.Money)
+                fromAdapter.setFocusItemWithCodeForParity(it, binding.fromRecyclerview.layoutManager as LinearLayoutManager)
+                toAdapter.setFocusItemWithCodeForParity(it, binding.toRecyclerview.layoutManager as LinearLayoutManager)
+            }
+            else{
+                bottomMenu(it.currencyType)
+                fromAdapter.changeType(it.currencyType)
+                toAdapter.changeType(it.currencyType)
+                fromAdapter.setFocusItemWithCode(it, binding.fromRecyclerview.layoutManager as LinearLayoutManager)
+            }
         }
         updateChangeText()
 
@@ -119,8 +133,8 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
         })
 
         binding.changeItemButton.setOnClickListener {
-            val fromPosition = fromAdapter.getSelectedPosition()
-            val toPosition = toAdapter.getSelectedPosition()
+            val fromPosition = if(fromAdapter.getSelectedItem().code != "TRY")fromAdapter.getSelectedPosition() + 1 else 1
+            val toPosition = if(toAdapter.getSelectedItem().code != "TRY") toAdapter.getSelectedPosition() - 1 else toAdapter.getShowListSize()-2
             fromAdapter.setPositionToItem(toPosition)
             toAdapter.setPositionToItem(fromPosition)
             resources?.getDimensionPixelSize(R.dimen.item_height)?.let {
@@ -200,8 +214,8 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
     }
     
     private fun updateChangeText(){
-        val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toDouble() else 1.0
-        val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toDouble() else 1.0
+        val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") reformForDoubleToString(exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString()).toDouble() else 1.0
+        val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") reformForDoubleToString(exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString()).toDouble() else 1.0
         if (toAdapter.getSelectedItem().sellingRate != 0f) {
             binding.toPiecePrice.text =
                 decimalFormat.format((fromAdapter.getSelectedItem().sellingRate * fromTermUSDPrice) / (toAdapter.getSelectedItem().sellingRate * toTermUSDPrice))
@@ -240,6 +254,8 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
     private fun selectBottomItem(constraintLayout: ConstraintLayout, isFirst:Boolean){
         when(constraintLayout){
             binding.dollarContainer->{
+                bottomMenu(CurrencyTypeEnum.Metal)
+                /*
                 binding.dollarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_dollar_selected, resources.newTheme()))
                 binding.dollarText.setTextColor(resources.getColor(R.color.odak_light_blue, resources.newTheme()))
                 binding.goldBarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_gold_bars, resources.newTheme()))
@@ -247,6 +263,7 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
                 binding.bitcoinIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_bitcoin, resources.newTheme()))
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
 
+                 */
                 fromAdapter.changeType(CurrencyTypeEnum.Money)
                 toAdapter.changeType(CurrencyTypeEnum.Money)
                 if (!isFirst){
@@ -254,6 +271,8 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
                 }
             }
             binding.goldBarsContainer->{
+                bottomMenu(CurrencyTypeEnum.Metal)
+                /*
                 binding.dollarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_dollar, resources.newTheme()))
                 binding.dollarText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
                 binding.goldBarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_gold_bars_selected, resources.newTheme()))
@@ -261,6 +280,7 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
                 binding.bitcoinIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_bitcoin, resources.newTheme()))
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
 
+                 */
                 fromAdapter.changeType(CurrencyTypeEnum.Metal)
                 toAdapter.changeType(CurrencyTypeEnum.Metal)
                 if (!isFirst){
@@ -268,6 +288,7 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
                 }
             }
             binding.cryptoContainer->{
+                /*
                 binding.dollarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_dollar, resources.newTheme()))
                 binding.dollarText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
                 binding.goldBarIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_gold_bars, resources.newTheme()))
@@ -275,6 +296,8 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
                 binding.bitcoinIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_bitcoin_selected, resources.newTheme()))
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.odak_light_blue, resources.newTheme()))
 
+                 */
+                bottomMenu(CurrencyTypeEnum.Crypto)
                 fromAdapter.changeType(CurrencyTypeEnum.Crypto)
                 toAdapter.changeType(CurrencyTypeEnum.Crypto)
                 if (!isFirst){
@@ -284,18 +307,49 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
         }
     }
 
+    private fun bottomMenu(type : CurrencyTypeEnum){
+        when(type){
+            CurrencyTypeEnum.Money ->{
+                setColorAndImage(R.drawable.icon_dollar_selected, R.color.odak_light_blue, binding.dollarIcon, binding.dollarText)
+                setColorAndImage(R.drawable.icon_gold_bars, R.color.white, binding.goldBarIcon, binding.goldBarText)
+                setColorAndImage(R.drawable.icon_bitcoin, R.color.white, binding.bitcoinIcon, binding.bitcoinText)
+            }
+            CurrencyTypeEnum.Metal ->{
+                setColorAndImage(R.drawable.icon_dollar, R.color.white, binding.dollarIcon, binding.dollarText)
+                setColorAndImage(R.drawable.icon_gold_bars_selected, R.color.odak_light_blue, binding.goldBarIcon, binding.goldBarText)
+                setColorAndImage(R.drawable.icon_bitcoin, R.color.white, binding.bitcoinIcon, binding.bitcoinText)
+            }
+            CurrencyTypeEnum.Crypto ->{
+                setColorAndImage(R.drawable.icon_dollar, R.color.white, binding.dollarIcon, binding.dollarText)
+                setColorAndImage(R.drawable.icon_gold_bars, R.color.white, binding.goldBarIcon, binding.goldBarText)
+                setColorAndImage(R.drawable.icon_bitcoin_selected, R.color.odak_light_blue, binding.bitcoinIcon, binding.bitcoinText)
+            }
+            CurrencyTypeEnum.Parity->{}
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setColorAndImage(icon:Int, color:Int, imageView:ImageView, textView:TextView){
+        resources.let {
+            imageView.setImageDrawable(it.getDrawable(icon, it.newTheme()))
+            textView.setTextColor(it.getColor(color, it.newTheme()))
+        }
+    }
+
     override fun changeTypeListener(isCrypto: Boolean) {
         this.isCrypto = isCrypto
     }
-/*
-    private fun getStatusBarHeight(): Int{
-        var result = 0
-        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (resourceId>0){
-            result = resources.getDimensionPixelSize(resourceId)
+
+    private fun reformForDoubleToString(priceString:String):String{
+        var result = ""
+        if (priceString.length >7) {
+            result = priceString.subSequence(0,7).toString()
+            if (result.last() == '.'){
+                result.replace(".","")
+            }
+        } else {
+            result=priceString
         }
         return result
     }
-
- */
 }

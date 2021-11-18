@@ -11,7 +11,7 @@
         android:id="@+id/back_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="20dp"
         android:src="@drawable/icon_back"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="@id/guideline_menu_horizontal"

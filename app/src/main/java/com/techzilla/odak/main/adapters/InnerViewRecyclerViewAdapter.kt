@@ -47,10 +47,8 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
             binding.title.text = exchangeRateDTO.code
             binding.subTitle.text = exchangeRateDTO.name
-            val buyText = DecimalFormat("#.####").format(exchangeRateDTO.buyingRate)
-            val sellText =  DecimalFormat("#.####").format(exchangeRateDTO.sellingRate)
-            binding.buyText.text = if (buyText.length > 7) buyText.subSequence(0,7) else buyText
-            binding.sellText.text = if (sellText.length > 7) sellText.subSequence(0,7) else sellText
+            binding.buyText.text = reformForDoubleToString(DecimalFormat("#.####").format(exchangeRateDTO.buyingRate))
+            binding.sellText.text = reformForDoubleToString(DecimalFormat("#.####").format(exchangeRateDTO.sellingRate))
             if (isFavorite){
                 binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_selected_favorite, binding.root.resources.newTheme()))
             }
@@ -89,6 +87,19 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 listener.innerViewAlarmOnClickListener(exchangeRateDTO)
             }
 
+        }
+
+        private fun reformForDoubleToString(priceString:String):String{
+            var result = ""
+            if (priceString.length >7) {
+                result = priceString.subSequence(0,7).toString()
+                if (result.last() == '.'){
+                    result.replace(".","")
+                }
+            } else {
+                result=priceString
+            }
+            return result
         }
 
     }

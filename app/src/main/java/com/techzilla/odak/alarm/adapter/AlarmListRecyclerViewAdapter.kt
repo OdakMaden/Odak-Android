@@ -9,7 +9,6 @@ import com.techzilla.odak.shared.constants.exchangeRateDTOListMap
 import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.model.AlarmTypeEnum
 import com.techzilla.odak.shared.model.ExchangeRateDTO
-import okhttp3.internal.notifyAll
 import java.text.DecimalFormat
 
 class AlarmListRecyclerViewAdapter (private val listener : AlarmListMenuListener) : RecyclerView.Adapter<AlarmListRecyclerViewAdapter.ViewHolder>(){
@@ -23,19 +22,33 @@ class AlarmListRecyclerViewAdapter (private val listener : AlarmListMenuListener
         fun bind (alarm: AlarmDTO, listener: AlarmListMenuListener, nowExchangeRateDTO: ExchangeRateDTO){
             val decimalFormat = DecimalFormat("#.####")
             if (alarm.alarmType == AlarmTypeEnum.PriceOver || alarm.alarmType == AlarmTypeEnum.PriceUnder){
-                binding.aimPriceText.text = alarm.targetValue.toString()
-                binding.nowPriceText.text = decimalFormat.format(nowExchangeRateDTO.sellingRate)
+                binding.aimPriceText.text = reformForDoubleToString(alarm.targetValue.toString())
+                binding.nowPriceText.text = reformForDoubleToString(decimalFormat.format(nowExchangeRateDTO.sellingRate))
             }
             else{
-                binding.aimPriceText.text = decimalFormat.format(alarm.referenceValue * (1 + alarm.targetValue / 100))
-                binding.nowPriceText.text = decimalFormat.format(nowExchangeRateDTO.sellingRate)
+                binding.aimPriceText.text = reformForDoubleToString(decimalFormat.format(alarm.referenceValue * (1 + alarm.targetValue / 100)))
+                binding.nowPriceText.text = reformForDoubleToString(decimalFormat.format(nowExchangeRateDTO.sellingRate))
             }
             binding.title.text = alarm.currencyCode
-            binding.subTitle.text = alarm.name
+            binding.subTitle.text = alarm.name.replaceFirst(" ", "\n")
 
             binding.itemMenu.setOnClickListener {
                 listener.alarmListMenuClick(alarm)
             }
+        }
+
+
+        private fun reformForDoubleToString(priceString:String):String{
+            var result = ""
+            if (priceString.length >7) {
+                result = priceString.subSequence(0,7).toString()
+                if (result.last() == '.'){
+                    result.replace(".","")
+                }
+            } else {
+                result=priceString
+            }
+            return result
         }
     }
 

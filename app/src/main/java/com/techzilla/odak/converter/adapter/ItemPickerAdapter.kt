@@ -22,9 +22,6 @@ class ItemPickerAdapter (private val adapterType:Int, private val listener:Chang
 
         fun bind(converterCurrency: ExchangeRateDTO, isSelected: Boolean){
             binding.currencyCode.text = converterCurrency.name.split("/")[0]
-            //binding.currencyName.text = converterCurrency.name
-
-            //binding.currencyName.isSelected = isSelected
             binding.currencyCode.isSelected = isSelected
         }
     }
@@ -107,11 +104,28 @@ class ItemPickerAdapter (private val adapterType:Int, private val listener:Chang
 
     @SuppressLint("NotifyDataSetChanged")
     fun setFocusItemWithCode(forItem:ExchangeRateDTO, layoutManager: LinearLayoutManager){
-        changeType(forItem.currencyType)
-
         selectedPosition = arrayList.indexOf(forItem)
         layoutManager.scrollToPosition(arrayList.indexOf(forItem) - 1)
 
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setFocusItemWithCodeForParity(forItem:ExchangeRateDTO, layoutManager: LinearLayoutManager){
+        dollarArrayList.forEach {
+            if (adapterType == 0){
+                if (it.name.split("/")[0] == forItem.name.split("/")[0] ){
+                    selectedPosition = arrayList.indexOf(it)
+                    layoutManager.scrollToPosition(arrayList.indexOf(it) - 1)
+                }
+            }
+            else{
+                if (it.name.split("/")[0] == forItem.name.split("/")[1] ){
+                    selectedPosition = arrayList.indexOf(it)
+                    layoutManager.scrollToPosition(arrayList.indexOf(it) - 1)
+                }
+            }
+        }
         notifyDataSetChanged()
     }
 

@@ -59,8 +59,8 @@ class AlarmDetailActivity : AppCompatActivity() {
         exchangeRateDTOForDetail?.let {
             binding.currencyCode.text = it.code
             binding.currencyName.text = it.name
-            binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${decimalFormat.format(it.sellingRate)}"
-            binding.aimPrice.setText(decimalFormat.format(it.sellingRate))
+            binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${reformForDoubleToString(decimalFormat.format(it.sellingRate))}"
+            binding.aimPrice.setText(reformForDoubleToString(decimalFormat.format(it.sellingRate)))
             binding.priceButton.isSelected = true
             binding.aimLabelTitle.text =
                 resources.getString(R.string.alarm_aim_title_label).replace("%@", binding.priceButton.text.toString())
@@ -80,7 +80,7 @@ class AlarmDetailActivity : AppCompatActivity() {
                     binding.aimPrice.setText("% ${decimalFormat.format(it.targetValue)}")
                 }
                 else if (it.alarmType == AlarmTypeEnum.PercentUnder){
-                    binding.aimPrice.setText("% ${decimalFormat.format(it.targetValue)}")
+                    binding.aimPrice.setText("% -${decimalFormat.format(it.targetValue)}")
                 }
 
                 object : CountDownTimer(2000, 1000){
@@ -217,13 +217,22 @@ class AlarmDetailActivity : AppCompatActivity() {
 
 
         binding.aimPriceIcon.setOnClickListener {
-            binding.aimPrice.requestFocus()
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.showSoftInput(binding.aimPrice, InputMethodManager.SHOW_IMPLICIT)
+            if (!binding.aimPrice.isFocusable) {
+                binding.aimPrice.requestFocus()
+                val inputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.showSoftInput(binding.aimPrice, InputMethodManager.SHOW_IMPLICIT)
+            }
+            else{
+                binding.aimPrice.clearFocus()
+            }
         }
 
         binding.aimPrice.addTextChangedListener {
             binding.aimPrice.minWidth = 40
+            if (it.toString().last() != '.') {
+                setSliderXToChangeEditText(binding.aimPrice.text.toString())
+            }
         }
 
         binding.aimPrice.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
@@ -356,7 +365,7 @@ class AlarmDetailActivity : AppCompatActivity() {
 
     private fun setSliderXForEdit(alarmDTO: AlarmDTO){
         exchangeRateDTOForDetail?.let {
-            val targetValue = alarmDTO.targetValue
+            val targetValue = reformForDoubleToString(alarmDTO.targetValue.toString()).toDouble()
             when (alarmDTO.alarmType) {
                 AlarmTypeEnum.PriceOver -> {
                     val decimalFactor = DecimalFormat("#.#").format(100 * ((targetValue / it.sellingRate) - 1)).toFloat()
@@ -428,6 +437,19 @@ class AlarmDetailActivity : AppCompatActivity() {
                 binding.ifDownButtonText.isSelected = true
             }
         }
+    }
+
+    private fun reformForDoubleToString(priceString:String):String{
+        var result = ""
+        if (priceString.length >7) {
+            result = priceString.subSequence(0,7).toString()
+            if (result.last() == '.'){
+                result.replace(".","")
+            }
+        } else {
+            result=priceString
+        }
+        return result
     }
 
 }

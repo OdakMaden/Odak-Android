@@ -29,10 +29,14 @@ class LoginRepository {
                         listener.checkPasswordListener(false)
                     }
                 }
+                else{
+                    listener.checkPasswordListener(false)
+                }
             }
 
             override fun onFailure(call: Call<MemberDTO>, t: Throwable) {
                 t.printStackTrace()
+                listener.checkPasswordListener(false)
             }
         })
     }
