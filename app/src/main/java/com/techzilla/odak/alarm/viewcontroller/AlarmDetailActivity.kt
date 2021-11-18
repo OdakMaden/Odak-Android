@@ -304,6 +304,8 @@ class AlarmDetailActivity : AppCompatActivity() {
             }
             true
         }
+
+        binding.aimPrice.clearFocus()
     }
 
     private fun checkOnSliderWay(x:Float):Boolean{
