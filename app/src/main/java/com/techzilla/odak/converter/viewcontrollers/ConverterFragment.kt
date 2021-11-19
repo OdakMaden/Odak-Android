@@ -189,8 +189,8 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
         })
 
         binding.fromPiece.addTextChangedListener { _it ->
-            val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") reformForDoubleToString(exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString()).toDouble() else 1.0
-            val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") reformForDoubleToString(exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString()).toDouble() else 1.0
+            val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString().toDouble() else 1.0
+            val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString().toDouble() else 1.0
             if (_it.toString() != ""){
                 val fromPiece = decimalFormat.parse(_it.toString())?.toDouble()
                 val toPiece = decimalFormat.parse(binding.toPiecePrice.text.toString())?.toDouble()
@@ -204,8 +204,8 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
     }
 
     private fun updateChangeText(){
-        val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") reformForDoubleToString(exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString()).toDouble() else 1.0
-        val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") reformForDoubleToString(exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString()).toDouble() else 1.0
+        val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString().toDouble() else 1.0
+        val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString().toDouble() else 1.0
         if (toAdapter.getSelectedItem().sellingRate != 0f) {
             binding.toPiecePrice.text =
                 decimalFormat.format((fromAdapter.getSelectedItem().sellingRate * fromTermUSDPrice) / (toAdapter.getSelectedItem().sellingRate * toTermUSDPrice))
@@ -287,6 +287,7 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
         }
     }
 
+    /*
     private fun reformForDoubleToString(priceString:String):String{
         var result = ""
         if (priceString.length >7) {
@@ -299,6 +300,8 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
         }
         return result
     }
+
+     */
 
     private fun getStatusBarHeight(): Int{
         var result = 0

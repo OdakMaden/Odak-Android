@@ -214,8 +214,8 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
     }
     
     private fun updateChangeText(){
-        val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") reformForDoubleToString(exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString()).toDouble() else 1.0
-        val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") reformForDoubleToString(exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString()).toDouble() else 1.0
+        val fromTermUSDPrice = if (isCrypto && toAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString().toDouble() else 1.0
+        val toTermUSDPrice = if (isCrypto && fromAdapter.getSelectedItem().code == "TRY") exchangeRateDTOListMap["USDTRY"]!!.sellingRate.toString().toDouble() else 1.0
         if (toAdapter.getSelectedItem().sellingRate != 0f) {
             binding.toPiecePrice.text =
                 decimalFormat.format((fromAdapter.getSelectedItem().sellingRate * fromTermUSDPrice) / (toAdapter.getSelectedItem().sellingRate * toTermUSDPrice))
@@ -340,6 +340,7 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
         this.isCrypto = isCrypto
     }
 
+    /*
     private fun reformForDoubleToString(priceString:String):String{
         var result = ""
         if (priceString.length >7) {
@@ -352,4 +353,5 @@ class ConverterActivity : AppCompatActivity() , ItemPickerAdapter.ChangeTypeList
         }
         return result
     }
+     */
 }

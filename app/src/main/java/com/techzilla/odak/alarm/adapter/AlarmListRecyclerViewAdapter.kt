@@ -22,12 +22,12 @@ class AlarmListRecyclerViewAdapter (private val listener : AlarmListMenuListener
         fun bind (alarm: AlarmDTO, listener: AlarmListMenuListener, nowExchangeRateDTO: ExchangeRateDTO){
             val decimalFormat = DecimalFormat("#.####")
             if (alarm.alarmType == AlarmTypeEnum.PriceOver || alarm.alarmType == AlarmTypeEnum.PriceUnder){
-                binding.aimPriceText.text = reformForDoubleToString(alarm.targetValue.toString())
-                binding.nowPriceText.text = reformForDoubleToString(decimalFormat.format(nowExchangeRateDTO.sellingRate))
+                binding.aimPriceText.text = alarm.targetValue.toString()
+                binding.nowPriceText.text = decimalFormat.format(nowExchangeRateDTO.sellingRate)
             }
             else{
-                binding.aimPriceText.text = reformForDoubleToString(decimalFormat.format(alarm.referenceValue * (1 + alarm.targetValue / 100)))
-                binding.nowPriceText.text = reformForDoubleToString(decimalFormat.format(nowExchangeRateDTO.sellingRate))
+                binding.aimPriceText.text = decimalFormat.format(alarm.referenceValue * (1 + alarm.targetValue / 100))
+                binding.nowPriceText.text = decimalFormat.format(nowExchangeRateDTO.sellingRate)
             }
             binding.title.text = alarm.currencyCode
             binding.subTitle.text = alarm.name.replaceFirst(" ", "\n")
@@ -37,7 +37,7 @@ class AlarmListRecyclerViewAdapter (private val listener : AlarmListMenuListener
             }
         }
 
-
+        /*
         private fun reformForDoubleToString(priceString:String):String{
             var result = ""
             if (priceString.length >7) {
@@ -49,7 +49,7 @@ class AlarmListRecyclerViewAdapter (private val listener : AlarmListMenuListener
                 result=priceString
             }
             return result
-        }
+        }*/
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

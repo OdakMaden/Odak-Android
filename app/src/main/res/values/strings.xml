@@ -57,7 +57,7 @@
     <!-- Profile -->
     <string name="profile.name.label">İSİM</string>
     <string name="profile.surname.label">SOYİSİM</string>
-    <string name="profile.birthday.label">Doğum Tarihi</string>
+    <string name="profile.phoneNumber.label">TELEFON NO</string>
     <string name="profile.email.label">MAİL ADRESİ</string>
     <string name="profile.notification.button">BİLDİRİMLER</string>
     <string name="profile.change_password.label">ŞİFRE DEĞİŞTİR</string>

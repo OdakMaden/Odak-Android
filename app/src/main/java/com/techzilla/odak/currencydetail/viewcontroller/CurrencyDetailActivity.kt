@@ -101,8 +101,8 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
             binding.clockText.isSelected = true
             binding.title.text = it.code
             binding.subTitle.text = it.name
-            binding.buyText.text = reformForDoubleToString(it.buyingRate.toString())
-            binding.sellText.text = reformForDoubleToString(it.sellingRate.toString())
+            binding.buyText.text = it.buyingRate.toString()
+            binding.sellText.text = it.sellingRate.toString()
             setChangePercentage(it.changePercentage)
 
             repository.getGraphData(it.code, graphPeriodEnum.value,
@@ -126,10 +126,10 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
 
         repository.exchangeRateGraphLiveData.observe(this, {
             //binding.sellText.text = it.meanValue.toString()
-            binding.lowestSliderText.text = reformForDoubleToString(it.lowestValue.toString())
-            binding.lowestText.text = reformForDoubleToString(it. lowestValue.toString())
-            binding.highestText.text = reformForDoubleToString(it.highestValue.toString())
-            binding.highestSliderText.text = reformForDoubleToString(it.highestValue.toString())
+            binding.lowestSliderText.text = it.lowestValue.toString()
+            binding.lowestText.text = it. lowestValue.toString()
+            binding.highestText.text = it.highestValue.toString()
+            binding.highestSliderText.text = it.highestValue.toString()
             changeSliderCirclePosition(it.meanValue, it.lowestValue, it.highestValue)
             values.clear()
             var termFloat = 0.0f
@@ -456,8 +456,8 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
                 exchangeRateDTOListMap[exchangeRateDTO.code]?.let{
                     exchangeRateDTO = it
                     setChangePercentage(it.changePercentage)
-                    binding.buyText.text = reformForDoubleToString(it.buyingRate.toString())
-                    binding.sellText.text = reformForDoubleToString(it.sellingRate.toString())
+                    binding.buyText.text = it.buyingRate.toString()
+                    binding.sellText.text = it.sellingRate.toString()
 
                     updatePeriodic()
                 }
@@ -521,6 +521,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         }
     }
 
+    /*
     private fun reformForDoubleToString(priceString:String):String{
         var result = ""
         if (priceString.length >7) {
@@ -533,6 +534,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         }
         return result
     }
+     */
 
     override fun onValueSelected(e: Entry?, h: Highlight?) {
         Log.i("Entry selected", e.toString())

@@ -59,8 +59,8 @@ class AlarmDetailActivity : AppCompatActivity() {
         exchangeRateDTOForDetail?.let {
             binding.currencyCode.text = it.code
             binding.currencyName.text = it.name
-            binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${reformForDoubleToString(decimalFormat.format(it.sellingRate))}"
-            binding.aimPrice.setText(reformForDoubleToString(decimalFormat.format(it.sellingRate)))
+            binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${decimalFormat.format(it.sellingRate)}"
+            binding.aimPrice.setText(decimalFormat.format(it.sellingRate))
             binding.priceButton.isSelected = true
             binding.aimLabelTitle.text =
                 resources.getString(R.string.alarm_aim_title_label).replace("%@", binding.priceButton.text.toString())
@@ -367,7 +367,7 @@ class AlarmDetailActivity : AppCompatActivity() {
 
     private fun setSliderXForEdit(alarmDTO: AlarmDTO){
         exchangeRateDTOForDetail?.let {
-            val targetValue = reformForDoubleToString(alarmDTO.targetValue.toString()).toDouble()
+            val targetValue = alarmDTO.targetValue.toString().toDouble()
             when (alarmDTO.alarmType) {
                 AlarmTypeEnum.PriceOver -> {
                     val decimalFactor = DecimalFormat("#.#").format(100 * ((targetValue / it.sellingRate) - 1)).toFloat()
@@ -441,6 +441,7 @@ class AlarmDetailActivity : AppCompatActivity() {
         }
     }
 
+    /*
     private fun reformForDoubleToString(priceString:String):String{
         var result = ""
         if (priceString.length >7) {
@@ -453,5 +454,6 @@ class AlarmDetailActivity : AppCompatActivity() {
         }
         return result
     }
+     */
 
 }

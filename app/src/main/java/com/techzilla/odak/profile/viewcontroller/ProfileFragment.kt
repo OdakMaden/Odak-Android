@@ -1,5 +1,6 @@
 package com.techzilla.odak.profile.viewcontroller
 
+import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
@@ -33,6 +34,7 @@ class ProfileFragment constructor(private val listener: MenuButtonListener) : Fr
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -43,6 +45,7 @@ class ProfileFragment constructor(private val listener: MenuButtonListener) : Fr
             binding.name.text = it.firstName
             binding.surname.text = it.lastName
             binding.email.text = it.email
+            binding.phoneNumber.text = "0${it.gSMNo}"
             binding.notificationSwitchCompat.isChecked = it.isPushMessageAllowed
         }
 

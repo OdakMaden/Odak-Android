@@ -87,7 +87,7 @@
                     style="@style/odak.textview.profile.default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/profile.birthday.label"
+                    android:text="@string/profile.phoneNumber.label"
                     />
                 <TextView
                     style="@style/odak.textview.profile.default"
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     />
                 <TextView
-                    android:id="@+id/birthdate"
+                    android:id="@+id/phoneNumber"
                     style="@style/odak.textview.profile.dynamic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

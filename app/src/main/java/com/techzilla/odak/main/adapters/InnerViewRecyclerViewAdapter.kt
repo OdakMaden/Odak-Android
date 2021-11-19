@@ -47,8 +47,8 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
             binding.title.text = exchangeRateDTO.code
             binding.subTitle.text = exchangeRateDTO.name
-            binding.buyText.text = reformForDoubleToString(DecimalFormat("#.####").format(exchangeRateDTO.buyingRate))
-            binding.sellText.text = reformForDoubleToString(DecimalFormat("#.####").format(exchangeRateDTO.sellingRate))
+            binding.buyText.text = DecimalFormat("#.####").format(exchangeRateDTO.buyingRate)
+            binding.sellText.text = DecimalFormat("#.####").format(exchangeRateDTO.sellingRate)
             if (isFavorite){
                 binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_selected_favorite, binding.root.resources.newTheme()))
             }
@@ -89,6 +89,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
         }
 
+        /*
         private fun reformForDoubleToString(priceString:String):String{
             var result = ""
             if (priceString.length >7) {
@@ -101,6 +102,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
             }
             return result
         }
+         */
 
     }
 
