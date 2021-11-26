@@ -31,6 +31,8 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
     private val decimalFormat = DecimalFormat("#.#####")
     private var isCrypto : Boolean = false
 
+    private var isFirstOpened = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,11 +53,14 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
         binding.fromRecyclerview.adapter = fromAdapter
         binding.toRecyclerview.adapter = toAdapter
 
-        fromAdapter.addNewItem(exchangeRateList)
-        toAdapter.addNewItem(exchangeRateList)
-        updateChangeText()
+        if (!isFirstOpened) {
+            fromAdapter.addNewItem(exchangeRateList)
+            toAdapter.addNewItem(exchangeRateList)
+            updateChangeText()
+            selectBottomItem(binding.dollarContainer, true)
+            isFirstOpened = true
+        }
 
-        selectBottomItem(binding.dollarContainer, true)
 
         binding.backBtn.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack(MarketFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -286,22 +291,6 @@ class ConverterFragment constructor(private val listener: MenuButtonListener) : 
             }
         }
     }
-
-    /*
-    private fun reformForDoubleToString(priceString:String):String{
-        var result = ""
-        if (priceString.length >7) {
-            result = priceString.subSequence(0,7).toString()
-            if (result.last() == '.'){
-                result.replace(".","")
-            }
-        } else {
-            result=priceString
-        }
-        return result
-    }
-
-     */
 
     private fun getStatusBarHeight(): Int{
         var result = 0

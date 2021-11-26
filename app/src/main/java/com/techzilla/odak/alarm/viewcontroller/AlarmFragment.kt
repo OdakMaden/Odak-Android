@@ -70,11 +70,21 @@ class AlarmFragment constructor(private val listener: MenuButtonListener) : Frag
                 adapter.addItemsToList(it)
                 alarmUpdateTimer.start()
             }
+            else{
+                binding.listContainer.visibility = View.GONE
+                binding.firstAlarmContainer.visibility = View.VISIBLE
+                alarmUpdateTimer.cancel()
+            }
         })
 
         repository.alarmDeleteLiveData.observe(requireActivity(), {
             if (it != null){
                 adapter.deleteItem(it)
+            }
+            if (adapter.alarmListSize() == 0){
+                binding.listContainer.visibility = View.GONE
+                binding.firstAlarmContainer.visibility = View.VISIBLE
+                alarmUpdateTimer.cancel()
             }
         })
 

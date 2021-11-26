@@ -36,20 +36,6 @@ class AlarmListRecyclerViewAdapter (private val listener : AlarmListMenuListener
                 listener.alarmListMenuClick(alarm)
             }
         }
-
-        /*
-        private fun reformForDoubleToString(priceString:String):String{
-            var result = ""
-            if (priceString.length >7) {
-                result = priceString.subSequence(0,7).toString()
-                if (result.last() == '.'){
-                    result.replace(".","")
-                }
-            } else {
-                result=priceString
-            }
-            return result
-        }*/
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -97,6 +83,10 @@ class AlarmListRecyclerViewAdapter (private val listener : AlarmListMenuListener
     @SuppressLint("NotifyDataSetChanged")
     fun alarmUpdatePrice(){
         notifyDataSetChanged()
+    }
+
+    fun alarmListSize():Int{
+        return alarmArrayList.size
     }
 
     interface AlarmListMenuListener{

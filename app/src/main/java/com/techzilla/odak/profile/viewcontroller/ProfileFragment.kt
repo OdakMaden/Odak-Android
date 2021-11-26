@@ -81,7 +81,7 @@ class ProfileFragment constructor(private val listener: MenuButtonListener) : Fr
         }
 
         binding.backBtn.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack(MarketFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
 

@@ -187,8 +187,7 @@
             android:id="@+id/dollar_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:padding="5dp">
+            android:layout_weight="0.25">
             <ImageView
                 android:id="@+id/dollar_icon"
                 android:layout_width="wrap_content"
@@ -216,8 +215,7 @@
             android:id="@+id/gold_bars_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:padding="5dp">
+            android:layout_weight="0.25">
             <ImageView
                 android:id="@+id/gold_bar_icon"
                 android:layout_width="wrap_content"
@@ -246,8 +244,7 @@
             android:id="@+id/crypto_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.25"
-            android:padding="5dp">
+            android:layout_weight="0.25">
             <ImageView
                 android:id="@+id/bitcoin_icon"
                 android:layout_width="wrap_content"

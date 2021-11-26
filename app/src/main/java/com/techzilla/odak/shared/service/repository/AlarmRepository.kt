@@ -39,6 +39,7 @@ class AlarmRepository {
 
             override fun onFailure(call: Call<AlarmDTO>, t: Throwable) {
                 t.printStackTrace()
+                errorMutableLiveData.postValue("Alarm Oluşturulamadı.")
             }
         })
     }
@@ -77,6 +78,7 @@ class AlarmRepository {
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 t.printStackTrace()
+                errorMutableLiveData.postValue("Silinme işlemi yapılamadı. Lütfen tekrar deneyiniz.")
             }
         })
     }
@@ -96,6 +98,7 @@ class AlarmRepository {
 
             override fun onFailure(call: Call<AlarmDTO>, t: Throwable) {
                 t.printStackTrace()
+                errorMutableLiveData.postValue("Alarm Güncellenemedi.")
             }
         })
     }

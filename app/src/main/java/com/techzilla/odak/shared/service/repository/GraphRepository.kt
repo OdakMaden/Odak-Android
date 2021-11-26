@@ -26,7 +26,6 @@ class GraphRepository {
             ) {
                 if (response.isSuccessful){
                     if (response.code() == 200){
-                        println(response.body()!!.baseTimeStamp)
                         exchangeRateGraphMutableLiveData.postValue(response.body())
                     }
                 }

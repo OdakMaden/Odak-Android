@@ -28,21 +28,24 @@
         <entry key="app/src/main/res/drawable/fade_red.xml" value="0.17109375" />
         <entry key="app/src/main/res/drawable/icon_close.xml" value="0.17109375" />
         <entry key="app/src/main/res/drawable/main_background.xml" value="0.17109375" />
+        <entry key="app/src/main/res/drawable/profile_edit_text_background.xml" value="0.22256410256410256" />
         <entry key="app/src/main/res/drawable/search_query_background.xml" value="0.17109375" />
         <entry key="app/src/main/res/drawable/search_view_background.xml" value="0.17109375" />
         <entry key="app/src/main/res/layout/activity_add_alarm.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_alarm.xml" value="0.158984375" />
         <entry key="app/src/main/res/layout/activity_alarm_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_change_password.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_converter.xml" value="0.158984375" />
         <entry key="app/src/main/res/layout/activity_currency_detail.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
         <entry key="app/src/main/res/layout/activity_notification.xml" value="0.26331967213114754" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.21197916666666666" />
+        <entry key="app/src/main/res/layout/component_progress_bar.xml" value="0.20989583333333334" />
         <entry key="app/src/main/res/layout/custom_marker_view.xml" value="0.158984375" />
         <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.158984375" />
         <entry key="app/src/main/res/layout/fragment_converter.xml" value="0.125" />
-        <entry key="app/src/main/res/layout/fragment_market.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_market.xml" value="0.37037037037037035" />
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.26331967213114754" />
         <entry key="app/src/main/res/layout/item_alarm.xml" value="0.45" />
         <entry key="app/src/main/res/layout/item_inner_view.xml" value="0.375" />

@@ -20,7 +20,7 @@ import com.techzilla.odak.alarm.viewcontroller.AlarmDetailActivity
 import com.techzilla.odak.converter.viewcontrollers.ConverterActivity
 import com.techzilla.odak.currencydetail.viewcontroller.CurrencyDetailActivity
 import com.techzilla.odak.databinding.FragmentMarketBinding
-import com.techzilla.odak.main.adapters.InnerViewRecyclerViewAdapter
+import com.techzilla.odak.main.adapters.ExchangeRateRecyclerViewAdapter
 import com.techzilla.odak.main.constant.isAddFavorite
 import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
 import com.techzilla.odak.shared.constants.rememberMemberDTO
@@ -32,7 +32,8 @@ import org.json.JSONObject
 import org.json.JSONTokener
 
 
-class MarketFragment constructor(private val listener:MenuButtonListener) : Fragment(), InnerViewRecyclerViewAdapter.InnerViewListener {
+class MarketFragment (private val listener:MenuButtonListener) : Fragment(), ExchangeRateRecyclerViewAdapter.ExchangeRateRecyclerViewListener
+{
     private var _binding: FragmentMarketBinding? = null
     private val binding get() = _binding!!
 
@@ -44,18 +45,7 @@ class MarketFragment constructor(private val listener:MenuButtonListener) : Frag
         const val TAG= "MarketFragment"
     }
 
-    private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
-        if (result.resultCode == AppCompatActivity.RESULT_OK){
-            AlertDialogViewController.buildAlertDialog(requireContext(), resources.getString(R.string.alert_alarm_title),
-                resources.getString(R.string.alert_alarm_message), "","",resources.getString(R.string.shared_Ok))
-            //AlertDialog.Builder(requireContext()).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"
-            //) { dialog, p1 ->  dialog.dismiss()}.show()
-        }
-    }
-
-    private val adapter by lazy { InnerViewRecyclerViewAdapter(this,
-        binding.defaultRecyclerview.layoutManager!!
-    ) }
+    private val adapter by lazy { ExchangeRateRecyclerViewAdapter(this) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -119,13 +109,11 @@ class MarketFragment constructor(private val listener:MenuButtonListener) : Frag
                             JSONTokener(memberDTO.memberData).nextValue() as JSONObject
                         favoriteIdList = memberDataJSON.getString("favoriteIdList")
                     }
-                    adapter.insertNewParam(it, favoriteIdList)
+                    adapter.insertNewExchangeRateRecyclerView(it, favoriteIdList)
                     isFirstOpen = false
                 }
             }else{
-                it.forEach { exDTO->
-                    adapter.changeItems(exDTO)
-                }
+                adapter.changeItems(it)
             }
         })
     }
@@ -162,7 +150,7 @@ class MarketFragment constructor(private val listener:MenuButtonListener) : Frag
                 binding.bitcoinIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_bitcoin, resources.newTheme()))
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
 
-                adapter.changeType(4)
+                adapter.changeType(-1)
             }
             binding.dollarContainer->{
                 binding.favoriteIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_favori, resources.newTheme()))
@@ -222,15 +210,11 @@ class MarketFragment constructor(private val listener:MenuButtonListener) : Frag
                 favoriteIdList += ",$favoriteCodeId"
                 val updateMemberDTO = JsonObject()
                 updateMemberDTO.addProperty("MemberData", """{"favoriteIdList": "$favoriteIdList"}""")
-
-                println(updateMemberDTO)
                 mainRepository.updateMemberDTO(updateMemberDTO)
             }
             else{
                 val updateMemberDTO = JsonObject()
                 updateMemberDTO.addProperty("MemberData", """{"favoriteIdList": "$favoriteCodeId"}""")
-
-                println(updateMemberDTO)
                 mainRepository.updateMemberDTO(updateMemberDTO)
             }
         }
@@ -251,8 +235,51 @@ class MarketFragment constructor(private val listener:MenuButtonListener) : Frag
         }
     }
 
+    override fun exchangeRateRecyclerViewItemOnClickListener(position: Int) {
+        adapter.selectItem(position)
+    }
+
+    override fun exchangeRateRecyclerViewItemForDetailOnClickListener(exchangeRateDTO: ExchangeRateDTO) {
+        Intent(requireActivity(), CurrencyDetailActivity::class.java).apply {
+            exchangeRateDTOForDetail = exchangeRateDTO
+            startActivity(this)
+        }
+    }
+
+    override fun exchangeRateRecyclerViewItemAddFavoriteOnClickListener(exchangeRateDTO: ExchangeRateDTO, isFavorite: Boolean) {
+        if (isFavorite){
+            deleteFavoriteList(exchangeRateDTO.code)
+            adapter.deleteFavorite(exchangeRateDTO)
+        }
+        else{
+            addFavoriteList(exchangeRateDTO.code)
+            adapter.addFavorite(exchangeRateDTO)
+        }
+    }
+
+    override fun exchangeRateRecyclerViewItemAlarmOnClickListener(exchangeRateDTO: ExchangeRateDTO) {
+        //startResult.launch(Intent(requireActivity(), AlarmDetailActivity::class.java).also {
+        exchangeRateDTOForDetail = exchangeRateDTO
+        Intent(requireActivity(), AlarmDetailActivity::class.java).apply {
+            startActivity(this)
+        }
+        //})
+    }
+
+    override fun exchangeRateRecyclerViewItemConverterOnClickListener(exchangeRateDTO: ExchangeRateDTO) {
+        exchangeRateDTOForDetail = exchangeRateDTO
+        Intent(requireActivity(), ConverterActivity::class.java).apply {
+            startActivity(this)
+        }
+       /* startResult.launch(Intent(requireActivity(), ConverterActivity::class.java).also {
+            exchangeRateDTOForDetail = exchangeRateDTO
+        })
+
+        */
+    }
 
 
+/*
     override fun innerViewOnClickListener(position: Int) {
         adapter.selectItem(position)
     }
@@ -286,6 +313,8 @@ class MarketFragment constructor(private val listener:MenuButtonListener) : Frag
             exchangeRateDTOForDetail = exchangeRateDTO
         })
     }
+
+ */
 
 
 }

@@ -27,6 +27,8 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
     private val cryptoMapList = HashMap<String, Int>()
     private val cryptoArrayList = ArrayList<ExchangeRateDTO>()
 
+
+
     private val arrayListMap = HashMap<String, Int>()
     private val arrayList = ArrayList<ExchangeRateDTO>()
     private var selectedItemPosition = -1
@@ -47,8 +49,14 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
 
             binding.title.text = exchangeRateDTO.code
             binding.subTitle.text = exchangeRateDTO.name
-            binding.buyText.text = DecimalFormat("#.####").format(exchangeRateDTO.buyingRate)
-            binding.sellText.text = DecimalFormat("#.####").format(exchangeRateDTO.sellingRate)
+            if (exchangeRateDTO.currencyType == CurrencyTypeEnum.Crypto){
+                binding.buyText.text = DecimalFormat("#.##").format(exchangeRateDTO.buyingRate)
+                binding.sellText.text = DecimalFormat("#.##").format(exchangeRateDTO.sellingRate)
+            }
+            else {
+                binding.buyText.text = DecimalFormat("#.####").format(exchangeRateDTO.buyingRate)
+                binding.sellText.text = DecimalFormat("#.####").format(exchangeRateDTO.sellingRate)
+            }
             if (isFavorite){
                 binding.favorite.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_selected_favorite, binding.root.resources.newTheme()))
             }
@@ -64,7 +72,7 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
                 binding.increaseImage.setImageDrawable(binding.root.resources.getDrawable(R.drawable.icon_increase_up, binding.root.resources.newTheme()))
                 binding.increaseText.setTextColor(binding.root.resources.getColor(R.color.odak_green, binding.root.resources.newTheme()))
             }
-            binding.increaseText.text = "% ${exchangeRateDTO.changePercentage}"
+            binding.increaseText.text = "% ${DecimalFormat("#.##").format(exchangeRateDTO.changePercentage)}"
 
             val dateShow = Calendar.getInstance()
             val date = SimpleDateFormat(timePatternYearMountDayHourMinuteSecond).parse(exchangeRateDTO.lastChangeTimeStamp.substring(0, exchangeRateDTO.lastChangeTimeStamp.length-14))

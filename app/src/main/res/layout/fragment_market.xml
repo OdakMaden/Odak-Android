@@ -44,8 +44,6 @@
             tools:listitem="@layout/item_inner_view"
             />
 
-
-
         <LinearLayout
             android:id="@+id/bottom_bar"
             android:layout_width="match_parent"
@@ -60,8 +58,7 @@
                 android:id="@+id/favorite_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
-                android:padding="5dp">
+                android:layout_weight="0.25">
                 <ImageView
                     android:id="@+id/favorite_icon"
                     android:layout_width="wrap_content"
@@ -79,7 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/menu.favorite.button"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="5dp"
                     app:layout_constraintTop_toBottomOf="@id/favorite_icon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -90,8 +87,7 @@
                 android:id="@+id/dollar_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
-                android:padding="5dp">
+                android:layout_weight="0.25">
                 <ImageView
                     android:id="@+id/dollar_icon"
                     android:layout_width="wrap_content"
@@ -119,8 +115,7 @@
                 android:id="@+id/gold_bars_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
-                android:padding="5dp">
+                android:layout_weight="0.25">
                 <ImageView
                     android:id="@+id/gold_bar_icon"
                     android:layout_width="wrap_content"
@@ -149,8 +144,7 @@
                 android:id="@+id/crypto_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
-                android:padding="5dp">
+                android:layout_weight="0.25">
                 <ImageView
                     android:id="@+id/bitcoin_icon"
                     android:layout_width="wrap_content"

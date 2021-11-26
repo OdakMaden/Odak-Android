@@ -16,8 +16,7 @@ import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.service.repository.AlarmRepository
 import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 
-class AlarmDefaultMenuFragment
-    (private val _alarmDTO: AlarmDTO, private val repository: AlarmRepository, private val startForResult: ActivityResultLauncher<Intent>)
+class AlarmDefaultMenuFragment(private val _alarmDTO: AlarmDTO, private val repository: AlarmRepository, private val startForResult: ActivityResultLauncher<Intent>)
     : BottomSheetDialogFragment() {
 
     private var _binding: FragmentAlarmDefaultMenuBinding? = null

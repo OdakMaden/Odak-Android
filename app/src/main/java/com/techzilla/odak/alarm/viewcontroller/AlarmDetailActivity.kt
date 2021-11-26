@@ -18,6 +18,7 @@ import com.techzilla.odak.alarm.constant.exchangeRateDTOForDetail
 import com.techzilla.odak.databinding.ActivityAlarmDetailBinding
 import com.techzilla.odak.shared.model.AlarmDTO
 import com.techzilla.odak.shared.model.AlarmTypeEnum
+import com.techzilla.odak.shared.model.CurrencyTypeEnum
 import com.techzilla.odak.shared.service.repository.AlarmRepository
 import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 import java.text.DecimalFormat
@@ -34,6 +35,7 @@ class AlarmDetailActivity : AppCompatActivity() {
     private var alarmName : String = ""
 
     private val decimalFormat = DecimalFormat("#.####")
+    private val cryptoDecimalFormat = DecimalFormat("#.##")
 
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,8 +61,14 @@ class AlarmDetailActivity : AppCompatActivity() {
         exchangeRateDTOForDetail?.let {
             binding.currencyCode.text = it.code
             binding.currencyName.text = it.name
-            binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${decimalFormat.format(it.sellingRate)}"
-            binding.aimPrice.setText(decimalFormat.format(it.sellingRate))
+            if (it.currencyType == CurrencyTypeEnum.Crypto){
+                binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${cryptoDecimalFormat.format(it.sellingRate)}"
+                binding.aimPrice.setText(cryptoDecimalFormat.format(it.sellingRate))
+            }
+            else{
+                binding.lastPriceLabel.text = "${resources.getString(R.string.alarm_lastPrice_label)} ${decimalFormat.format(it.sellingRate)}"
+                binding.aimPrice.setText(decimalFormat.format(it.sellingRate))
+            }
             binding.priceButton.isSelected = true
             binding.aimLabelTitle.text =
                 resources.getString(R.string.alarm_aim_title_label).replace("%@", binding.priceButton.text.toString())
@@ -176,9 +184,7 @@ class AlarmDetailActivity : AppCompatActivity() {
                     if (alarmType == AlarmTypeEnum.PercentOver || alarmType == AlarmTypeEnum.PercentUnder) {
                         alarmMap["ReferenceValue"] = exchangeRateDTOForDetail!!.sellingRate
                     }
-                    alarmMap["TargetValue"] =
-                        binding.aimPrice.text.toString().replace("%", "").replace(" ", "")
-                            .replace("-", "").toDouble()
+                    alarmMap["TargetValue"] = cleanInputAndToFloat(binding.aimPrice.text.toString())
                     alarmRepository.updateAlarm(it.rID, alarmMap)
                 }
             }
@@ -207,10 +213,7 @@ class AlarmDetailActivity : AppCompatActivity() {
                 if (alarmType == AlarmTypeEnum.PercentOver || alarmType == AlarmTypeEnum.PercentUnder) {
                     alarmMap["ReferenceValue"] = exchangeRateDTOForDetail!!.sellingRate
                 }
-                alarmMap["TargetValue"] =
-                    binding.aimPrice.text.toString().replace("%", "").replace(" ", "")
-                        .replace("-", "").toDouble()
-
+                alarmMap["TargetValue"] = cleanInputAndToFloat(binding.aimPrice.text.toString())
                 alarmRepository.addAlarm(alarmMap)
             }
         }
@@ -230,14 +233,16 @@ class AlarmDetailActivity : AppCompatActivity() {
 
         binding.aimPrice.addTextChangedListener {
             binding.aimPrice.minWidth = 40
-            if (it.toString().last() != '.') {
-                setSliderXToChangeEditText(binding.aimPrice.text.toString())
+            it?.let {
+                if (it.isNotEmpty() && it.toString().last() != ',') {
+                    setSliderXToChangeEditText(binding.aimPrice.text.toString())
+                }
             }
         }
 
         binding.aimPrice.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
             if (!hasFocus){
-                val aimPriceValue = binding.aimPrice.text.toString().replace("%", "").replace(" ","").toDouble()
+                val aimPriceValue = cleanInputAndToFloat(binding.aimPrice.text.toString())//binding.aimPrice.text.toString().replace("%", "").replace(" ","").toDouble()
                 if (alarmType == AlarmTypeEnum.PriceOver || alarmType == AlarmTypeEnum.PriceUnder){
                     when {
                          aimPriceValue < (exchangeRateDTOForDetail!!.sellingRate * 0.8) -> {
@@ -316,7 +321,7 @@ class AlarmDetailActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun getResultSlider(x:Float){
         val result = (x / binding.sliderWay.width) - (binding.sliderCircleWay.width / (2 * binding.sliderWay.width) - 1/2)
-        val decimalFactor = DecimalFormat("#.#").format(result * 20 - 0.4).toDouble()
+        val decimalFactor = cleanInputAndToFloat(DecimalFormat("#.#").format(result * 20 - 0.4)).toDouble()
         exchangeRateDTOForDetail?.let {
             when (alarmType) {
                 AlarmTypeEnum.PriceOver -> {
@@ -336,17 +341,17 @@ class AlarmDetailActivity : AppCompatActivity() {
     }
 
     private fun setSliderXToChangeEditText(targetValueText:String){
-        val targetValue = targetValueText.replace("%", "").replace(" ","").toFloat()
+        val targetValue = cleanInputAndToFloat(targetValueText) //targetValueText.replace("%", "").replace(" ","").toDouble()
         exchangeRateDTOForDetail?.let {
             when (alarmType) {
                 AlarmTypeEnum.PriceOver -> {
-                    val decimalFactor = DecimalFormat("#.#").format(100 * ((targetValue / it.sellingRate) - 1)).toFloat()
+                    val decimalFactor = cleanInputAndToFloat(DecimalFormat("#.#").format(100 * ((targetValue / it.sellingRate) - 1)))
                     val result = (decimalFactor + 0.4) / 20
 
                     binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
                 }
                 AlarmTypeEnum.PriceUnder -> {
-                    val decimalFactor = DecimalFormat("#.#").format((100 *((targetValue/it.sellingRate) - 0.8))).toFloat()
+                    val decimalFactor = cleanInputAndToFloat(DecimalFormat("#.#").format((100 *((targetValue/it.sellingRate) - 0.8))))
                     val result = (decimalFactor + 0.4) / 20
 
                     binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
@@ -367,16 +372,16 @@ class AlarmDetailActivity : AppCompatActivity() {
 
     private fun setSliderXForEdit(alarmDTO: AlarmDTO){
         exchangeRateDTOForDetail?.let {
-            val targetValue = alarmDTO.targetValue.toString().toDouble()
+            val targetValue = alarmDTO.targetValue
             when (alarmDTO.alarmType) {
                 AlarmTypeEnum.PriceOver -> {
-                    val decimalFactor = DecimalFormat("#.#").format(100 * ((targetValue / it.sellingRate) - 1)).toFloat()
+                    val decimalFactor = cleanInputAndToFloat(DecimalFormat("#.#").format(100 * ((targetValue / it.sellingRate) - 1)))
                     val result = (decimalFactor + 0.4) / 20
 
                     binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
                 }
                 AlarmTypeEnum.PriceUnder -> {
-                    val decimalFactor = DecimalFormat("#.#").format((100 *((targetValue/it.sellingRate) - 0.8))).toFloat()
+                    val decimalFactor = cleanInputAndToFloat(DecimalFormat("#.#").format((100 *((targetValue/it.sellingRate) - 0.8))))
                     val result = (decimalFactor + 0.4) / 20
 
                     binding.sliderCircle.x = (binding.sliderWay.width * result).toFloat()
@@ -441,19 +446,17 @@ class AlarmDetailActivity : AppCompatActivity() {
         }
     }
 
-    /*
-    private fun reformForDoubleToString(priceString:String):String{
-        var result = ""
-        if (priceString.length >7) {
-            result = priceString.subSequence(0,7).toString()
-            if (result.last() == '.'){
-                result.replace(".","")
-            }
-        } else {
-            result=priceString
+
+    private fun cleanInputAndToFloat(inputString : String):Float{
+        var result = 0.0f
+        try {
+            var resultString = inputString.replace("%", "")
+            resultString = resultString.replace(" ", "")
+            resultString = resultString.replace(",", ".")
+            result = resultString.toFloat()
+        }catch (e : Exception){
+            e.printStackTrace()
         }
         return result
     }
-     */
-
 }
