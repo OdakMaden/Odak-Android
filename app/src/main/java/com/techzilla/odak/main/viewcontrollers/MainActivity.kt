@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
     private var isOpenMenu = false
 
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
-        if (result.resultCode == AppCompatActivity.RESULT_OK){
+        if (result.resultCode == RESULT_OK){
             AlertDialogViewController.buildAlertDialog(this, resources.getString(R.string.alert_alarm_title),
                     resources.getString(R.string.alert_alarm_message), "","",resources.getString(R.string.shared_Ok))
             //AlertDialog.Builder(requireContext()).setTitle("Alarm").setMessage("Alarm Başarılı Olarak Kaydedilmiştir.").setPositiveButton("Tamam"
@@ -91,64 +91,29 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
 
 
         binding.defaultClickContainer.setOnClickListener {
-            isEnableChange()
-            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=600
-            binding.container.animate()
-                .translationX(0.0f)
-               // .translationY(0.0f)
-                .setInterpolator(AccelerateInterpolator()).duration = 600
+            menuButtonAnimation(0.0f, false)
+            binding.container.animate().apply {
+                translationX(0.0f)
+                interpolator = AccelerateInterpolator()
+                duration = 600
+            }
             binding.defaultClickContainer.visibility = GONE
             backgroundMenu(false)
         }
 
-
         binding.menuButton.setOnClickListener {
-            isOpenMenu = !isOpenMenu
-            if (isOpenMenu){
-                binding.defaultClickContainer.visibility = VISIBLE
-                isEnableChange()
-                binding.menuButton.animate().rotation(90.0f).setInterpolator(AccelerateInterpolator()).duration=600
-                binding.container.animate()
-                    .translationX((binding.root.width * 0.6).toFloat())
-                    //.translationY((binding.root.height * 0.25).toFloat())
-                    .translationY(0.0f)
-                    .setInterpolator(AccelerateInterpolator()).duration = 600
-            }
-            else{
-                isEnableChange()
-                binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=600
-                binding.container.animate()
-                    .translationX(0.0f)
-                    //.translationY(0.0f)
-                    .setInterpolator(AccelerateInterpolator()).duration = 600
-                binding.defaultClickContainer.visibility = GONE
+            binding.defaultClickContainer.visibility = VISIBLE
+            menuButtonAnimation(90.0f, true)
+            binding.container.animate().apply {
+                translationX((binding.root.width * 0.6).toFloat())
+                interpolator = AccelerateInterpolator()
+                duration = 600
             }
             binding.container.isSelected = isOpenMenu
-
             backgroundMenu(isOpenMenu)
         }
 
-        /*
-        binding.market.setOnClickListener {
-            supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, marketFragment)
-                .addToBackStack(MarketFragment.TAG)
-                .commit()
 
-            isEnableChange()
-            binding.menuButton.animate().rotation(0.0f).setInterpolator(AccelerateInterpolator()).duration=1000
-            binding.container.animate()
-                .translationX(0.0f)
-                //.translationY(0.0f)
-                .setInterpolator(AccelerateInterpolator()).duration = 1000
-            binding.defaultClickContainer.visibility = GONE
-            isOpenMenu = false
-            binding.container.isSelected = isOpenMenu
-
-            backgroundMenu(isOpenMenu)
-        }
-
-         */
         binding.converter.setOnClickListener {
             setFragment(converterFragment, MarketFragment.TAG)
         }
@@ -164,7 +129,41 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
 
     }
 
-    private fun isEnableChange(){
+    private fun setFragment(fragment:Fragment, TAG:String){
+        supportFragmentManager.beginTransaction().apply {
+            replace(binding.fragmentContainer.id, fragment)
+            addToBackStack(TAG)
+            commit()
+        }
+        menuButtonAnimation(0.0f, false)
+        binding.container.animate().apply {
+            translationX(0.0f)
+            interpolator = AccelerateInterpolator()
+            duration = 600
+        }
+        binding.defaultClickContainer.visibility = GONE
+        binding.container.isSelected = isOpenMenu
+
+        backgroundMenu(isOpenMenu)
+    }
+
+    private fun backgroundMenu(isEnable:Boolean){
+        binding.converter.isEnabled = isEnable
+        binding.call.isEnabled = isEnable
+        binding.notification.isEnabled = isEnable
+        binding.profile.isEnabled = isEnable
+    }
+
+    override fun menuVisible(visible: Int) {
+        binding.menuButton.visibility = visible
+        if (visible == VISIBLE){
+            isOpenMenu = false
+        }
+    }
+
+
+    private fun menuButtonAnimation(value: Float, isMenu:Boolean){
+        isOpenMenu = isMenu
         binding.defaultClickContainer.isEnabled = false
         binding.menuButton.isEnabled = false
 
@@ -176,41 +175,11 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
                 binding.menuButton.isEnabled = true
             }
         }.start()
-    }
 
-    private fun setFragment(fragment:Fragment, TAG:String){
-        supportFragmentManager.beginTransaction().apply {
-            replace(binding.fragmentContainer.id, fragment)
-            addToBackStack(TAG)
-            commit()
-        }
-        isEnableChange()
         binding.menuButton.animate().apply {
-            rotation(0.0f)
+            rotation(value)
             interpolator = AccelerateInterpolator()
             duration=600
         }
-        binding.container.animate().apply {
-            translationX(0.0f)
-            interpolator = AccelerateInterpolator()
-            duration = 600
-        }
-        binding.defaultClickContainer.visibility = GONE
-        isOpenMenu = false
-        binding.container.isSelected = isOpenMenu
-
-        backgroundMenu(isOpenMenu)
-    }
-
-    private fun backgroundMenu(isEnable:Boolean){
-       // binding.market.isEnabled = isEnable
-        binding.converter.isEnabled = isEnable
-        binding.call.isEnabled = isEnable
-        binding.notification.isEnabled = isEnable
-        binding.profile.isEnabled = isEnable
-    }
-
-    override fun menuVisible(visible: Int) {
-        binding.menuButton.visibility = visible
     }
 }
