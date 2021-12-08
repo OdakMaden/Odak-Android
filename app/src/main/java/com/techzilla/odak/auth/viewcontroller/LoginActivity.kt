@@ -46,6 +46,12 @@ class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
                     "","", resources.getString(R.string.shared_Ok))
             }
         }
+
+        binding.singButton.setOnClickListener {
+            Intent(this, SingActivity::class.java).apply {
+                startActivity(this)
+            }
+        }
     }
 
     override fun checkPasswordListener(isCheck: Boolean) {

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.SearchView
@@ -21,6 +23,7 @@ import com.techzilla.odak.converter.viewcontrollers.ConverterActivity
 import com.techzilla.odak.currencydetail.viewcontroller.CurrencyDetailActivity
 import com.techzilla.odak.databinding.FragmentMarketBinding
 import com.techzilla.odak.main.adapters.ExchangeRateRecyclerViewAdapter
+import com.techzilla.odak.main.adapters.FavoriteRecyclerViewAdapter
 import com.techzilla.odak.main.constant.isAddFavorite
 import com.techzilla.odak.main.constant.isChangeInnerViewCurrencyModel
 import com.techzilla.odak.shared.constants.rememberMemberDTO
@@ -46,6 +49,7 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
     }
 
     private val adapter by lazy { ExchangeRateRecyclerViewAdapter(this) }
+    private val adapterFavorite by lazy { FavoriteRecyclerViewAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,6 +64,7 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
         binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
         selectBottomItem(binding.favoriteContainer)
         binding.defaultRecyclerview.adapter = adapter
+        binding.favoriteRecyclerview.adapter = adapterFavorite
         listener.menuVisible(View.VISIBLE)
         binding.componentProgressBar.progressbarContainer.visibility = View.VISIBLE
 
@@ -110,10 +115,12 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
                         favoriteIdList = memberDataJSON.getString("favoriteIdList")
                     }
                     adapter.insertNewExchangeRateRecyclerView(it, favoriteIdList)
+                    adapterFavorite.insertNewExchangeRateRecyclerView(it, favoriteIdList)
                     isFirstOpen = false
                 }
             }else{
                 adapter.changeItems(it)
+                adapterFavorite.changeItems(it)
             }
         })
     }
@@ -123,9 +130,11 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
         isChangeInnerViewCurrencyModel?.let {
             if (isAddFavorite){
                 adapter.addFavorite(it)
+                adapterFavorite.addFavorite(it)
             }
             else{
                 adapter.deleteFavorite(it)
+                adapterFavorite.deleteFavorite(it)
             }
             isChangeInnerViewCurrencyModel = null
         }
@@ -151,6 +160,7 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
 
                 adapter.changeType(-1)
+                binding.favoriteRecyclerviewContainer.visibility = GONE
             }
             binding.dollarContainer->{
                 binding.favoriteIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_favori, resources.newTheme()))
@@ -163,6 +173,7 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
 
                 adapter.changeType(0)
+                binding.favoriteRecyclerviewContainer.visibility = VISIBLE
             }
             binding.goldBarsContainer->{
                 binding.favoriteIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_favori, resources.newTheme()))
@@ -175,6 +186,7 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.white, resources.newTheme()))
 
                 adapter.changeType(1)
+                binding.favoriteRecyclerviewContainer.visibility = VISIBLE
             }
             binding.cryptoContainer->{
                 binding.favoriteIcon.setImageDrawable(resources.getDrawable(R.drawable.icon_favori, resources.newTheme()))
@@ -187,6 +199,7 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
                 binding.bitcoinText.setTextColor(resources.getColor(R.color.odak_light_blue, resources.newTheme()))
 
                 adapter.changeType(2)
+                binding.favoriteRecyclerviewContainer.visibility = VISIBLE
             }
         }
 
@@ -250,20 +263,20 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
         if (isFavorite){
             deleteFavoriteList(exchangeRateDTO.code)
             adapter.deleteFavorite(exchangeRateDTO)
+            adapterFavorite.deleteFavorite(exchangeRateDTO)
         }
         else{
             addFavoriteList(exchangeRateDTO.code)
             adapter.addFavorite(exchangeRateDTO)
+            adapterFavorite.addFavorite(exchangeRateDTO)
         }
     }
 
     override fun exchangeRateRecyclerViewItemAlarmOnClickListener(exchangeRateDTO: ExchangeRateDTO) {
-        //startResult.launch(Intent(requireActivity(), AlarmDetailActivity::class.java).also {
         exchangeRateDTOForDetail = exchangeRateDTO
         Intent(requireActivity(), AlarmDetailActivity::class.java).apply {
             startActivity(this)
         }
-        //})
     }
 
     override fun exchangeRateRecyclerViewItemConverterOnClickListener(exchangeRateDTO: ExchangeRateDTO) {
@@ -271,50 +284,7 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
         Intent(requireActivity(), ConverterActivity::class.java).apply {
             startActivity(this)
         }
-       /* startResult.launch(Intent(requireActivity(), ConverterActivity::class.java).also {
-            exchangeRateDTOForDetail = exchangeRateDTO
-        })
-
-        */
     }
-
-
-/*
-    override fun innerViewOnClickListener(position: Int) {
-        adapter.selectItem(position)
-    }
-
-    override fun innerViewForDetailOnClickListener(exchangeRateDTO: ExchangeRateDTO) {
-        Intent(requireActivity(), CurrencyDetailActivity::class.java).apply {
-            exchangeRateDTOForDetail = exchangeRateDTO
-            startActivity(this)
-        }
-    }
-
-    override fun innerViewAddFavoriteOnClickListener(exchangeRateDTO: ExchangeRateDTO, isFavorite:Boolean) {
-        if (isFavorite){
-            deleteFavoriteList(exchangeRateDTO.code)
-            adapter.deleteFavorite(exchangeRateDTO)
-        }
-        else{
-            addFavoriteList(exchangeRateDTO.code)
-            adapter.addFavorite(exchangeRateDTO)
-        }
-    }
-
-    override fun innerViewAlarmOnClickListener(exchangeRateDTO: ExchangeRateDTO) {
-        startResult.launch(Intent(requireActivity(), AlarmDetailActivity::class.java).also {
-            exchangeRateDTOForDetail = exchangeRateDTO
-        })
-    }
-
-    override fun innerViewConverterOnClickListener(exchangeRateDTO: ExchangeRateDTO) {
-        startResult.launch(Intent(requireActivity(), ConverterActivity::class.java).also {
-            exchangeRateDTOForDetail = exchangeRateDTO
-        })
-    }
-
- */
 
 
 }

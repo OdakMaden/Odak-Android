@@ -64,6 +64,25 @@ class LoginRepository {
         })
     }
 
+    fun createMember(jsonObject: JsonObject, listener: SingListener){
+        service.createMember(jsonObject).enqueue(object : Callback<MemberDTO>{
+            override fun onResponse(call: Call<MemberDTO>, response: Response<MemberDTO>) {
+                if (response.isSuccessful){
+                    if (response.code() == 201){
+                        listener.singMemberDTO("Success")
+                    }
+                    else{
+                        listener.singMemberDTO("Failure")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MemberDTO>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
+    }
+
     fun rememberUserGSMNoAndPassword(password:String, sharedPref: SharedPreferences, context: Context){
         with(sharedPref.edit()){
             putString(context.getString(R.string.password), password)
@@ -77,5 +96,8 @@ class LoginRepository {
     }
     interface UpdateMemberDTOListener{
         fun updateMemberDTOListener(message:String)
+    }
+    interface SingListener{
+        fun singMemberDTO(string: String)
     }
 }

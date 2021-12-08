@@ -15,6 +15,10 @@ import java.util.concurrent.TimeUnit
 
 interface ApiService {
 
+    @POST("Member")
+    @Headers(apiKey, sessionKey, application)
+    fun createMember(@Body jsonObject: JsonObject) : Call<MemberDTO>
+
     @GET("MemberByPassword/{Password}")
     @Headers(apiKey, sessionKey, application)
     fun checkPassword(@Path("Password") password:String) : Call<MemberDTO>

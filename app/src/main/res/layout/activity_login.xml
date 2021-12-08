@@ -68,7 +68,43 @@
             android:textColor="@color/white"
             android:paddingHorizontal="15dp"
             android:paddingVertical="3dp"
-            android:textAllCaps="true"
+            android:gravity="center"
+            />
+    </androidx.cardview.widget.CardView>
+
+
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Odak Hesabı açmak için"
+        android:fontFamily="@font/metropolis_semi_bold"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintTop_toBottomOf="@id/login_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sing_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp"
+        android:backgroundTint="@color/odak_dark_blue"
+        app:cardCornerRadius="6dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/auth.sing.button"
+            android:textColor="@color/white"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="3dp"
             android:gravity="center"
             />
     </androidx.cardview.widget.CardView>

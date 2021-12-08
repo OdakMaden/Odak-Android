@@ -9,7 +9,16 @@
     <string name="shared.Ok">Tamam</string>
     <!--auth-->
     <string name="auth.password.label">Şifre</string>
-    <string name="auth.login.button">giriş</string>
+    <string name="auth.login.button">GİRİŞ</string>
+    <string name="auth.sing.button">BAŞVUR</string>
+
+    <!-- sing -->
+    <string name="sing.firstName.label">İsim</string>
+    <string name="sing.lastName.label">Soyisim</string>
+    <string name="sing.gsmno.label">Telefon Numarası</string>
+    <string name="sing.email.label">Email</string>
+    <string name="sing.save.button">Başvur</string>
+    <string name="sing.success.label">Başvurunuz alınmıştır. En kısa sürede tarafınıza bildirim sağlanacaktır.</string>
 
     <!--Menu-->
     <string name="menu.market.label">PİYASA</string>
@@ -66,13 +75,14 @@
     <string name="profile.new_password.label">YENİ ŞİFRE</string>
     <string name="profile.repeat_new_password.label">YENİ ŞİFRE TEKRAR</string>
     <string name="profile.save.button">KAYDET</string>
-    
+
     <!-- Alarm default menu-->
     <string name="alarm.menu.edit.label">DÜZENLE</string>
     <string name="alarm.menu.delete.label">SİL</string>
     <string name="alarm.menu.cancel.label">İPTAL</string>
 
     <!-- Alert -->
+    <string name="alert.sing.check">LÜTFEN BİLGİLERİ DÜZGÜN GİRİNİZ</string>
     <string name="alert.login.password">6 HANELİ ŞİFRENİZİ GİRİNİZ</string>
     <string name="alert.login.message">YANLIŞ BİR ŞİFRE GİRDİNİZ. LÜTFEN ŞİFREYİ DOĞRU GİRİNİZ.</string>
     <string name="alert.dont_same_password.message">YENİ ŞİFRENİZ, YENİ ŞİFRE TEKRAR İLE UYUŞMAMAKTADIR. LÜTFEN AYNISINI GİRİNİZ.</string>

@@ -96,22 +96,6 @@ class InnerViewRecyclerViewAdapter(private val listener: InnerViewListener, priv
             }
 
         }
-
-        /*
-        private fun reformForDoubleToString(priceString:String):String{
-            var result = ""
-            if (priceString.length >7) {
-                result = priceString.subSequence(0,7).toString()
-                if (result.last() == '.'){
-                    result.replace(".","")
-                }
-            } else {
-                result=priceString
-            }
-            return result
-        }
-         */
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

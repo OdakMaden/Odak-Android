@@ -14,6 +14,9 @@
         android:theme="@style/Theme.Odak"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".auth.viewcontroller.SingActivity"
+            android:exported="false" />
+        <activity
             android:name=".profile.viewcontroller.ChangeMemberDTOActivity"
             android:exported="false" />
         <activity
