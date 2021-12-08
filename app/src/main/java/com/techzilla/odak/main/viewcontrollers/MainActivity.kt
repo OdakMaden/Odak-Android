@@ -1,5 +1,8 @@
 package com.techzilla.odak.main.viewcontrollers
 
+import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -11,6 +14,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -25,6 +29,7 @@ import com.techzilla.odak.alarm.viewcontroller.AlarmFragment
 import com.techzilla.odak.profile.viewcontroller.ProfileFragment
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.helper_interface.MenuButtonListener
+import com.techzilla.odak.shared.service.repository.MainActivityRepository
 import com.techzilla.odak.shared.service.repository.MainRepository
 import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 
@@ -38,6 +43,11 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
     private val profileFragment = ProfileFragment(this)
     private val alarmFragment = AlarmFragment(this)
     private var isOpenMenu = false
+
+    private val repository by lazy { MainActivityRepository() }
+    private var phoneNumber1 : String? = null
+
+    private var requestSinglePermissionLauncher : ActivityResultLauncher<String>? = null
 
     private val startResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
         if (result.resultCode == RESULT_OK){
@@ -63,6 +73,23 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
+        requestSinglePermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
+            if (it){
+                if (phoneNumber1 != null) {
+                    Intent(Intent.ACTION_CALL, Uri.parse("tel:${phoneNumber1}")).apply {
+                        startActivity(this)
+                    }
+                }
+                else{
+                    AlertDialogViewController.buildAlertDialog(this, "",resources.getString(R.string.alert_phone_number),
+                        "","", resources.getString(R.string.shared_Ok))
+                }
+            }
+            else{
+                AlertDialogViewController.buildAlertDialog(this, "",resources.getString(R.string.alert_phone_number),
+                    "","", resources.getString(R.string.shared_Ok))
+            }
+        }
 
         backgroundMenu(isOpenMenu)
         binding.container.isSelected = isOpenMenu
@@ -89,6 +116,15 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
                 }
             })
 
+        repository.getPhoneNumber()
+        repository.phoneNumberLiveData.observe(this, {
+            if (it.phoneNo01 != null){
+                phoneNumber1 = it.phoneNo01
+            }
+            else if(it.phoneNo02 != null){
+                phoneNumber1 = it.phoneNo02
+            }
+        })
 
         binding.defaultClickContainer.setOnClickListener {
             menuButtonAnimation(0.0f, false)
@@ -118,7 +154,19 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
             setFragment(converterFragment, MarketFragment.TAG)
         }
         binding.call.setOnClickListener {
-            println("call")
+            requestSinglePermissionLauncher!!.launch(Manifest.permission.CALL_PHONE)
+            /*
+            if (phoneNumber1 != null) {
+                Intent(Intent.ACTION_CALL, Uri.parse("tel:${phoneNumber1}")).apply {
+                    startActivity(this)
+                }
+            }
+            else{
+                AlertDialogViewController.buildAlertDialog(this, "",resources.getString(R.string.alert_phone_number),
+                    "","", resources.getString(R.string.shared_Ok))
+            }
+
+             */
         }
         binding.notification.setOnClickListener {
             setFragment(alarmFragment, MarketFragment.TAG)

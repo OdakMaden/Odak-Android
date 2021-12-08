@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class SystemConfigurationDTO(
     /* Phone number (CCCCCAAATTTTTTT) */
-    val phoneNo01: String? = null,
+    @SerializedName("PhoneNo01") val phoneNo01: String? = null,
     /* Phone number (CCCCCAAATTTTTTT) */
-    val phoneNo02: String? = null
+    @SerializedName("PhoneNo02") val phoneNo02: String? = null
 )

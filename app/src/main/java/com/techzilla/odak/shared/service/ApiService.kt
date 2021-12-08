@@ -55,6 +55,11 @@ interface ApiService {
     @Headers(apiKey, sessionKey, application)
     fun getGraphData(@Query("MemberID") memberID : String, @Query("CurrencyCode") currencyCode:String, @Query("GraphPeriodEnum") graphPeriodEnum:String, @Query("TimeStamp") timeStamp:String): Call<ExchangeRateGraphDTO>
 
+    @GET("System/Configuration")
+    @Headers(apiKey, sessionKey, application)
+    fun getPhoneNumbers(): Call<SystemConfigurationDTO>
+
+
     companion object{
         operator fun invoke():ApiService{
             val client = OkHttpClient.Builder().readTimeout(1200, TimeUnit.SECONDS).connectTimeout(1200,

@@ -91,5 +91,7 @@
     <string name="alert.alarm.title">ALARM</string>
     <string name="alert.alarm.message">ALARM BAŞARILI OLARAK KAYDEDİLMİŞTİR.</string>
     <string name="alert.notification_permision_message">İŞLEM BAŞARISIZ OLDU! LÜTFEN YENİDEN DENEYİNİZ.</string>
+    <string name="alert.phone.number">NUMARA ÜZERİNDE BİR HATA OLUŞTU LÜTFEN SONRA TEKRAR DENEYİNİZ.</string>
+    <string name="alert.permision.phone">EĞER ARAMAYA İZİN VERMEZSENİZ, ARAMA EKRANINA NUMARAYI AKTARAMAYIZ.</string>
 
 </resources>
