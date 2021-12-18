@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.google.gson.JsonObject
@@ -25,10 +26,11 @@ class SingActivity : AppCompatActivity(), LoginRepository.SingListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             window.setDecorFitsSystemWindows(false)
-            window.insetsController?.show(WindowInsets.Type.ime())
+            //window.insetsController?.show(WindowInsets.Type.ime())
         }
         else{
             window.decorView.systemUiVisibility =

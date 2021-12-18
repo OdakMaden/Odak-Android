@@ -8,6 +8,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.SearchView
 import androidx.activity.result.ActivityResult
@@ -51,6 +52,11 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
     private val adapter by lazy { ExchangeRateRecyclerViewAdapter(this) }
     private val adapterFavorite by lazy { FavoriteRecyclerViewAdapter() }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,6 +67,7 @@ class MarketFragment (private val listener:MenuButtonListener) : Fragment(), Exc
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.bottomBar.setPadding(0,0,0, getStatusBarHeight())
         selectBottomItem(binding.favoriteContainer)
         binding.defaultRecyclerview.adapter = adapter

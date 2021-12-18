@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.techzilla.odak.R
 import com.techzilla.odak.databinding.ActivityLoginBinding
@@ -24,10 +25,11 @@ class LoginActivity : AppCompatActivity(), LoginRepository.CheckListener {
         super.onCreate(savedInstanceState)
         _binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             window.setDecorFitsSystemWindows(false)
-            window.insetsController?.show(WindowInsets.Type.ime())
+            //window.insetsController?.show(WindowInsets.Type.ime())
         }
         else{
             window.decorView.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //or SYSTEM_UI_FLAG_LIGHT_STATUS_BAR

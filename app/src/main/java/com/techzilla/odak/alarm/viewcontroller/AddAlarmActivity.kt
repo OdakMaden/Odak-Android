@@ -36,10 +36,11 @@ class AddAlarmActivity : AppCompatActivity(), AddAlarmRecyclerviewAdapter.AddAla
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+       // window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             window.setDecorFitsSystemWindows(false)
-            window.insetsController?.show(WindowInsets.Type.ime())
+           // window.insetsController?.show(WindowInsets.Type.ime())
         }
         else{
             window.decorView.systemUiVisibility =

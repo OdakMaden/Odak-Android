@@ -10,6 +10,7 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
+import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
@@ -86,6 +87,7 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         super.onCreate(savedInstanceState)
         _binding = ActivityCurrencyDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             window.setDecorFitsSystemWindows(false)
