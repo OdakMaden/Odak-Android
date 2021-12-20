@@ -5,13 +5,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.JsonObject
 import com.techzilla.odak.R
 import com.techzilla.odak.auth.viewcontroller.LoginActivity
 import com.techzilla.odak.databinding.ActivityChangePasswordBinding
+import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.service.repository.LoginRepository
 import com.techzilla.odak.shared.viewcontroller.AlertDialogViewController
 
@@ -46,13 +46,19 @@ class ChangeMemberDTOActivity : AppCompatActivity(), LoginRepository.UpdateMembe
     }
 
     private fun checkSamePassword(newPassword: String, repeatPassword: String, oldPassword:String){
-        if(!newPassword.contains(repeatPassword)){
+        if(oldPassword.contains(rememberMemberDTO!!.password)){
+            binding.componentProgressBar.progressbarContainer.visibility = View.GONE
+            AlertDialogViewController.buildAlertDialog(this, "",
+                resources.getString(R.string.alert_password_message),
+                "","", resources.getString(R.string.shared_Ok))
+        }
+        else if(!newPassword.contains(repeatPassword)){
             binding.componentProgressBar.progressbarContainer.visibility = View.GONE
             AlertDialogViewController.buildAlertDialog(this, "",
                 resources.getString(R.string.alert_dont_same_password_message),
                 "","", resources.getString(R.string.shared_Ok))
         }
-        else if (oldPassword.contains(newPassword)){
+        else if (rememberMemberDTO!!.password.contains(newPassword)){
             binding.componentProgressBar.progressbarContainer.visibility = View.GONE
             AlertDialogViewController.buildAlertDialog(this, "", resources.getString(R.string.alert_dont_same_old_password_message),
             "","", resources.getString(R.string.shared_Ok))

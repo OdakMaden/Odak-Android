@@ -85,8 +85,9 @@
     <string name="alert.sing.check">LÜTFEN BİLGİLERİ DÜZGÜN GİRİNİZ</string>
     <string name="alert.login.password">6 HANELİ ŞİFRENİZİ GİRİNİZ</string>
     <string name="alert.login.message">YANLIŞ BİR ŞİFRE GİRDİNİZ. LÜTFEN ŞİFREYİ DOĞRU GİRİNİZ.</string>
-    <string name="alert.dont_same_password.message">YENİ ŞİFRENİZ, YENİ ŞİFRE TEKRAR İLE UYUŞMAMAKTADIR. LÜTFEN AYNISINI GİRİNİZ.</string>
-    <string name="alert.dont_same_old_password.message">YENİ ŞİFRE, ESKİ ŞİFRENİZ İLE AYNI OLAMAZ.</string>
+    <string name="alert.password.message">Mevcut şifrenizi yanlış girdiniz. Lütfen kontrol edin.</string>
+    <string name="alert.dont_same_password.message">Yeni şifre ile tekrarı aynı değil. Lütfen kontrol edin.</string>
+    <string name="alert.dont_same_old_password.message">Yeni şifre mevcut şifreyle aynı olamaz. Lütfen farklı bir şifre deneyin.</string>
     <string name="alert.change_password.message">ŞİFRE BAŞARILI BİR ŞEKİLDE DEĞİŞTİRİLDİ. YENİ ŞİFRE İLE YENİDEN GİRİŞ YAPINIZ.</string>
     <string name="alert.alarm.title">ALARM</string>
     <string name="alert.alarm.message">ALARM BAŞARILI OLARAK KAYDEDİLMİŞTİR.</string>
