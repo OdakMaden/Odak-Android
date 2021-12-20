@@ -87,11 +87,9 @@ class CurrencyDetailActivity : AppCompatActivity(), OnChartValueSelectedListener
         super.onCreate(savedInstanceState)
         _binding = ActivityCurrencyDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             window.setDecorFitsSystemWindows(false)
-            window.insetsController?.show(WindowInsets.Type.ime())
         }
         else{
             window.decorView.systemUiVisibility =
