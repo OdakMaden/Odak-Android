@@ -6,5 +6,7 @@ data class SystemConfigurationDTO(
     /* Phone number (CCCCCAAATTTTTTT) */
     @SerializedName("PhoneNo01") val phoneNo01: String? = null,
     /* Phone number (CCCCCAAATTTTTTT) */
-    @SerializedName("PhoneNo02") val phoneNo02: String? = null
+    @SerializedName("PhoneNo02") val phoneNo02: String? = null,
+    /* Data refresh interval in seconds */
+    @SerializedName("RefreshInterval") val refreshInterval: Int? = null
 )

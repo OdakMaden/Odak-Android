@@ -18,7 +18,7 @@ import java.util.*
 class MainRepository {
     private val service = ApiService.invoke()
 
-    private val periodTimeGetExchangeRateList = object : CountDownTimer(3000, 3000){
+    private val periodTimeGetExchangeRateList = object : CountDownTimer((refreshInterval!!*1000).toLong(), (refreshInterval!!*1000).toLong()){
         override fun onTick(millisUntilFinished: Long) {
 
         }

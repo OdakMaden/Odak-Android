@@ -26,6 +26,9 @@ val exchangeRateListForIndexMap = HashMap<String, Int>()
 val exchangeRateList = ArrayList<ExchangeRateDTO>()
 val exchangeRateDTOListMap = HashMap<String, ExchangeRateDTO>()
 
+var phoneNumber1 : String? = null
+var refreshInterval : Int? = null
+
 @SuppressLint("SimpleDateFormat")
 fun Calendar.dateFormatISO8601ToTimeStamp(): TimeStamp {
     return try {

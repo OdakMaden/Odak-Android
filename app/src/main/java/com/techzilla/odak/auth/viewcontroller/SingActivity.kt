@@ -38,7 +38,7 @@ class SingActivity : AppCompatActivity(), LoginRepository.SingListener {
         }
 
         binding.gSMNo.addTextChangedListener {
-            gSMNoString = "9$it"
+            gSMNoString = "$it"
         }
 
         binding.singButton.setOnClickListener {

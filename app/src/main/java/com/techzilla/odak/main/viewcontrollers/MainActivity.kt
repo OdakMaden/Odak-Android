@@ -27,6 +27,7 @@ import com.techzilla.odak.converter.viewcontrollers.ConverterFragment
 import com.techzilla.odak.databinding.ActivityMainBinding
 import com.techzilla.odak.alarm.viewcontroller.AlarmFragment
 import com.techzilla.odak.profile.viewcontroller.ProfileFragment
+import com.techzilla.odak.shared.constants.phoneNumber1
 import com.techzilla.odak.shared.constants.rememberMemberDTO
 import com.techzilla.odak.shared.helper_interface.MenuButtonListener
 import com.techzilla.odak.shared.service.repository.MainActivityRepository
@@ -44,8 +45,8 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
     private val alarmFragment = AlarmFragment(this)
     private var isOpenMenu = false
 
-    private val repository by lazy { MainActivityRepository() }
-    private var phoneNumber1 : String? = null
+   // private val repository by lazy { MainActivityRepository() }
+   // private var phoneNumber1 : String? = null
 
     private var requestSinglePermissionLauncher : ActivityResultLauncher<String>? = null
 
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
                 }
             })
 
+        /*
         repository.getPhoneNumber()
         repository.phoneNumberLiveData.observe(this, {
             if (it.phoneNo01 != null){
@@ -128,6 +130,8 @@ class MainActivity : AppCompatActivity(), MenuButtonListener {
                 phoneNumber1 = it.phoneNo02
             }
         })
+
+         */
 
         binding.defaultClickContainer.setOnClickListener {
             menuButtonAnimation(0.0f, false)

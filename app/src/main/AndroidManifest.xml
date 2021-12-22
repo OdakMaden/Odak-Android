@@ -42,19 +42,16 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".alarm.viewcontroller.AddAlarmActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:exported="true"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".currencydetail.viewcontroller.CurrencyDetailActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:exported="true"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".main.viewcontrollers.MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:exported="true"
             tools:ignore="LockedOrientationActivity" />
@@ -66,7 +63,6 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".splash.viewcontroller.SplashActivity"
-            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             android:exported="true"
             tools:ignore="LockedOrientationActivity">
